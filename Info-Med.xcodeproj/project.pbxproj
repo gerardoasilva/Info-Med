@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,10 @@
 		DC83851B244E91FC00BA40AD /* Info_MedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC83851A244E91FC00BA40AD /* Info_MedUITests.swift */; };
 		DCB7F9C7244F78A300D8E9A8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */; };
 		DCB7F9C9244F7CC100D8E9A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DCB7F9C8244F7CC000D8E9A8 /* GoogleService-Info.plist */; };
+		DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */; };
+		DCB7F9CE244F9F5900D8E9A8 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */; };
+		DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CF244FB08900D8E9A8 /* Constants.swift */; };
+		DCB7F9D2244FB13800D8E9A8 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9D1244FB13800D8E9A8 /* HomeViewController.swift */; };
 		FB5327AB28D4864FF569F7F3 /* Pods_Info_Med.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A66310D517DC1EBFE645DEA /* Pods_Info_Med.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +68,10 @@
 		DC83851C244E91FC00BA40AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		DCB7F9C8244F7CC000D8E9A8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		DCB7F9CF244FB08900D8E9A8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		DCB7F9D1244FB13800D8E9A8 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F33507A55DF10063C676242A /* Pods-Info-Med.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med/Pods-Info-Med.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,7 +113,6 @@
 				A408450063D2290428FAA4B4 /* Pods-Info-MedTests.debug.xcconfig */,
 				CC530C47578044D97EE7F522 /* Pods-Info-MedTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -144,7 +151,8 @@
 		DC8384F4244E91FB00BA40AD /* Info-Med */ = {
 			isa = PBXGroup;
 			children = (
-				DCB7F9C5244F782100D8E9A8 /* Views */,
+				DCB7F9CA244F9EE400D8E9A8 /* Helpers */,
+				DCB7F9C5244F782100D8E9A8 /* View Controllers */,
 				DC8384F5244E91FB00BA40AD /* AppDelegate.swift */,
 				DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */,
 				DC8384FB244E91FB00BA40AD /* Main.storyboard */,
@@ -175,12 +183,23 @@
 			path = "Info-MedUITests";
 			sourceTree = "<group>";
 		};
-		DCB7F9C5244F782100D8E9A8 /* Views */ = {
+		DCB7F9C5244F782100D8E9A8 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */,
+				DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */,
+				DCB7F9D1244FB13800D8E9A8 /* HomeViewController.swift */,
 			);
-			path = Views;
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		DCB7F9CA244F9EE400D8E9A8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */,
+				DCB7F9CF244FB08900D8E9A8 /* Constants.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -426,6 +445,10 @@
 				DCB7F9C7244F78A300D8E9A8 /* LoginViewController.swift in Sources */,
 				DC8384F6244E91FB00BA40AD /* AppDelegate.swift in Sources */,
 				DC838500244E91FB00BA40AD /* Info_Med.xcdatamodeld in Sources */,
+				DCB7F9D2244FB13800D8E9A8 /* HomeViewController.swift in Sources */,
+				DCB7F9CE244F9F5900D8E9A8 /* RegisterViewController.swift in Sources */,
+				DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */,
+				DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */,
 				DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

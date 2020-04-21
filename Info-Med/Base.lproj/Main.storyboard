@@ -11,7 +11,7 @@
         <scene sceneID="fU5-s5-Tel">
             <objects>
                 <viewController title="Login" id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="MRO-p7-ojo" customClass="Log">
+                    <view key="view" contentMode="scaleToFill" id="MRO-p7-ojo" userLabel="View" customClass="Log">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -26,18 +26,21 @@
                                 <rect key="frame" x="47" y="333" width="320.5" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Teléfono" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L8q-pa-Fzs">
                                 <rect key="frame" x="46" y="394" width="320.5" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JAh-T3-YIf">
                                 <rect key="frame" x="47" y="452" width="320.5" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Iniciar sesión"/>
+                                <connections>
+                                    <action selector="loginTapped:" destination="dkt-nE-AGt" eventType="touchUpInside" id="x9o-9z-cTQ"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hMm-Dd-rCE" userLabel="Separator">
                                 <rect key="frame" x="46" y="506" width="320.5" height="2"/>
@@ -48,15 +51,122 @@
                                 <rect key="frame" x="46" y="534" width="320.5" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Registrarse"/>
+                                <connections>
+                                    <segue destination="NLP-fp-dDt" kind="show" id="sRf-fZ-eZB"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="65E-IN-b6S"/>
                     </view>
+                    <connections>
+                        <outlet property="loginButton" destination="JAh-T3-YIf" id="Xrx-gp-7jS"/>
+                        <outlet property="registerButton" destination="sr0-Vo-Kw7" id="d4w-4h-QvF"/>
+                        <outlet property="tfEmail" destination="HxR-Uq-gcG" id="vrY-o6-Nnn"/>
+                        <outlet property="tfPhoneNumber" destination="L8q-pa-Fzs" id="x3X-Na-kaF"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uia-CS-qag" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="839.13043478260875" y="137.94642857142856"/>
+            <point key="canvasLocation" x="1852" y="282"/>
+        </scene>
+        <!--Home View Controller-->
+        <scene sceneID="sQz-UK-j7e">
+            <objects>
+                <viewController storyboardIdentifier="HomeVC" id="iJ6-mK-RR6" customClass="HomeViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="E7b-4h-dXS">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ACCESS GRANTED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dq7-A0-kGE">
+                                <rect key="frame" x="133" y="438" width="148" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="O1k-k1-qC2"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="REq-Rf-JlL"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x7L-Wk-4Ie" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2628" y="-46"/>
+        </scene>
+        <!--Register View Controller-->
+        <scene sceneID="aDN-Th-QEz">
+            <objects>
+                <viewController id="NLP-fp-dDt" customClass="RegisterViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fhE-tL-8bo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info-Med Bot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2j6-85-71u">
+                                <rect key="frame" x="48" y="152" width="320.5" height="63"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="54"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Correo electrónico *" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zVU-ii-v5a">
+                                <rect key="frame" x="48" y="256" width="320.5" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Teléfono *" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="42H-nm-WzR">
+                                <rect key="frame" x="47" y="317" width="320.5" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DPy-VD-Rww">
+                                <rect key="frame" x="48" y="556" width="320.5" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Crear Cuenta"/>
+                                <connections>
+                                    <action selector="loginTapped:" destination="dkt-nE-AGt" eventType="touchUpInside" id="TA5-mQ-tDF"/>
+                                    <action selector="registerTapped:" destination="NLP-fp-dDt" eventType="touchUpInside" id="UxJ-Wd-81X"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yPJ-a7-GKC">
+                                <rect key="frame" x="47" y="385" width="320.5" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Apellido" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cev-dP-vMj">
+                                <rect key="frame" x="47" y="453" width="320.5" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mF5-di-2AF">
+                                <rect key="frame" x="47" y="517" width="321" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="43b-1q-iZ9"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Gju-9C-cRZ"/>
+                    <connections>
+                        <outlet property="lbError" destination="mF5-di-2AF" id="HWn-Ff-CjP"/>
+                        <outlet property="registerButton" destination="DPy-VD-Rww" id="ED6-EB-YC6"/>
+                        <outlet property="tfEmail" destination="zVU-ii-v5a" id="CkW-36-dKp"/>
+                        <outlet property="tfFirstName" destination="yPJ-a7-GKC" id="Yy3-Xd-Xe6"/>
+                        <outlet property="tfLastName" destination="cev-dP-vMj" id="2Lq-fY-8Qo"/>
+                        <outlet property="tfPhoneNumber" destination="42H-nm-WzR" id="CT9-yG-LSf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SK3-PD-jKf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2626.0869565217395" y="600"/>
         </scene>
     </scenes>
 </document>

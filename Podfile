@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '13.0'
+platform :ios, '13.0'
 
 target 'Info-Med' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -16,10 +16,12 @@ target 'Info-Med' do
     # Pods for testing
   end
 
-  # Firebase pod for Google Analytics
+  # Firebase pods
   pod 'Firebase/Analytics'
-  # add pods for any other desired Firebase products
   pod 'Firebase/Auth'
-  # https://firebase.google.com/docs/ios/setup#available-pods
+  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+
 
 end
