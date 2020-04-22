@@ -116,21 +116,27 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         }
         
         request?.setMappedCompletionBlockSuccess({ (request, response) in
-        let response = response as! AIResponse
+            let response = response as! AIResponse
 
-        // Display message if successful
-        if let textResponse = response.result.fulfillment.speech {
+            // Display message if successful
+            if let textResponse = response.result.fulfillment.speech {
             self.displayResponse(msg: textResponse)
-        }
-    }, failure: { (request, error) in
+            }
+        }, failure: { (request, error) in
         print(error!)
-    })    }
+        })
+        
+        ApiAI.shared().enqueue(request)
+        tfInput.text = ""
+        
+    }
     
     func send(){
          if tfInput.text != ""{
             addBubble(bbl: Bubble(view : messageScrollView, msg : Message(sender: "user", text: tfInput.text!)))
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
         }
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
