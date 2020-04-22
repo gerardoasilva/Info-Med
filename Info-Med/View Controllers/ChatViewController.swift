@@ -15,6 +15,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var messageScrollView: UIScrollView!
     @IBOutlet weak var tfInput: UITextField!
     @IBOutlet weak var btSend: UIButton!
+    @IBOutlet var inputToolBar: UIToolbar!
     
     var activeField : UITextField!
     
@@ -22,7 +23,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var bubblesList : [Bubble]!
     var acumulatedHeight = 0
     var offsetAccum = 0
-    
+    var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0)
     let speechSynthesizer = AVSpeechSynthesizer()
 
     func displayResponse(msg: String) {
@@ -32,7 +33,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         //if tfInput.text != ""{
         addBubble(bbl: Bubble(view : messageScrollView, msg : Message(sender: "agent", text: msg)))
-        messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+        //messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
     }
     
     func addBubble(bbl : Bubble){
@@ -46,7 +47,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         bbl.setY(y: CGFloat(acumulatedHeight + bbl.padd))
         acumulatedHeight += addedHeight
         messageScrollView.addSubview(bbl)
-        messageScrollView.contentSize.height = CGFloat(acumulatedHeight + bbl.padd)
+        messageScrollView.contentSize.height = CGFloat(acumulatedHeight)
         
         if CGFloat(acumulatedHeight + bbl.padd) > messageScrollView.frame.height{
             offsetAccum += addedHeight
@@ -58,9 +59,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         self.tfInput.delegate = self
         self.tfInput.returnKeyType = UIReturnKeyType.send
         messageScrollView.isScrollEnabled = true
+        messageScrollView.frame = CGRect(x: messageScrollView.frame.origin.x, y: messageScrollView.frame.origin.y, width: messageScrollView.frame.width, height: view.frame.height - 100)
+        toolBarOriginalFrame = inputToolBar.frame
         
-        aBubble = Bubble(view : messageScrollView, msg : Message(sender: "bot", text: "Lorem Ipsum wjnbdvagjhfcwdjvkblwaklnkbhdvjghcgwxadhgvjbhwkjkdnbavhcfdhgwjhdbaghfcwhdghwabdvawchdhwjbdavhgwvjabwhvgdhcwvjahbdjg"))
-        addBubble(bbl: aBubble)
+        print(messageScrollView.frame.height)
+        print(messageScrollView.contentSize.height)
+        print(messageScrollView.visibleSize.height)
+        /*aBubble = Bubble(view : messageScrollView, msg : Message(sender: "bot", text: "Lorem Ipsum wjnbdvagjhfcwdjvkblwaklnkbhdvjghcgwxadhgvjbhwkjkdnbavhcfdhgwjhdbaghfcwhdghwabdvawchdhwjbdavhgwvjabwhvgdhcwvjahbdjg"))
+        addBubble(bbl: aBubble)*/
         
         //registers for  keyboard notifications
         NotificationCenter.default.addObserver(self, selector: #selector(tecladoSeMostro(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -72,11 +78,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         let contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height), right: 0.0)
         messageScrollView.contentInset = contentInset
         messageScrollView.scrollIndicatorInsets = contentInset
+        inputToolBar.frame = CGRect(
+            x: inputToolBar.frame.origin.x,
+            y: inputToolBar.frame.origin.y - kbSize.height ,
+            width: inputToolBar.frame.width,
+            height: inputToolBar.frame.height)
         //messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum + 200)), animated: true)
     }
     
     // Called when the UIKeyboardWillHideNotification is sent
     @IBAction func tecladoSeOculto(aNotification : NSNotification) {
+        inputToolBar.frame = toolBarOriginalFrame
+        
         let contentInsets = UIEdgeInsets.zero
         messageScrollView.contentInset = contentInsets
         messageScrollView.scrollIndicatorInsets = contentInsets
@@ -96,9 +109,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         print("preparing Request")
         //Validaton of text
         if let text = tfInput.text, text != "" {
-            
-            // Put text from user input in the request
-            request?.query = text
+            request?.query = text // Put text from user input in the request
         } else {
             return
         }

@@ -70,7 +70,7 @@ class Bubble: UITextView {
         // Round the corners.
         self.layer.masksToBounds = true
         // Set the size of the roundness.
-        self.layer.cornerRadius = 18.0
+        self.layer.cornerRadius = 16.0
         // Set the thickness of the border.
         self.layer.borderWidth = 0
         // Set the border color to black.

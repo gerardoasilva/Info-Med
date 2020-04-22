@@ -87,26 +87,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgn-bg-pGp">
-                                <rect key="frame" x="20" y="44" width="374" height="732"/>
+                                <rect key="frame" x="20" y="76" width="374" height="795"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="PNm-OK-xp9"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="ci8-ss-ICS"/>
                             </scrollView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rHW-Pa-PEX">
-                                <rect key="frame" x="20" y="816" width="316" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1j9-st-zH6">
-                                <rect key="frame" x="344" y="816" width="50" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Enviar"/>
-                                <connections>
-                                    <action selector="actSend:" destination="iJ6-mK-RR6" eventType="touchUpInside" id="vno-d9-ls3"/>
-                                </connections>
-                            </button>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ep-Os-0oH">
+                                <rect key="frame" x="0.0" y="32" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Info-Med Bot" id="MQm-Sq-80X"/>
+                                </items>
+                            </navigationBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ent-pP-myu">
+                                <rect key="frame" x="0.0" y="818" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" id="ilZ-5G-OFW">
+                                        <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" textAlignment="natural" minimumFontSize="17" id="rHW-Pa-PEX">
+                                            <rect key="frame" x="20" y="5" width="278" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="Dxp-Du-2E1">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1j9-st-zH6">
+                                            <rect key="frame" x="344" y="5" width="50" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <state key="normal" title="Enviar"/>
+                                            <connections>
+                                                <action selector="actSend:" destination="iJ6-mK-RR6" eventType="touchUpInside" id="vno-d9-ls3"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
@@ -118,6 +135,7 @@
                     <navigationItem key="navigationItem" id="REq-Rf-JlL"/>
                     <connections>
                         <outlet property="btSend" destination="1j9-st-zH6" id="W1K-BM-GP1"/>
+                        <outlet property="inputToolBar" destination="ent-pP-myu" id="TIO-2c-s3T"/>
                         <outlet property="messageScrollView" destination="dgn-bg-pGp" id="Gq3-X6-p3v"/>
                         <outlet property="tfInput" destination="rHW-Pa-PEX" id="n3l-lg-HDx"/>
                     </connections>
