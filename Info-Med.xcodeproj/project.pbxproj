@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		635FCD0C245023680083E984 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0B245023680083E984 /* ChatViewController.swift */; };
+		635FCD0E245023CA0083E984 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0D245023CA0083E984 /* Message.swift */; };
+		635FCD10245024090083E984 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0F245024090083E984 /* Bubble.swift */; };
 		6C8549DDE252DFCCBB5CA858 /* Pods_Info_Med_Info_MedUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */; };
 		DB65092BD89BEC084BA4A7D0 /* Pods_Info_MedTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */; };
 		DC8384F6244E91FB00BA40AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8384F5244E91FB00BA40AD /* AppDelegate.swift */; };
@@ -48,6 +51,9 @@
 		3A66310D517DC1EBFE645DEA /* Pods_Info_Med.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_Med.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_MedTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_Med_Info_MedUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		635FCD0B245023680083E984 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		635FCD0D245023CA0083E984 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Message.swift; path = "Info-Med/Message.swift"; sourceTree = SOURCE_ROOT; };
+		635FCD0F245024090083E984 /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
 		6FD835AC9DFFB1A2444592E3 /* Pods-Info-Med-Info-MedUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.release.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.release.xcconfig"; sourceTree = "<group>"; };
 		78DD32B7A751FD85306DBE8F /* Pods-Info-Med-Info-MedUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A408450063D2290428FAA4B4 /* Pods-Info-MedTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-MedTests.debug.xcconfig"; path = "Target Support Files/Pods-Info-MedTests/Pods-Info-MedTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -186,6 +192,7 @@
 		DCB7F9C5244F782100D8E9A8 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				635FCD0B245023680083E984 /* ChatViewController.swift */,
 				DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */,
 				DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */,
 				DCB7F9D1244FB13800D8E9A8 /* HomeViewController.swift */,
@@ -198,6 +205,8 @@
 			children = (
 				DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */,
 				DCB7F9CF244FB08900D8E9A8 /* Constants.swift */,
+				635FCD0D245023CA0083E984 /* Message.swift */,
+				635FCD0F245024090083E984 /* Bubble.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -448,7 +457,10 @@
 				DCB7F9D2244FB13800D8E9A8 /* HomeViewController.swift in Sources */,
 				DCB7F9CE244F9F5900D8E9A8 /* RegisterViewController.swift in Sources */,
 				DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */,
+				635FCD10245024090083E984 /* Bubble.swift in Sources */,
 				DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */,
+				635FCD0E245023CA0083E984 /* Message.swift in Sources */,
+				635FCD0C245023680083E984 /* ChatViewController.swift in Sources */,
 				DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
