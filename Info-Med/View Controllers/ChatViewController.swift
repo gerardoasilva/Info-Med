@@ -26,14 +26,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     let speechSynthesizer = AVSpeechSynthesizer()
 
     func displayResponse(msg: String) {
-        let speechUtterance = AVSpeechUtterance(string: msg)
-        speechSynthesizer.speak(speechUtterance)
+        print("Request completed")
+        /*let speechUtterance = AVSpeechUtterance(string: msg)
+        speechSynthesizer.speak(speechUtterance)*/
         
         //if tfInput.text != ""{
         addBubble(bbl: Bubble(view : messageScrollView, msg : Message(sender: "agent", text: msg)))
         messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-        
-}
+    }
+    
     func addBubble(bbl : Bubble){
         if bubblesList == nil{
             bubblesList = [bbl]
@@ -48,8 +49,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         messageScrollView.contentSize.height = CGFloat(acumulatedHeight + bbl.padd)
         
         if CGFloat(acumulatedHeight + bbl.padd) > messageScrollView.frame.height{
-            //messageScrollView.contentSize.height = CGFloat(acumulatedHeight + bbl.padd)
-            /* = CGSizeMake( messageScrollView.frame.width, CGFloat(acumulatedHeight + bbl.padd))*/
             offsetAccum += addedHeight
         }
     }
@@ -59,10 +58,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         self.tfInput.delegate = self
         self.tfInput.returnKeyType = UIReturnKeyType.send
         messageScrollView.isScrollEnabled = true
-        //messageScrollView.contentSize.height = messageScrollView.frame.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height)
-        print(messageScrollView.contentSize.height)
-        //print(messageScrollView.contentSize)
-        //print(messageScrollView.frame.size)
         
         aBubble = Bubble(view : messageScrollView, msg : Message(sender: "bot", text: "Lorem Ipsum wjnbdvagjhfcwdjvkblwaklnkbhdvjghcgwxadhgvjbhwkjkdnbavhcfdhgwjhdbaghfcwhdghwabdvawchdhwjbdavhgwvjabwhvgdhcwvjahbdjg"))
         addBubble(bbl: aBubble)
@@ -73,17 +68,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func tecladoSeMostro(aNotification: NSNotification) {
-    
         let kbSize = (aNotification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
-        //print(kbSize.height)
-        //print(messageScrollView.contentInset)
         let contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height), right: 0.0)
         messageScrollView.contentInset = contentInset
         messageScrollView.scrollIndicatorInsets = contentInset
-        //print(messageScrollView.contentInset)
-        
         //messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum + 200)), animated: true)
-        //messageScrollView.setContentOffset(CGPoint(x: 0.0, y: activeField.frame.origin.y - kbSize.height), animated: true)
     }
     
     // Called when the UIKeyboardWillHideNotification is sent
@@ -96,7 +85,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func actSend(_ sender: Any) {
         send()
-        prepareRequest()
     }
 
     @IBAction func tapAction(_ sender: Any) {
@@ -105,7 +93,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     func prepareRequest() {
         let request = ApiAI.shared().textRequest()
-        
+        print("preparing Request")
         //Validaton of text
         if let text = tfInput.text, text != "" {
             
@@ -115,15 +103,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        print("executing request")
         request?.setMappedCompletionBlockSuccess({ (request, response) in
             let response = response as! AIResponse
 
             // Display message if successful
             if let textResponse = response.result.fulfillment.speech {
-            self.displayResponse(msg: textResponse)
+                self.displayResponse(msg: textResponse)
+            }else{
+                print("some weird error")
             }
         }, failure: { (request, error) in
-        print(error!)
+            print(error!)
         })
         
         ApiAI.shared().enqueue(request)
@@ -135,9 +126,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
          if tfInput.text != ""{
             addBubble(bbl: Bubble(view : messageScrollView, msg : Message(sender: "user", text: tfInput.text!)))
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+            prepareRequest()
         }
         
+        tfInput.text = ""
     }
+    
+    //MARK: - text field delegate implementations
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         view.endEditing(true)
