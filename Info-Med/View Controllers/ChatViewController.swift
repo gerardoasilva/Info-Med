@@ -75,7 +75,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func tecladoSeMostro(aNotification: NSNotification) {
         let kbSize = (aNotification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
-        let contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height), right: 0.0)
+        let contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height + inputToolBar.frame.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height), right: 0.0)
         messageScrollView.contentInset = contentInset
         messageScrollView.scrollIndicatorInsets = contentInset
         inputToolBar.frame = CGRect(
