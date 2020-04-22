@@ -7,6 +7,8 @@
 // something
 
 import UIKit
+import ApiAI
+import AVFoundation
 
 class ChatViewController: UIViewController, UITextFieldDelegate {
 
@@ -21,6 +23,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var acumulatedHeight = 0
     var offsetAccum = 0
     
+    let speechSynthesizer = AVSpeechSynthesizer()
+
+    func displayResponse(msg: String) {
+        let speechUtterance = AVSpeechUtterance(string: msg)
+        speechSynthesizer.speak(speechUtterance)
+        
+        //if tfInput.text != ""{
+        addBubble(bbl: Bubble(view : messageScrollView, msg : Message(sender: "agent", text: msg)))
+        messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+        
+}
     func addBubble(bbl : Bubble){
         if bubblesList == nil{
             bubblesList = [bbl]
@@ -82,15 +95,39 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func actSend(_ sender: Any) {
-       send()
+        send()
+        prepareRequest()
     }
 
     @IBAction func tapAction(_ sender: Any) {
         view.endEditing(true)
     }
     
+    func prepareRequest() {
+        let request = ApiAI.shared().textRequest()
+        
+        //Validaton of text
+        if let text = tfInput.text, text != "" {
+            
+            // Put text from user input in the request
+            request?.query = text
+        } else {
+            return
+        }
+        
+        request?.setMappedCompletionBlockSuccess({ (request, response) in
+        let response = response as! AIResponse
+
+        // Display message if successful
+        if let textResponse = response.result.fulfillment.speech {
+            self.displayResponse(msg: textResponse)
+        }
+    }, failure: { (request, error) in
+        print(error!)
+    })    }
+    
     func send(){
-        if tfInput.text != ""{
+         if tfInput.text != ""{
             addBubble(bbl: Bubble(view : messageScrollView, msg : Message(sender: "user", text: tfInput.text!)))
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
         }
