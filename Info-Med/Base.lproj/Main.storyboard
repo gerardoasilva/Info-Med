@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dkt-nE-AGt">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dkt-nE-AGt">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -78,30 +78,58 @@
             </objects>
             <point key="canvasLocation" x="1850.7246376811595" y="281.91964285714283"/>
         </scene>
-        <!--Home View Controller-->
+        <!--Chat View Controller-->
         <scene sceneID="sQz-UK-j7e">
             <objects>
-                <viewController storyboardIdentifier="HomeVC" id="iJ6-mK-RR6" customClass="HomeViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeVC" id="iJ6-mK-RR6" customClass="ChatViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E7b-4h-dXS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ACCESS GRANTED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dq7-A0-kGE">
-                                <rect key="frame" x="133" y="438" width="148" height="21"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgn-bg-pGp">
+                                <rect key="frame" x="20" y="44" width="374" height="732"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <viewLayoutGuide key="contentLayoutGuide" id="PNm-OK-xp9"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="ci8-ss-ICS"/>
+                            </scrollView>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rHW-Pa-PEX">
+                                <rect key="frame" x="20" y="816" width="316" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1j9-st-zH6">
+                                <rect key="frame" x="344" y="816" width="50" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Enviar"/>
+                                <connections>
+                                    <action selector="actSend:" destination="iJ6-mK-RR6" eventType="touchUpInside" id="vno-d9-ls3"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <gestureRecognizers/>
                         <viewLayoutGuide key="safeArea" id="O1k-k1-qC2"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="2CK-Gc-zRE" appends="YES" id="NPK-Dc-2dk"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="REq-Rf-JlL"/>
+                    <connections>
+                        <outlet property="btSend" destination="1j9-st-zH6" id="W1K-BM-GP1"/>
+                        <outlet property="messageScrollView" destination="dgn-bg-pGp" id="Gq3-X6-p3v"/>
+                        <outlet property="tfInput" destination="rHW-Pa-PEX" id="n3l-lg-HDx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x7L-Wk-4Ie" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="2CK-Gc-zRE">
+                    <connections>
+                        <action selector="tapAction:" destination="iJ6-mK-RR6" id="ba8-F5-c0o"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2628" y="-46"/>
+            <point key="canvasLocation" x="2626.0869565217395" y="-46.205357142857139"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">
