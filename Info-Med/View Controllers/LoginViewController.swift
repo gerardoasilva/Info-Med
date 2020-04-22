@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var tfPhoneNumber: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var lbError: UILabel!
     @IBOutlet weak var registerButton: UIButton!
     
     override func viewDidLoad() {
@@ -27,7 +29,7 @@ class LoginViewController: UIViewController {
         // Check that all the fields are filled in
         if tfEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             tfPhoneNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) == ""{
-            return "Correo electrónico o teléfono incorrecto."
+            return "Por favor llene todos los campos."
         }
     
         return nil
@@ -39,14 +41,48 @@ class LoginViewController: UIViewController {
         // Validate fields
         let error = validateFields()
         
+
         if error != nil {
             
+            // There's something wrong with fields
+            showError(error!)
         }
-        
-        // Signing in the user
+        else {
+            
+            // Create cleaned versions of text fields
+            let email = tfEmail.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+            let phoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+         
+            // Signing in the user
+            Auth.auth().signIn(withEmail: email, password: phoneNumber) { (result, error) in
+                
+                if error != nil {
+                    
+                    // There was an error signing in the user
+                    self.showError("Correo electrónico o teléfono incorrecto.")
+                }
+                else {
+                    
+                    // User signed in successfully
+                    self.transitionToHome()
+                    
+                }
+            }
+            
+        }
     }
     
+    func showError(_ message:String) {
+        lbError.text = message
+        lbError.alpha = 1
+    }
     
+    func transitionToHome() {
+        let homeViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.homeViewController) as? HomeViewController
+        
+        view.window?.rootViewController = homeViewController
+        view.window?.makeKeyAndVisible()
+    }
     
     /*
     // MARK: - Navigation

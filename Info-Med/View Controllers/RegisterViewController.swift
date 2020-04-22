@@ -68,7 +68,7 @@ class RegisterViewController: UIViewController {
                 if err != nil {
                     
                     // There was an error creating the user
-                    self.showError("Error creando usuario.")
+                    self.showError("El correo electrónico es inválido o ya está en uso.")
                 }
                 else {
                     
@@ -82,7 +82,7 @@ class RegisterViewController: UIViewController {
                     ]) { (error) in
                         if error != nil {
                             // Show error message
-                            self.showError("Error almacenando datos de usuario.")
+                            self.showError("Hubo un error almacenando los datos de usuario.")
                         }
                     }
                     
