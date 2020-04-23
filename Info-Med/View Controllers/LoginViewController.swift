@@ -64,7 +64,7 @@ class LoginViewController: UIViewController {
                 else {
                     
                     // User signed in successfully
-                    self.transitionToHome()
+                    self.transitionToChatVC()
                     
                 }
             }
@@ -77,10 +77,10 @@ class LoginViewController: UIViewController {
         lbError.alpha = 1
     }
     
-    func transitionToHome() {
-        let homeViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.homeViewController) as? ChatViewController
+    func transitionToChatVC() {
+        let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
         
-        view.window?.rootViewController = homeViewController
+        view.window?.rootViewController = chatViewController
         view.window?.makeKeyAndVisible()
     }
     

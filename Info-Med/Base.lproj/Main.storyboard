@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dkt-nE-AGt">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zoz-a2-ynV">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Login-->
+        <!--Login View Controller-->
         <scene sceneID="fU5-s5-Tel">
             <objects>
-                <viewController title="Login" id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MRO-p7-ojo" userLabel="View" customClass="Log">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info-Med Bot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bic-ql-srU">
-                                <rect key="frame" x="48" y="193" width="320.5" height="63"/>
+                                <rect key="frame" x="47" y="138" width="320.5" height="63"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="54"/>
                                 <nil key="textColor"/>
@@ -52,7 +52,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Registrarse"/>
                                 <connections>
-                                    <segue destination="NLP-fp-dDt" kind="show" id="sRf-fZ-eZB"/>
+                                    <segue destination="NLP-fp-dDt" kind="show" id="sRf-fZ-eZB">
+                                        <segue key="commit" inheritsFrom="parent" id="9yv-x3-lm5"/>
+                                        <segue key="preview" inheritsFrom="commit" id="Vye-9l-o9P"/>
+                                    </segue>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WvU-6G-E6x">
@@ -66,6 +69,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="65E-IN-b6S"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Itk-lL-2ew"/>
                     <connections>
                         <outlet property="lbError" destination="WvU-6G-E6x" id="9wn-sa-WhE"/>
                         <outlet property="loginButton" destination="JAh-T3-YIf" id="Xrx-gp-7jS"/>
@@ -76,12 +80,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uia-CS-qag" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1850.7246376811595" y="281.91964285714283"/>
+            <point key="canvasLocation" x="2495.6521739130435" y="650.89285714285711"/>
         </scene>
         <!--Chat View Controller-->
         <scene sceneID="sQz-UK-j7e">
             <objects>
-                <viewController storyboardIdentifier="HomeVC" id="iJ6-mK-RR6" customClass="ChatViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatVC" id="iJ6-mK-RR6" customClass="ChatViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E7b-4h-dXS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -147,23 +151,16 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2626.0869565217395" y="-46.205357142857139"/>
+            <point key="canvasLocation" x="2419" y="-82"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">
             <objects>
                 <viewController id="NLP-fp-dDt" customClass="RegisterViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fhE-tL-8bo">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info-Med Bot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2j6-85-71u">
-                                <rect key="frame" x="48" y="152" width="320.5" height="63"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="54"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Correo electrónico *" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zVU-ii-v5a">
                                 <rect key="frame" x="48" y="256" width="320.5" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -204,11 +201,24 @@
                                     <action selector="registerTapped:" destination="NLP-fp-dDt" eventType="touchUpInside" id="UxJ-Wd-81X"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info-Med Bot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2j6-85-71u">
+                                <rect key="frame" x="47" y="138" width="320.5" height="63"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="54"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="43b-1q-iZ9"/>
                     </view>
-                    <navigationItem key="navigationItem" id="Gju-9C-cRZ"/>
+                    <navigationItem key="navigationItem" id="Gju-9C-cRZ">
+                        <barButtonItem key="leftBarButtonItem" title="Atrás" image="chevron.left" catalog="system" largeContentSizeImage="chevron.left" id="VjV-16-9hZ">
+                            <connections>
+                                <action selector="backTapped:" destination="NLP-fp-dDt" id="hcd-bu-NTi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="lbError" destination="mF5-di-2AF" id="HWn-Ff-CjP"/>
                         <outlet property="registerButton" destination="DPy-VD-Rww" id="ED6-EB-YC6"/>
@@ -220,7 +230,31 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SK3-PD-jKf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2626.0869565217395" y="600"/>
+            <point key="canvasLocation" x="3313.04347826087" y="650.89285714285711"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="p2O-wv-ZKh">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Zoz-a2-ynV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YQr-yB-gzL">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="dkt-nE-AGt" kind="relationship" relationship="rootViewController" id="d7x-oY-fPo"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xsj-eO-sJk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1585.5072463768117" y="650.89285714285711"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="chevron.left" catalog="system" width="48" height="64"/>
+    </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="sRf-fZ-eZB"/>
+    </inferredMetricsTieBreakers>
 </document>

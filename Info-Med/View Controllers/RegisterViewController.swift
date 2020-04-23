@@ -22,7 +22,7 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.navigationController?.navigationBar.isTranslucent = true
     }
     
     // Check the fields and validate. If everything is correct, return nil. Otherwise, return the error message.
@@ -66,9 +66,9 @@ class RegisterViewController: UIViewController {
                 
                 // Check for errors
                 if err != nil {
-                    
+                    print(err!.localizedDescription)
                     // There was an error creating the user
-                    self.showError("El correo electrónico es inválido o ya está en uso.")
+                    self.showError("Correo electrónico o teléfono inválido.")
                 }
                 else {
                     
@@ -87,7 +87,7 @@ class RegisterViewController: UIViewController {
                     }
                     
                     // Transition to the home screen
-                    self.transitionToHome()
+                    self.transitionToChatVC()
                 }
             }
             
@@ -100,14 +100,17 @@ class RegisterViewController: UIViewController {
         lbError.alpha = 1
     }
     
-    func transitionToHome() {
-        let homeViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.homeViewController) as? HomeViewController
+    func transitionToChatVC() {
+        let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
         
-        view.window?.rootViewController = homeViewController
+        view.window?.rootViewController = chatViewController
         view.window?.makeKeyAndVisible()
     }
 
-
+    @IBAction func backTapped(_ sender: UIBarButtonItem) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 
