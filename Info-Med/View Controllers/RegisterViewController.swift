@@ -107,7 +107,7 @@ class RegisterViewController: UIViewController {
         view.window?.makeKeyAndVisible()
     }
 
-    @IBAction func backTapped(_ sender: UIBarButtonItem) {
+    @IBAction func backTapped(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
     }
     
