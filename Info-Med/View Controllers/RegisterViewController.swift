@@ -13,6 +13,7 @@ import FirebaseFirestore
 class RegisterViewController: UIViewController {
 
     @IBOutlet weak var tfEmail: UITextField!
+    @IBOutlet weak var tfPassword: UITextField!
     @IBOutlet weak var tfPhoneNumber: UITextField!
     @IBOutlet weak var tfFirstName: UITextField!
     @IBOutlet weak var tfLastName: UITextField!
@@ -30,8 +31,8 @@ class RegisterViewController: UIViewController {
         
         // Check that all the fields are filled in
         if tfEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            tfPhoneNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) == ""{
-            return "Por favor llene los campos requeridos."
+        tfPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" || tfPhoneNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            return "Por favor llene todos los campos requeridos."
         }
         
         // Check if email is valid
@@ -39,6 +40,20 @@ class RegisterViewController: UIViewController {
         if Utilities.isEmailValid(cleanedEmail) == false {
             // Email is not valid
             return "Correo electrónico inválido."
+        }
+        
+        // Check if password is valid
+        let cleanedPassword = tfPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        if Utilities.isPasswordValid(cleanedPassword) == false {
+            // Password is not valid
+            return "La contraseña debe contener al menos 8 caracteres incluyendo una letra y un caracter especial."
+        }
+        
+        // Check if phoneNumber is valid
+        let cleanedPhoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        if Utilities.isPhoneNumberValid(cleanedPhoneNumber) == false {
+            // Phone number is not valid
+            return "Teléfono inválido."
         }
     
         return nil
@@ -56,13 +71,14 @@ class RegisterViewController: UIViewController {
         else {
             
             // Create cleaned versions of the data
+            let email = tfEmail.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+            let password = tfPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+            let phoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let firstName = tfFirstName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let lastName = tfLastName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            let email = tfEmail.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            let phoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            
+
             //Create user
-            Auth.auth().createUser(withEmail: email, password: phoneNumber) { (result, err) in
+            Auth.auth().createUser(withEmail: email, password: password) { (result, err) in
                 
                 // Check for errors
                 if err != nil {
@@ -76,9 +92,10 @@ class RegisterViewController: UIViewController {
                     let db = Firestore.firestore()
                     
                     db.collection("users").addDocument(data: [
+                        "uid":result!.user.uid,
+                        "phoneNumber":phoneNumber,
                         "firstName":firstName,
-                        "lastName":lastName,
-                        "uid":result!.user.uid
+                        "lastName":lastName
                     ]) { (error) in
                         if error != nil {
                             // Show error message
@@ -95,11 +112,13 @@ class RegisterViewController: UIViewController {
         }
     }
     
+    // Display error message in the form
     func showError(_ message:String) {
         lbError.text = message
         lbError.alpha = 1
     }
     
+    // Transitions view to chat
     func transitionToChatVC() {
         let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
         

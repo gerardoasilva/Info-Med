@@ -18,5 +18,21 @@ class Utilities: NSObject {
         
         return emailTest.evaluate(with: email)
     }
+    
+    // Validate if password has correct format
+    static func isPasswordValid(_ password: String) -> Bool {
+        
+        let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")
+        
+        return passwordTest.evaluate(with: password)
+    }
+    
+    // Validate if phone number has correct format
+    static func isPhoneNumberValid(_ phoneNumber: String) -> Bool {
+        
+        let phoneNumberTest = NSPredicate(format: "SELF MATCHES %@", "[0-9]{6,14}")
+        
+        return phoneNumberTest.evaluate(with: phoneNumber)
+    }
 
 }
