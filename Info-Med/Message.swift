@@ -8,11 +8,11 @@
 
 import UIKit
 
-class Message: NSObject {
-    var text : String!
-    var sender : String!
+class Message: Codable {
+    var text: String!
+    var sender: String!
     
-    init(sender : String, text : String){
+    init(text: String, sender: String){
         self.text = text
         self.sender = sender
     }

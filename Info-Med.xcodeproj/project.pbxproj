@@ -25,6 +25,8 @@
 		DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */; };
 		DCB7F9CE244F9F5900D8E9A8 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */; };
 		DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CF244FB08900D8E9A8 /* Constants.swift */; };
+		DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9D324246220C900F69F29 /* APIRequest.swift */; };
+		DCF9D327246244F900F69F29 /* ResponseFAQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9D326246244F900F69F29 /* ResponseFAQ.swift */; };
 		FB5327AB28D4864FF569F7F3 /* Pods_Info_Med.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A66310D517DC1EBFE645DEA /* Pods_Info_Med.framework */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +78,8 @@
 		DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		DCB7F9CF244FB08900D8E9A8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		DCF9D324246220C900F69F29 /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
+		DCF9D326246244F900F69F29 /* ResponseFAQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFAQ.swift; sourceTree = "<group>"; };
 		F33507A55DF10063C676242A /* Pods-Info-Med.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med/Pods-Info-Med.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +161,7 @@
 			children = (
 				DCB7F9CA244F9EE400D8E9A8 /* Helpers */,
 				DCB7F9C5244F782100D8E9A8 /* View Controllers */,
+				DCF9D324246220C900F69F29 /* APIRequest.swift */,
 				DC8384F5244E91FB00BA40AD /* AppDelegate.swift */,
 				DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */,
 				DC8384FB244E91FB00BA40AD /* Main.storyboard */,
@@ -204,6 +209,7 @@
 				DCB7F9CF244FB08900D8E9A8 /* Constants.swift */,
 				635FCD0D245023CA0083E984 /* Message.swift */,
 				635FCD0F245024090083E984 /* Bubble.swift */,
+				DCF9D326246244F900F69F29 /* ResponseFAQ.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -455,6 +461,8 @@
 				DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */,
 				635FCD10245024090083E984 /* Bubble.swift in Sources */,
 				DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */,
+				DCF9D327246244F900F69F29 /* ResponseFAQ.swift in Sources */,
+				DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */,
 				635FCD0E245023CA0083E984 /* Message.swift in Sources */,
 				635FCD0C245023680083E984 /* ChatViewController.swift in Sources */,
 				DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */,

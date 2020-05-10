@@ -10,7 +10,7 @@ import UIKit
 
 class Bubble: UITextView {
     
-    var msg : Message!
+    var msg: Message!
     let padd = 20
     /*
     // Only override draw() if you perform custom drawing.
@@ -19,7 +19,7 @@ class Bubble: UITextView {
         // Drawing code
     }
     */
-    init(view : UIView, msg : Message) {
+    init(view: UIView, msg: Message) {
         let initX = CGFloat(padd)
         let initY = CGFloat(padd)
         let initW = view.frame.width - CGFloat(padd * 2)
@@ -95,7 +95,7 @@ class Bubble: UITextView {
         self.isScrollEnabled = false
     }
     
-    func setY(y : CGFloat){
+    func setY(y: CGFloat){
         self.frame = CGRect(x: frame.origin.x, y: y, width: frame.width , height: frame.height)
     }
 }

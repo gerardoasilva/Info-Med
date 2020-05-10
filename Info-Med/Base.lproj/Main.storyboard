@@ -122,7 +122,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <state key="normal" title="Enviar"/>
                                             <connections>
-                                                <action selector="actSend:" destination="iJ6-mK-RR6" eventType="touchUpInside" id="vno-d9-ls3"/>
+                                                <action selector="sendTapped:" destination="iJ6-mK-RR6" eventType="touchUpInside" id="vno-d9-ls3"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>

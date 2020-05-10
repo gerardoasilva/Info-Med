@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ApiAI
 import CoreData
 import Firebase
 
@@ -17,13 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        // Connects with Dialogflow using client access token
-        let configuration = AIDefaultConfiguration()
-        configuration.clientAccessToken = "e50a50d58bd44cc2b16fe2f0f0c36b7c"
-        let apiai = ApiAI.shared()
-        apiai?.configuration = configuration
-        
         // Connects with Firebase backend
         FirebaseApp.configure()
         return true
