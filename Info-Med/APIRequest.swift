@@ -17,6 +17,7 @@ enum APIError : Error {
 struct APIRequest {
     let resourceURL: URL
     
+    // Create an instance of APIRequest with the endpoint of the server
     init(endpoint: String) {
         let resourceString = "https://info-med.herokuapp.com/api/\(endpoint)"
         guard let resourceURL = URL(string: resourceString) else { fatalError() }
@@ -24,6 +25,7 @@ struct APIRequest {
         self.resourceURL = resourceURL
     }
     
+    // HTTP Request to server with endpoint
     func faq(_ queryToSolve: Message, completion: @escaping(Result<Response, APIError>) -> Void) {
         print("Executing request")
         
@@ -38,13 +40,6 @@ struct APIRequest {
                     completion(.failure(.responseProblem))
                     return
                 }
-                
-//                do {
-//                    let responseJson = try JSONSerialization.jsonObject(with: jsonData, options: [])
-//                    completion(.success(responseJson))
-//                } catch {
-//                    completion(.failure(.decodingProblem))
-//                }
                 do {
                     let decoder = JSONDecoder()
                     let intentResponse = try decoder.decode(Response.self, from: jsonData)
