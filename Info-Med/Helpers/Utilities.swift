@@ -21,9 +21,23 @@ class Utilities: NSObject {
     
     // Validate if password has correct format
     static func isPasswordValid(_ password: String) -> Bool {
+        // Password has at least 8 characters
+        if (password.count < 8){
+            return false
+        }
         
-        let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")// modify this REGEX to make password friendlier
-        return passwordTest.evaluate(with: password)
+        // Password has at least one digit
+        if (password.range(of:  #"\d+"#, options: .regularExpression) == nil){
+            return false
+        }
+        
+        // Password has at least one upper case character
+        let upperCaseTest = NSPredicate(format: "SELF MATCHES %@", ".*[A-Z]+.*")
+        
+        // Original Regex
+        //let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")// modify this REGEX to make password friendlier
+        
+        return upperCaseTest.evaluate(with: password)
     }
     
     // Validate if phone number has correct format
