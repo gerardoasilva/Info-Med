@@ -148,7 +148,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             getRequest.faq(queryToSolve, completion: { result in
                 switch result {
                 case .success(let response):
-                    self.displayResponse(msg: response.fulfillmentText)
+                    DispatchQueue.main.async {
+                        self.displayResponse(msg: response.fulfillmentText)
+                    }                    
                     print("RESPUESTA :::: \(response.fulfillmentText)")
                 case .failure(let error):
                     print("An error occured \(error).")
