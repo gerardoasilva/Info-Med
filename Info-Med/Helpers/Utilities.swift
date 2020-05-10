@@ -34,7 +34,7 @@ class Utilities: NSObject {
         // Password has at least one upper case character
         let upperCaseTest = NSPredicate(format: "SELF MATCHES %@", ".*[A-Z]+.*")
         
-        // Original Regex
+        
         //let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")// modify this REGEX to make password friendlier
         
         return upperCaseTest.evaluate(with: password)
