@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Structure of the required to decode attributes from Dialogflow-Server response
 struct Response: Decodable {
     var fulfillmentText: String
 }

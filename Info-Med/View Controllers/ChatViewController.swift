@@ -133,18 +133,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     func prepareRequest() {
-//        let request = ApiAI.shared().textRequest()
         print("Preparing request")
         
         // Define the URL to request to
-        let userID = "12345"
-//        guard let serverURL = URL(string: "https://info-med.herokuapp.com/api/faq/detectIntent/\(userID)") else { return }
-        
-//        let session = URLSession.shared
+        let userID = "12345" // This is going to have the actual UID
         
         // User's text input is valid
         if let text = tfInput.text {
-//            request?.query = text // Put text from user input in the request
+            
             let queryToSolve = Message(text: text, sender: "user")
             
             let getRequest = APIRequest(endpoint: "faq/detectIntent/\(userID)")
@@ -163,23 +159,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         else {
             return
         }
-        
-//        print("Executing request")
-//        request?.setMappedCompletionBlockSuccess({ (request, response) in
-//            let response = response as! AIResponse
-//
-//            // Display message if successful
-//            if let textResponse = response.result.fulfillment.speech {
-//                self.displayResponse(msg: textResponse)
-//            }else{
-//                print("There was an error")
-//            }
-//        }, failure: { (request, error) in
-//            print(error!)
-//        })
-//
-//        ApiAI.shared().enqueue(request)
-//        tfInput.text = ""
         
     }
     
