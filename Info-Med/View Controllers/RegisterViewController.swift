@@ -24,6 +24,15 @@ class RegisterViewController: UIViewController {
         super.viewDidLoad()
 
         self.navigationController?.navigationBar.isTranslucent = true
+        
+        // Adds tap recognizer in current view to hide keyboard
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    // Hides keyboard when user taps away from keyboard
+    @IBAction func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     // Check the fields and validate. If everything is correct, return nil. Otherwise, return the error message.
