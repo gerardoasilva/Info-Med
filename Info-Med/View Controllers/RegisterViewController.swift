@@ -10,7 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-class RegisterViewController: UIViewController {
+class RegisterViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var tfPassword: UITextField!
@@ -28,12 +28,39 @@ class RegisterViewController: UIViewController {
         // Adds tap recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        tfEmail.delegate = self
+        tfPassword.delegate = self
+        tfPhoneNumber.delegate = self
+        tfFirstName.delegate = self
+        tfLastName.delegate = self
+        
     }
     
     // Hides keyboard when user taps away from keyboard
     @IBAction func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        case tfEmail:
+            tfPassword.becomeFirstResponder()
+        case tfPassword:
+            tfPhoneNumber.becomeFirstResponder()
+        case tfPhoneNumber:
+            tfFirstName.becomeFirstResponder()
+        case tfFirstName:
+            tfLastName.becomeFirstResponder()
+        case tfLastName:
+            registerTapped(registerButton)
+        default:
+            textField.resignFirstResponder()
+        }
+        
+        return true
+    }
+
     
     // Check the fields and validate. If everything is correct, return nil. Otherwise, return the error message.
     func validateFields() -> String? {

@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseAuth
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var tfPhoneNumber: UITextField!
@@ -23,6 +23,9 @@ class LoginViewController: UIViewController {
         // Adds tap recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        tfEmail.delegate = self
+        tfPhoneNumber.delegate = self
 
         // Do any additional setup after loading the view.
     }
@@ -30,6 +33,18 @@ class LoginViewController: UIViewController {
     // Hides keyboard when user taps away from keyboard
     @IBAction func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == tfEmail {
+            textField.resignFirstResponder()
+            tfPhoneNumber.becomeFirstResponder()
+        }
+        else if textField == tfPhoneNumber {
+            textField.resignFirstResponder()
+            loginTapped(loginButton)
+        }
+        return true
     }
     
     // Check the fields and validate. If everything is correct, return nil. Otherwise, return the error message.
