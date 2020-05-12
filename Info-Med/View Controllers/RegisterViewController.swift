@@ -29,6 +29,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
         
+        // Textfield delegates
         tfEmail.delegate = self
         tfPassword.delegate = self
         tfPhoneNumber.delegate = self
@@ -42,6 +43,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
+    // Allows navigation through textfields when "return" is pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
         case tfEmail:

@@ -24,6 +24,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
         
+        // Textfield delegates
         tfEmail.delegate = self
         tfPhoneNumber.delegate = self
 
@@ -35,6 +36,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
+    // Allows navigation through textfields when "return" is pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == tfEmail {
             textField.resignFirstResponder()
