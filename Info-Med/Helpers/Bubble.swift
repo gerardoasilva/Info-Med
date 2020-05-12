@@ -12,21 +12,17 @@ class Bubble: UITextView {
     
     var msg: Message!
     let padd = 20
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+
     init(view: UIView, msg: Message) {
+        //
         let initX = CGFloat(padd)
         let initY = CGFloat(padd)
-        let initW = view.frame.width - CGFloat(padd * 2)
+        let initW = view.frame.width - CGFloat(padd * 2) //initial width is view width - padding
         let initH = CGFloat(100)
                 
         let dimensions = CGRect(x: initX, y: initY, width: initW, height: initH)
-        super.init(frame: dimensions, textContainer: nil)
+        
+        super.init(frame: dimensions, textContainer: nil)//intialize the UITextView to such dimensions
         initialize()
         
         self.msg = msg
@@ -34,9 +30,9 @@ class Bubble: UITextView {
         
         adjustHeight()
         
-        let limit = (view.frame.width / 5) * 4
+        let limit = (view.frame.width / 5) * 4 //the proportion at wich the bubble truncates
         var x = initX
-        var newW = frame.width
+        var newW = frame.width //new width
         
         if msg.sender == "user"{
             self.backgroundColor = .darkGray
@@ -48,6 +44,8 @@ class Bubble: UITextView {
             }else{
                 x = view.frame.width - CGFloat(padd) - frame.width
             }
+            
+            
         }else{
             self.backgroundColor = .lightGray
             self.textColor = UIColor.black
@@ -64,6 +62,7 @@ class Bubble: UITextView {
         initialize()
     }
     
+    //initializes only basic visual stuff
     func initialize(){
         // Set the background
         self.backgroundColor = .lightGray
@@ -87,6 +86,8 @@ class Bubble: UITextView {
         self.layer.shadowOpacity = 0.5
         // Make text uneditable.
         self.isEditable = false
+        //set border inset
+        self.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
     
     func adjustHeight(){

@@ -21,11 +21,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var inputToolBar: UIToolbar!
     
     var menuController : UIViewController! //side menu view controller
-    var shouldExpand = true;
+    var shouldExpand = true; //if the side menu is expanded or contracted
+    let menuLimit = 130
     
     var activeField: UITextField!
-    
     var bubblesList: [Bubble]! //list of chat bubbles were new bubbles are pushed to
+    
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0         //the inner view offset, must correspond to the accumulated height
     var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
@@ -97,15 +98,21 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         // Add notification observers for keyboard shown and hidden
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func showMenuController(){
-        let menuWidth =  self.messageScrollView.frame.width - 80
+    /// This function toggles the side menu to show or not
+    /// ```
+    /// toggleMenuController() // Toggles the menu
+    /// ```
+    /// - Returns: Void
+    func toggleMenuController(){
+        let menuWidth =  self.messageScrollView.frame.width - CGFloat(menuLimit)
         
         if menuController == nil && shouldExpand{
             menuController = MenuController()
-            menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.messageScrollView.frame.height)
+            //set menu controller dimensions
+            menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
             
             view.insertSubview(menuController.view, at: 0)
             addChild(menuController)
@@ -115,12 +122,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         if shouldExpand{ //show menu
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - 80
+                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - CGFloat(self.menuLimit)
+                self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
                 self.menuController.view.frame.origin.x = 0
             }, completion: nil)
         }else{
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-                self.messageScrollView.frame.origin.x = 20
+                self.messageScrollView.frame.origin.x = 0
+                self.inputToolBar.frame.origin.x = 0
                 self.menuController.view.frame.origin.x = -menuWidth
             }, completion: nil)
         }
@@ -133,8 +142,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         navigationItem.leftBarButtonItem = button
     }
     
+    //gets called when pressing the navbar hamburger button
     @objc func handleMenuToggle(){
-        showMenuController()
+        toggleMenuController()
     }
     
     // Move messageScrollView when keyboard is shown
@@ -158,7 +168,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     // Move messageScrollView when keyboard is hidden
     @IBAction func keyboardHides(aNotification: NSNotification) {
         //sets the tool bar back to its original position
-        inputToolBar.frame = toolBarOriginalFrame
+        
+        self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
+        /*UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+            self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
+        }, completion: nil)*/
+        
         //resets the content insets to 0
         let contentInsets = UIEdgeInsets.zero
         messageScrollView.contentInset = contentInsets
@@ -172,10 +187,30 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         send()
     }
 
+    //tap action anywere on the view controller
     @IBAction func tapAction(_ sender: Any) {
         // Hide keyboard
         view.endEditing(true)
+        
+        if !shouldExpand{
+            toggleMenuController()
+        }
     }
+    /*
+    //tap action on the scroll
+    @IBAction func tapOnScroll(_ sender: Any) {
+        if !shouldExpand{
+            toggleMenuController()
+        }
+    }
+    
+    //tap action on the toolbar
+    @IBAction func tapOnToolBar(_ sender: Any) {
+        if !shouldExpand{
+            toggleMenuController()
+        }
+    }*/
+    
     
     func prepareRequest() {
         print("Preparing request")

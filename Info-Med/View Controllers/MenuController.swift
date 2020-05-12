@@ -12,50 +12,62 @@ class MenuController: UIViewController {
     
     var table : UITableView!
     var reuseIdentifier = "cell"
+    
+    //table data
+    var labels : [String]!
+    var icons : [UIImage]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //initialize table
         table = UITableView()
         table.delegate = self
         table.dataSource = self
-        table.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
-        table.backgroundColor = UIColor.lightGray
+        table.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier) //register cells of type SideMenuCell using reuse identifier
+        table.backgroundColor = .darkGray
         table.separatorStyle = .none
         table.rowHeight = 80
         
         view.addSubview(table)
+        //tableView Constrains
         table.translatesAutoresizingMaskIntoConstraints = false
         table.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         table.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         table.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
-        //table.frame = 
+        //initialize table data
+        labels = ["Mi cuenta", "Bot Covid-19", "Historial"]
+        icons = []
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension MenuController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        labels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
+        cell.descritionLabel.text = labels[indexPath.row]
+        //add some icons and the uncomment
+        //cell.iconImageView.image = icons[indexPath.row]
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Finish segue implementation here
+        switch indexPath.row {
+        case 0:
+            print("Ir a mi cuenta")
+        case 1:
+            print("Ir a bot covid")
+        case 2:
+            print("Ir a Historial")
+        default:
+            print("Default")
+        }
+    }
      
 }

@@ -8,9 +8,11 @@
 
 import UIKit
 
+/// a cell that belongs to the side menu
 class SideMenuCell: UITableViewCell {
     
-    let descritionLabel: UILabel = {
+    //the cell label
+    let descritionLabel: UILabel = { //construct label
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 16)
@@ -19,7 +21,7 @@ class SideMenuCell: UITableViewCell {
     }()
     
     //crete an icon for this cell
-    let iconImageView: UIImageView = {
+    let iconImageView: UIImageView = { //construct icon
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
@@ -41,7 +43,7 @@ class SideMenuCell: UITableViewCell {
         iconImageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         iconImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         
-        //add lable sub view
+        //add label sub view and center 
         addSubview(descritionLabel)
         descritionLabel.translatesAutoresizingMaskIntoConstraints = false
         descritionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
