@@ -20,14 +20,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var btSend: UIButton!
     @IBOutlet var inputToolBar: UIToolbar!
     
+    var menuController : UIViewController! //side menu view controller
+    var shouldExpand = true;
+    
     var activeField: UITextField!
     
-    var aBubble: Bubble!
-    var bubblesList: [Bubble]!
-    var acumulatedHeight = 0
-    var offsetAccum = 0
-    var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0)
-    let speechSynthesizer = AVSpeechSynthesizer()
+    var bubblesList: [Bubble]! //list of chat bubbles were new bubbles are pushed to
+    var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
+    var offsetAccum = 0         //the inner view offset, must correspond to the accumulated height
+    var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
 
     /// This function displays a message bubble from agent in messageScrollView
     ///
@@ -38,10 +39,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     /// - Returns: Void
     func displayResponse(msg: String) {
         print("Request completed")
-        
-        //if tfInput.text != ""{
         addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: msg, sender: "agent")))
-        //messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
     }
     
     /// This function adds a bubble to array of Bubbles (bubbleList)
@@ -60,11 +58,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         else {
             bubblesList.append(bbl)
         }
-        // Store the height added by bubble in the view
+        
+        // Store the height added by bubble, plus spacing, in the view
         let addedHeight = Int(bbl.frame.height) + bbl.padd
         // Set position to bubble added
         bbl.setY(y: CGFloat(acumulatedHeight + bbl.padd))
-        // Update the accumulated height in the view
+        // Update the accumulated height for later view scroll size update
         acumulatedHeight += addedHeight
         // Add view with bubble to scroll view
         messageScrollView.addSubview(bbl)
@@ -81,48 +80,94 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tfInput.delegate = self
+        
         // Assign return key type to textfield
         self.tfInput.returnKeyType = UIReturnKeyType.send
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         // Sets size of view
         messageScrollView.frame = CGRect(x: messageScrollView.frame.origin.x, y: messageScrollView.frame.origin.y, width: messageScrollView.frame.width, height: view.frame.height - 100)
-        // Sets original frame of toolbar
+        // Sets original position of toolbar
         toolBarOriginalFrame = inputToolBar.frame
         
 //        print(messageScrollView.frame.height)
 //        print(messageScrollView.contentSize.height)
 //        print(messageScrollView.visibleSize.height)
+        configureNavBar()
         
         // Add notification observers for keyboard shown and hidden
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
-    // Move messageScrollView when skeyboard is shown
+    func showMenuController(){
+        let menuWidth =  self.messageScrollView.frame.width - 80
+        
+        if menuController == nil && shouldExpand{
+            menuController = MenuController()
+            menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.messageScrollView.frame.height)
+            
+            view.insertSubview(menuController.view, at: 0)
+            addChild(menuController)
+            menuController.didMove(toParent: self)
+            print("Did add menu controller")
+        }
+        
+        if shouldExpand{ //show menu
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - 80
+                self.menuController.view.frame.origin.x = 0
+            }, completion: nil)
+        }else{
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.messageScrollView.frame.origin.x = 20
+                self.menuController.view.frame.origin.x = -menuWidth
+            }, completion: nil)
+        }
+        
+        shouldExpand = !shouldExpand
+    }
+    
+    func configureNavBar(){
+        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburgerMenu70Pad").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func handleMenuToggle(){
+        showMenuController()
+    }
+    
+    // Move messageScrollView when keyboard is shown
     @IBAction func keyboardShows(aNotification: NSNotification) {
+        //obtains the keyboard size so we know how much to move
         let kbSize = (aNotification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
+        //sets a contentInset taking into acount the keyboard size and the diferences between the size of the scroll and the viewcontroller
         let contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height + inputToolBar.frame.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height), right: 0.0)
+        
         messageScrollView.contentInset = contentInset
         messageScrollView.scrollIndicatorInsets = contentInset
+        
+        //moves the toolbar by the same amout as the keyboard size
         inputToolBar.frame = CGRect(
             x: inputToolBar.frame.origin.x,
             y: inputToolBar.frame.origin.y - kbSize.height ,
             width: inputToolBar.frame.width,
             height: inputToolBar.frame.height)
-        //messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum + 200)), animated: true)
     }
     
     // Move messageScrollView when keyboard is hidden
     @IBAction func keyboardHides(aNotification: NSNotification) {
+        //sets the tool bar back to its original position
         inputToolBar.frame = toolBarOriginalFrame
-        
+        //resets the content insets to 0
         let contentInsets = UIEdgeInsets.zero
         messageScrollView.contentInset = contentInsets
         messageScrollView.scrollIndicatorInsets = contentInsets
+        //?
         messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
     }
     
+    //send button is pressed
      @IBAction func sendTapped(_ sender: Any) {
         send()
     }
@@ -142,16 +187,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         if let text = tfInput.text {
             
             let queryToSolve = Message(text: text, sender: "user")
-            
             let getRequest = APIRequest(endpoint: "faq/detectIntent/\(userID)")
             
+            //request promise
             getRequest.faq(queryToSolve, completion: { result in
                 switch result {
                 case .success(let response):
+                    //does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         self.displayResponse(msg: response.fulfillmentText)
                     }                    
                     print("RESPUESTA :::: \(response.fulfillmentText)")
+                    
                 case .failure(let error):
                     print("An error occured \(error).")
                 }
@@ -161,14 +208,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         else {
             return
         }
-        
     }
     
+    //when the user tries to send a message
     func send(){
          if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
+            
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-            prepareRequest()
+            prepareRequest() //does the server request
         }
         
         tfInput.text = ""
@@ -176,6 +224,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - text field delegate implementations
     
+    //sends a user message if the return buttons is pressed on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         view.endEditing(true)
         send()
@@ -184,6 +233,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     // Each text field in the interface sets the view controller as its delegate.
     // Therefore, when a text field becomes active, it calls these methods.
+    
     func textFieldDidBeginEditing (_ textField: UITextField )
     {
         activeField = textField

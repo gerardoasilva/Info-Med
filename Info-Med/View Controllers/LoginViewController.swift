@@ -103,8 +103,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func transitionToChatVC() {
         let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
+        let navController = UINavigationController(rootViewController: chatViewController!)
         
-        view.window?.rootViewController = chatViewController
+        view.window?.rootViewController = navController
         view.window?.makeKeyAndVisible()
     }
     
