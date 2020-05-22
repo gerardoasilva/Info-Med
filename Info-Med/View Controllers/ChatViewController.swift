@@ -204,7 +204,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         //moves the toolbar by the same amout as the keyboard size
         inputToolBar.frame = CGRect(
             x: inputToolBar.frame.origin.x,
-            y: inputToolBar.frame.origin.y - kbSize.height ,
+            y: inputToolBar.frame.origin.y - kbSize.height + 34,
             width: inputToolBar.frame.width,
             height: inputToolBar.frame.height)
     }
