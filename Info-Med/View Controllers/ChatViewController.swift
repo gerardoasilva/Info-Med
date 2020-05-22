@@ -14,25 +14,25 @@ public struct FAQ: Codable {
 }
 
 class ChatViewController: UIViewController, UITextFieldDelegate {
-
+    
     @IBOutlet weak var messageScrollView: UIScrollView!
     @IBOutlet weak var tfInput: UITextField!
     @IBOutlet weak var btSend: UIButton!
     @IBOutlet var inputToolBar: UIToolbar!
     
     var menuController : UIViewController! //side menu view controller
-    var shouldExpand = true; //if the side menu is expanded or contracted
+    var shouldExpand = true //if the side menu is expanded or contracted
     let menuLimit = 130
     
     var activeField: UITextField!
-    var bubblesList: [Bubble]! //list of chat bubbles were new bubbles are pushed to
+    var bubblesList: [Bubble]!  //list of chat bubbles were new bubbles are pushed to
     
-    var contexts: [Context] = [Context]()// Context array to store contexts from intent responses
+    var contexts: [Context] = [Context]() // Declare empty Context array to store contexts from queries
     
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
-    var offsetAccum = 0         //the inner view offset, must correspond to the accumulated height
+    var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
     var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
-
+    
     /// This function displays a message bubble from agent in messageScrollView
     ///
     /// ```
@@ -57,14 +57,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         if bubblesList == nil{
             bubblesList = [bbl]
         }
-        // Not the first bubble
+            // Not the first bubble
         else {
             bubblesList.append(bbl)
         }
         
         // Store the height added by bubble, plus spacing, in the view
         let addedHeight = Int(bbl.frame.height) + bbl.padd
-        // Set position to bubble added
+        // Set position to the bubble added
         bbl.setY(y: CGFloat(acumulatedHeight + bbl.padd))
         // Update the accumulated height for later view scroll size update
         acumulatedHeight += addedHeight
@@ -79,7 +79,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             offsetAccum += addedHeight
         }
     }
-       
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tfInput.delegate = self
@@ -93,9 +93,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Sets original position of toolbar
         toolBarOriginalFrame = inputToolBar.frame
         
-//        print(messageScrollView.frame.height)
-//        print(messageScrollView.contentSize.height)
-//        print(messageScrollView.visibleSize.height)
+        //        print(messageScrollView.frame.height)
+        //        print(messageScrollView.contentSize.height)
+        //        print(messageScrollView.visibleSize.height)
         configureNavBar()
         
         // Add notification observers for keyboard shown and hidden
@@ -173,8 +173,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
         /*UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
-        }, completion: nil)*/
+         self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
+         }, completion: nil)*/
         
         //resets the content insets to 0
         let contentInsets = UIEdgeInsets.zero
@@ -185,10 +185,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     //send button is pressed
-     @IBAction func sendTapped(_ sender: Any) {
+    @IBAction func sendTapped(_ sender: Any) {
         send()
     }
-
+    
     //tap action anywere on the view controller
     @IBAction func tapAction(_ sender: Any) {
         // Hide keyboard
@@ -199,21 +199,21 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         }
     }
     /*
-    //tap action on the scroll
-    @IBAction func tapOnScroll(_ sender: Any) {
-        if !shouldExpand{
-            toggleMenuController()
-        }
-    }
+     //tap action on the scroll
+     @IBAction func tapOnScroll(_ sender: Any) {
+     if !shouldExpand{
+     toggleMenuController()
+     }
+     }
+     
+     //tap action on the toolbar
+     @IBAction func tapOnToolBar(_ sender: Any) {
+     if !shouldExpand{
+     toggleMenuController()
+     }
+     }*/
     
-    //tap action on the toolbar
-    @IBAction func tapOnToolBar(_ sender: Any) {
-        if !shouldExpand{
-            toggleMenuController()
-        }
-    }*/
-    
-    
+    // This function prepares an HTTP request to the server that calls Dialogflow´s API
     func prepareRequest() {
         print("Preparing request")
         
@@ -226,35 +226,36 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             // Instantiate an APIRequest object that calls FAQ Agent
             let getRequest = APIRequest(endpoint: "faq/detectIntent")
             
-            //request promise
-            getRequest.faq(queryToSolve, completion: { result in
+            // Request promise
+            getRequest.response(queryToSolve, completion: { result in
                 switch result {
+                // Request was successful and there is a Response JSON already decoded
                 case .success(let response):
                     
-                    // Store contexts from API response
+                    // Store contexts from query
                     self.contexts.removeAll()
                     for context in response.outputContexts {
                         self.contexts.append(Context(name: context.name, lifespanCount: context.lifespanCount))
                     }
                     
                     print("Contexts self: \(self.contexts)")
-                    
                     print("FULL RESPONSE: \(response)\n")
                     print("FULFILLMENT_MESSAGES: \(response.fulfillmentMessages)\n")
                     print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
                     print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
                     
-                    //does the display response in the main thread as UI changes in other treads do not behave correctly
+                    // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         self.displayResponse(msg: response.fulfillmentText)
                     }
                     
+                // Request went wrong
                 case .failure(let error):
                     print("An error occured \(error).")
                 }
             })
         }
-        // text input is invalid
+            // text input is invalid
         else {
             return
         }
@@ -262,7 +263,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     //when the user tries to send a message
     func send(){
-         if tfInput.text != ""{
+        if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
@@ -297,15 +298,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
-    
-    
+
+

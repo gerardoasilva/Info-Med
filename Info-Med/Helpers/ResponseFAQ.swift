@@ -7,53 +7,8 @@
 //
 
 import Foundation
-import SwiftyJSON
 
-// Structure of the required to decode attributes from Dialogflow-Server response
-//struct Response: Decodable {
-//    var fulfillmentText: String
-//}
-
-/* This WORKS to decode Custom Payload from agent 2
- 
-struct Response: Decodable {
-    struct Fulfillment: Decodable {
-        struct Payload: Decodable {
-            struct Fields: Decodable {
-                struct Message: Decodable {
-                    var text: String
-                    private enum CodingKeys: String, CodingKey {
-                       case text = "stringValue"
-                    }
-                }
-                struct Suggestions: Decodable {
-                    struct ListValue: Decodable {
-                        struct Value: Decodable {
-                            var suggestion: String
-                            private enum CodingKeys: String, CodingKey {
-                                case suggestion = "stringValue"
-                            }
-                        }
-                        var values: [Value]?
-                    }
-                    var listValue: ListValue
-                }
-                var responseText: Message
-                var suggestions: Suggestions
-            }
-            var fields: Fields
-        }
-        var payload: Payload
-    }
-    var fulfillmentMessages: [Fulfillment]
-}
-*/
-
-
-
-
-
-
+// Struct required to decode JSON Response from Dialogflow API
 struct Response: Decodable {
     struct FulfillmentMessages: Decodable {
         struct Payload: Decodable {

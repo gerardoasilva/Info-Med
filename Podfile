@@ -22,7 +22,6 @@ target 'Info-Med' do
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift'
-  pod 'SwiftyJSON', '~> 4.0'
   
   # Dialog pods
   # pod 'ApiAI'
