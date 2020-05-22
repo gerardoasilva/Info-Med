@@ -131,7 +131,7 @@
                             <outletCollection property="gestureRecognizers" destination="2CK-Gc-zRE" appends="YES" id="NPK-Dc-2dk"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Info_Med Bot" id="REq-Rf-JlL"/>
+                    <navigationItem key="navigationItem" title="Info-Med Bot" id="REq-Rf-JlL" userLabel="Info-Med Bot"/>
                     <connections>
                         <outlet property="btSend" destination="1j9-st-zH6" id="W1K-BM-GP1"/>
                         <outlet property="inputToolBar" destination="ent-pP-myu" id="TIO-2c-s3T"/>
