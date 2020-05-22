@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		635FCD0C245023680083E984 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0B245023680083E984 /* ChatViewController.swift */; };
-		635FCD0E245023CA0083E984 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0D245023CA0083E984 /* Message.swift */; };
+		635FCD0E245023CA0083E984 /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0D245023CA0083E984 /* Classes.swift */; };
 		635FCD10245024090083E984 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0F245024090083E984 /* Bubble.swift */; };
 		63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB924246A8DB2006EF9FD /* MenuController.swift */; };
 		63AFB927246A968D006EF9FD /* SideMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB926246A968D006EF9FD /* SideMenuCell.swift */; };
@@ -55,7 +55,7 @@
 		473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_MedTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_Med_Info_MedUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		635FCD0B245023680083E984 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		635FCD0D245023CA0083E984 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Message.swift; path = "Info-Med/Message.swift"; sourceTree = SOURCE_ROOT; };
+		635FCD0D245023CA0083E984 /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Classes.swift; path = "Info-Med/Classes.swift"; sourceTree = SOURCE_ROOT; };
 		635FCD0F245024090083E984 /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
 		63AFB924246A8DB2006EF9FD /* MenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		63AFB926246A968D006EF9FD /* SideMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCell.swift; sourceTree = "<group>"; };
@@ -213,7 +213,7 @@
 			children = (
 				DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */,
 				DCB7F9CF244FB08900D8E9A8 /* Constants.swift */,
-				635FCD0D245023CA0083E984 /* Message.swift */,
+				635FCD0D245023CA0083E984 /* Classes.swift */,
 				635FCD0F245024090083E984 /* Bubble.swift */,
 				DCF9D326246244F900F69F29 /* ResponseFAQ.swift */,
 			);
@@ -470,7 +470,7 @@
 				DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */,
 				DCF9D327246244F900F69F29 /* ResponseFAQ.swift in Sources */,
 				DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */,
-				635FCD0E245023CA0083E984 /* Message.swift in Sources */,
+				635FCD0E245023CA0083E984 /* Classes.swift in Sources */,
 				635FCD0C245023680083E984 /* ChatViewController.swift in Sources */,
 				63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */,
 				DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */,

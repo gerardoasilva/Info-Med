@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ido-Wz-N7d">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ido-Wz-N7d">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -10,7 +10,7 @@
         <!--Login View Controller-->
         <scene sceneID="fU5-s5-Tel">
             <objects>
-                <viewController id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginVC" id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MRO-p7-ojo" userLabel="View" customClass="Log">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,10 +82,10 @@
             </objects>
             <point key="canvasLocation" x="3404.347826086957" y="650.89285714285711"/>
         </scene>
-        <!--Info_Med Bot-->
+        <!--Info-Med Bot-->
         <scene sceneID="sQz-UK-j7e">
             <objects>
-                <viewController storyboardIdentifier="ChatVC" id="iJ6-mK-RR6" customClass="ChatViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatVC" id="iJ6-mK-RR6" userLabel="Info-Med Bot" customClass="ChatViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E7b-4h-dXS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -131,7 +131,7 @@
                             <outletCollection property="gestureRecognizers" destination="2CK-Gc-zRE" appends="YES" id="NPK-Dc-2dk"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Info_Med Bot" id="REq-Rf-JlL"/>
+                    <navigationItem key="navigationItem" title="Info-Med Bot" id="REq-Rf-JlL" userLabel="Info-Med Bot"/>
                     <connections>
                         <outlet property="btSend" destination="1j9-st-zH6" id="W1K-BM-GP1"/>
                         <outlet property="inputToolBar" destination="ent-pP-myu" id="TIO-2c-s3T"/>
@@ -146,7 +146,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4907.2463768115949" y="650.89285714285711"/>
+            <point key="canvasLocation" x="5057" y="651"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">
@@ -254,10 +254,10 @@
             <point key="canvasLocation" x="3404" y="-66"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="chevron.left" catalog="system" width="48" height="64"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="sRf-fZ-eZB"/>
     </inferredMetricsTieBreakers>
-    <resources>
-        <image name="chevron.left" catalog="system" width="96" height="128"/>
-    </resources>
 </document>

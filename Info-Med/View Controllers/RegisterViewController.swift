@@ -146,7 +146,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                 }
             }
             
-            
         }
     }
     
@@ -163,6 +162,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         let navController = UINavigationController(rootViewController: chatViewController!)
         
         view.window?.rootViewController = navController
+        //view.window?.rootViewController = chatViewController
         view.window?.makeKeyAndVisible()
     }
 

@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol menuOption  {
+    func clickOption() -> Void
+}
+
 class MenuController: UIViewController {
     
     var table : UITableView!
