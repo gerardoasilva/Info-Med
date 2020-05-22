@@ -26,7 +26,7 @@ struct APIRequest {
     }
     
     // HTTP Request to server with endpoint
-    func faq(_ queryToSolve: Message, completion: @escaping(Result<Response, APIError>) -> Void) {
+    func faq(_ queryToSolve: Query, completion: @escaping(Result<Response, APIError>) -> Void) {
         print("Executing request")
         
         do {

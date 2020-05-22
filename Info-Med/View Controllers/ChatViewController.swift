@@ -27,6 +27,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var activeField: UITextField!
     var bubblesList: [Bubble]! //list of chat bubbles were new bubbles are pushed to
     
+    var contexts: [Context] = [Context]()// Context array to store contexts from intent responses
+    
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0         //the inner view offset, must correspond to the accumulated height
     var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
@@ -215,24 +217,37 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     func prepareRequest() {
         print("Preparing request")
         
-        // Define the URL to request to
-        let userID = "12345" // This is going to have the actual UID
-        
-        // User's text input is valid
-        if let text = tfInput.text {
+        // Validate that the user's query is valid
+        if let query = tfInput.text {
             
-            let queryToSolve = Message(text: text, sender: "user")
-            let getRequest = APIRequest(endpoint: "faq/detectIntent/\(userID)")
+            // Create the query to solve
+            let queryToSolve = Query(query: query, contexts: contexts)
+            
+            // Instantiate an APIRequest object that calls FAQ Agent
+            let getRequest = APIRequest(endpoint: "faq/detectIntent")
             
             //request promise
             getRequest.faq(queryToSolve, completion: { result in
                 switch result {
                 case .success(let response):
+                    
+                    // Store contexts from API response
+                    self.contexts.removeAll()
+                    for context in response.outputContexts {
+                        self.contexts.append(Context(name: context.name, lifespanCount: context.lifespanCount))
+                    }
+                    
+                    print("Contexts self: \(self.contexts)")
+                    
+                    print("FULL RESPONSE: \(response)\n")
+                    print("FULFILLMENT_MESSAGES: \(response.fulfillmentMessages)\n")
+                    print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
+                    print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
+                    
                     //does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         self.displayResponse(msg: response.fulfillmentText)
-                    }                    
-                    print("RESPUESTA :::: \(response.fulfillmentText)")
+                    }
                     
                 case .failure(let error):
                     print("An error occured \(error).")
