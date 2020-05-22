@@ -14,5 +14,6 @@ struct Constants {
     struct Storyboard {
         
         static let chatViewController = "ChatVC"
+        static let loginViewController = "LoginVC"
     }
 }

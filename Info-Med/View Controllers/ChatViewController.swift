@@ -170,15 +170,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             // Sign out user
             try Auth.auth().signOut()
             
-            // Missing implemtation of returning to LoginViewController
-            
-            // Failed attempts:
-            
-            //self.navigationController?.popViewController(animated: true)
-            //popViewController()
-            //self.dismiss(animated: true, completion: nil)
-            //let navController = UINavigationController(rootViewController: LoginViewController())
-            //self.present(navController, animated: true, completion: nil)
+            // Go to LoginViewController
+            let loginViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.loginViewController) as? LoginViewController
+            let navController = UINavigationController(rootViewController: loginViewController!)
+            view.window?.rootViewController = navController
+            view.window?.makeKeyAndVisible()
         }
         catch let error {
             print("Failed to sign out. Error: ", error)
