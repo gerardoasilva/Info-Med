@@ -159,8 +159,10 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     // Transitions view to chat
     func transitionToChatVC() {
         let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
+        //adds a nav controler to the newly instantiated view so that the side menu is visible
+        let navController = UINavigationController(rootViewController: chatViewController!)
         
-        view.window?.rootViewController = chatViewController
+        view.window?.rootViewController = navController
         view.window?.makeKeyAndVisible()
     }
 
