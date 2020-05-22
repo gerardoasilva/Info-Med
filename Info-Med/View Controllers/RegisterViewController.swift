@@ -146,7 +146,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                 }
             }
             
-            
         }
     }
     
@@ -159,8 +158,10 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     // Transitions view to chat
     func transitionToChatVC() {
         let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
+        let navController = UINavigationController(rootViewController: chatViewController!)
         
-        view.window?.rootViewController = chatViewController
+        view.window?.rootViewController = navController
+        //view.window?.rootViewController = chatViewController
         view.window?.makeKeyAndVisible()
     }
 

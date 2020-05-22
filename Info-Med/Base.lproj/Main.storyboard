@@ -10,7 +10,7 @@
         <!--Login View Controller-->
         <scene sceneID="fU5-s5-Tel">
             <objects>
-                <viewController id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginVC" id="dkt-nE-AGt" customClass="LoginViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MRO-p7-ojo" userLabel="View" customClass="Log">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,6 +219,7 @@
                                 <action selector="backTapped:" destination="NLP-fp-dDt" id="hcd-bu-NTi"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Sign out" id="Bzx-Q1-T0d"/>
                     </navigationItem>
                     <connections>
                         <outlet property="lbError" destination="mF5-di-2AF" id="HWn-Ff-CjP"/>

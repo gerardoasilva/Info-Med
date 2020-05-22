@@ -31,6 +31,37 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
     }
     
+    // Verify user authentication when view appears
+    override func viewWillAppear(_ animated: Bool) {
+        // Check user's authentication status
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+            // If user is logged in go to ChatViewController
+            if user != nil {
+                self.transitionToChatVC()
+            }
+            else {
+                print("Login needed\n")
+            }
+        }
+    }
+    
+    /*
+    func authenticateUser(){
+        // Check
+        if Auth.auth().currentUser == nil {
+            DispatchQueue.main.async {
+                print("login\n")
+                
+                //print(Auth.auth().currentUser?.email))
+                self.transitionToChatVC()
+            }
+        }
+        else {
+            print("Login required \n")
+        }
+    }
+ */
+    
     // Hides keyboard when user taps away from keyboard
     @IBAction func dismissKeyboard() {
         view.endEditing(true)
@@ -66,7 +97,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // Validate fields
         let error = validateFields()
-        
 
         if error != nil {
             

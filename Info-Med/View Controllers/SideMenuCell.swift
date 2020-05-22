@@ -11,6 +11,7 @@ import UIKit
 /// a cell that belongs to the side menu
 class SideMenuCell: UITableViewCell {
     
+    
     //the cell label
     let descritionLabel: UILabel = { //construct label
         let label = UILabel()
