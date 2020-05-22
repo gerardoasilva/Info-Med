@@ -55,6 +55,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Is the first bubble
         if bubblesList == nil{
             bubblesList = [bbl]
+            acumulatedHeight += bbl.padd
+            messageScrollView.contentSize.height = CGFloat(acumulatedHeight) //adds initial padd
         }
         // Not the first bubble
         else {
@@ -64,37 +66,50 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Store the height added by bubble, plus spacing, in the view
         let addedHeight = Int(bbl.frame.height) + bbl.padd
         // Set position to bubble added
-        bbl.setY(y: CGFloat(acumulatedHeight + bbl.padd))
+        bbl.setY(y: CGFloat(acumulatedHeight))
         // Update the accumulated height for later view scroll size update
         acumulatedHeight += addedHeight
         // Add view with bubble to scroll view
         messageScrollView.addSubview(bbl)
         // Update size of scroll view's content
-        messageScrollView.contentSize.height = CGFloat(acumulatedHeight)
+        messageScrollView.contentSize.height = CGFloat(acumulatedHeight )
         
         // Check if content is larger than scroll view's actual height
-        if CGFloat(acumulatedHeight + bbl.padd) > messageScrollView.frame.height {
+        if CGFloat(messageScrollView.contentSize.height) >= messageScrollView.frame.height {
             // Add height to offset
             offsetAccum += addedHeight
         }
+        print("frame: ", messageScrollView.frame.height)
+        print("CS: ", messageScrollView.contentSize.height)
+        print("VS: ", messageScrollView.visibleSize.height)
+        print("AH: ", acumulatedHeight)
+        print("OffsetAcc: ", offsetAccum)
     }
        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tfInput.delegate = self
-        
         // Assign return key type to textfield
         self.tfInput.returnKeyType = UIReturnKeyType.send
+        
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         // Sets size of view
-        messageScrollView.frame = CGRect(x: messageScrollView.frame.origin.x, y: messageScrollView.frame.origin.y, width: messageScrollView.frame.width, height: view.frame.height - 100)
+        /*messageScrollView.frame = CGRect(
+            x: messageScrollView.frame.origin.x,
+            y: messageScrollView.frame.origin.y,
+            width: messageScrollView.frame.width,
+            height: view.frame.height - 100)*/
+        
         // Sets original position of toolbar
         toolBarOriginalFrame = inputToolBar.frame
         
-//        print(messageScrollView.frame.height)
-//        print(messageScrollView.contentSize.height)
-//        print(messageScrollView.visibleSize.height)
+        print("frame: ", messageScrollView.frame.height)
+        print("CS: ", messageScrollView.contentSize.height)
+        print("VS: ", messageScrollView.visibleSize.height)
+        print("AH: ", acumulatedHeight)
+        print("OffsetAcc: ", offsetAccum)
+        
         configureNavBar()
         
         // Add notification observers for keyboard shown and hidden
@@ -295,7 +310,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
             //for testing only
-            addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
+            //addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
             
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
             prepareRequest() //does the server request
