@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import FirebaseAuth
 
 public struct FAQ: Codable {
     var textInput: String
@@ -140,6 +141,49 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     func configureNavBar(){
         let button = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburgerMenu70Pad").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
+        
+        // Temporary button for signing out
+        let signOutButton = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(handleSignOut))
+        navigationItem.rightBarButtonItem = signOutButton
+    }
+    
+    // Show alert to end session with user
+    @objc func handleSignOut() {
+        // Create alert for sign out
+        let alertController = UIAlertController(title: nil, message: "¿Seguro que quieres cerrar sesión?", preferredStyle: .actionSheet)
+        
+        // Add option to sign out in alert
+        alertController.addAction(UIAlertAction(title: "Cerrar sesion", style: .destructive, handler: { (_) in
+            self.signOut()
+        }))
+        
+        // Add option to cancel in alert
+        alertController.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
+        
+        // Display alert
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    // End session and return to loginVewController
+    func signOut(){
+        do {
+            // Sign out user
+            try Auth.auth().signOut()
+            
+            // Missing implemtation of returning to LoginViewController
+            
+            // Failed attempts:
+            
+            //self.navigationController?.popViewController(animated: true)
+            //popViewController()
+            //self.dismiss(animated: true, completion: nil)
+            //let navController = UINavigationController(rootViewController: LoginViewController())
+            //self.present(navController, animated: true, completion: nil)
+        }
+        catch let error {
+            print("Failed to sign out. Error: ", error)
+        }
+        
     }
     
     //gets called when pressing the navbar hamburger button

@@ -219,6 +219,7 @@
                                 <action selector="backTapped:" destination="NLP-fp-dDt" id="hcd-bu-NTi"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Sign out" id="Bzx-Q1-T0d"/>
                     </navigationItem>
                     <connections>
                         <outlet property="lbError" destination="mF5-di-2AF" id="HWn-Ff-CjP"/>
