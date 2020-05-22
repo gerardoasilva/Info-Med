@@ -294,6 +294,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
          if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
+            //for testing only
+            addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
+            
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
             prepareRequest() //does the server request
         }

@@ -17,8 +17,8 @@ class Bubble: UITextView {
         //
         let initX = CGFloat(padd)
         let initY = CGFloat(padd)
-        let initW = view.frame.width - CGFloat(padd * 2) //initial width is view width - padding
-        let initH = CGFloat(100)
+        let initW = view.frame.width
+        let initH = CGFloat(40)
                 
         let dimensions = CGRect(x: initX, y: initY, width: initW, height: initH)
         
@@ -27,6 +27,8 @@ class Bubble: UITextView {
         
         self.msg = msg
         self.text = msg.text
+        
+        //------------------------------------------
         
         adjustHeight()
         
@@ -44,8 +46,6 @@ class Bubble: UITextView {
             }else{
                 x = view.frame.width - CGFloat(padd) - frame.width
             }
-            
-            
         }else{
             self.backgroundColor = .lightGray
             self.textColor = UIColor.black
@@ -54,7 +54,11 @@ class Bubble: UITextView {
                 newW = CGFloat(limit - CGFloat(padd))
             }
         }
+        
         self.frame = CGRect(x: x, y: frame.origin.y, width: newW , height: frame.height)
+        //set bubble height to content (text) size
+        self.frame = CGRect(x: x, y: frame.origin.y, width: newW , height: self.contentSize.height)
+        self.isScrollEnabled = false
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -93,7 +97,7 @@ class Bubble: UITextView {
     func adjustHeight(){
         self.translatesAutoresizingMaskIntoConstraints = true
         self.sizeToFit()
-        self.isScrollEnabled = false
+        //self.isScrollEnabled = false
     }
     
     func setY(y: CGFloat){
