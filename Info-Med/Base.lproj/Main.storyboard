@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ido-Wz-N7d">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ido-Wz-N7d">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -90,21 +90,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgn-bg-pGp">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgn-bg-pGp">
                                 <rect key="frame" x="0.0" y="84" width="414" height="734"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <gestureRecognizers/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="PNm-OK-xp9"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="ci8-ss-ICS"/>
                             </scrollView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ent-pP-myu">
-                                <rect key="frame" x="0.0" y="818" width="414" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ent-pP-myu">
+                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <gestureRecognizers/>
                                 <items>
                                     <barButtonItem style="plain" id="ilZ-5G-OFW">
                                         <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" textAlignment="natural" minimumFontSize="17" id="rHW-Pa-PEX">
-                                            <rect key="frame" x="20" y="5" width="278" height="34"/>
+                                            <rect key="frame" x="20" y="10" width="278" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
@@ -112,7 +110,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="Dxp-Du-2E1">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1j9-st-zH6">
-                                            <rect key="frame" x="344" y="5" width="50" height="34"/>
+                                            <rect key="frame" x="344" y="10" width="50" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <state key="normal" title="Enviar"/>
@@ -126,6 +124,16 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="ent-pP-myu" firstAttribute="top" secondItem="dgn-bg-pGp" secondAttribute="bottom" id="0oo-mg-DRW"/>
+                            <constraint firstItem="dgn-bg-pGp" firstAttribute="top" secondItem="O1k-k1-qC2" secondAttribute="top" id="Keq-oY-5Ve"/>
+                            <constraint firstItem="dgn-bg-pGp" firstAttribute="trailing" secondItem="O1k-k1-qC2" secondAttribute="trailing" id="Kky-vl-pW2"/>
+                            <constraint firstItem="ent-pP-myu" firstAttribute="leading" secondItem="O1k-k1-qC2" secondAttribute="leading" id="bex-ze-mzi"/>
+                            <constraint firstItem="ent-pP-myu" firstAttribute="top" secondItem="dgn-bg-pGp" secondAttribute="bottom" id="c4z-kf-PuU"/>
+                            <constraint firstItem="ent-pP-myu" firstAttribute="trailing" secondItem="O1k-k1-qC2" secondAttribute="trailing" id="dsO-Cc-0m4"/>
+                            <constraint firstItem="ent-pP-myu" firstAttribute="bottom" secondItem="O1k-k1-qC2" secondAttribute="bottom" id="h7e-eB-JMp"/>
+                            <constraint firstItem="dgn-bg-pGp" firstAttribute="leading" secondItem="O1k-k1-qC2" secondAttribute="leading" id="lg0-Tc-hd3"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="O1k-k1-qC2"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="2CK-Gc-zRE" appends="YES" id="NPK-Dc-2dk"/>
@@ -254,10 +262,10 @@
             <point key="canvasLocation" x="3404" y="-66"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="chevron.left" catalog="system" width="48" height="64"/>
-    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="sRf-fZ-eZB"/>
     </inferredMetricsTieBreakers>
+    <resources>
+        <image name="chevron.left" catalog="system" width="96" height="128"/>
+    </resources>
 </document>
