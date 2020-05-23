@@ -37,7 +37,13 @@ struct Response: Decodable {
         var name: String
         var lifespanCount: Int
     }
+    
+    struct Intent: Decodable {
+        var displayName: String
+        var isFallback: Bool
+    }
     var fulfillmentMessages: [FulfillmentMessages]
     var outputContexts: [Context]
+    var intent: [Intent]
     var fulfillmentText: String
 }
