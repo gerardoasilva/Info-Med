@@ -24,8 +24,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var inputToolBar: UIToolbar!
     
     // Variables
-    var menuView: UIView! //side menu view controller
+    var menuView: UIView! // Side menu view controller
     var isMenuHidden = true
+    var darkView: UIView!
 
     var menuLimit: CGFloat!
     
@@ -56,23 +57,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         messageScrollView.alwaysBounceVertical = true
-        // Sets size of view
-        /*messageScrollView.frame = CGRect(
-            x: messageScrollView.frame.origin.x,
-            y: messageScrollView.frame.origin.y,
-            width: messageScrollView.frame.width,
-            height: view.frame.height - 100)*/
         
         // Gets original position of toolbar
         if toolBarOriginalFrame == nil {
             toolBarOriginalFrame = inputToolBar.frame
         }
-
-//        print("frame: ", messageScrollView.frame.height)
-//        print("CS: ", messageScrollView.contentSize.height)
-//        print("VS: ", messageScrollView.visibleSize.height)
-//        print("AH: ", acumulatedHeight)
-//        print("OffsetAcc: ", offsetAccum)
         
         if menuView == nil {
             createSideMenu()
@@ -85,7 +74,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             // Configure initial chat
             startConversation()
         }
-                
+        
+        // Create gestures
+        let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
+        
+        // Add gesture to view
+        darkView.addGestureRecognizer(closeMenuTap)
+        
         // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -120,11 +115,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
         menuView = MenuView(labels: labels, icons: icons)
         
-        // Set menu dimensions and position
-        menuView.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
+        // Create dark view
+        darkView = UIView()
+        
+        // Set menuView and darkViewdimensions and position
+        menuView.frame = CGRect(x: -UIScreen.main.bounds.width, y: 0, width: menuWidth, height: self.view.frame.height)
+        darkView.frame = CGRect(x: -menuWidth, y: 0, width: menuLimit, height: self.view.frame.height)
         
         // Add subview of menu to ChatViewController
         view.addSubview(menuView)
+        view.addSubview(darkView)
+        
+        // DarkView style
+        darkView.backgroundColor = .black
+        darkView.alpha = 0
         menuView.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -137,7 +141,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     //gets called when pressing the navbar hamburger button
-    @objc func handleMenuToggle(){
+    @objc func handleMenuToggle(_ sender: UITapGestureRecognizer? = nil){
         toggleMenuController()
     }
 
@@ -149,11 +153,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     func toggleMenuController(){
         // Show menu
         if isMenuHidden {
+            
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                
                 // Slide chat content to the right
+                self.view.endEditing(true)
                 self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - self.menuLimit
                 self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
                 self.menuView.frame.origin.x = 0
+                self.menuView.layer.shadowOpacity = 1
+                self.darkView.frame.origin.x = self.menuView.frame.width
+                self.darkView.alpha = 0.35
+                self.darkView.isUserInteractionEnabled = true
             }, completion: nil)
         }
         // Hide menu
@@ -162,7 +173,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
-                self.menuView.frame.origin.x = -self.menuView.frame.width
+                self.menuView.frame.origin.x = -self.menuView.frame.width - self.darkView.frame.width
+                self.menuView.layer.shadowOpacity = 0
+                self.darkView.frame.origin.x = -self.menuLimit
+                self.darkView.alpha = 0
+                self.darkView.isUserInteractionEnabled = false
             }, completion: nil)
         }
         
@@ -275,8 +290,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         send()
     }
     
-    //tap action anywere on the view controller
-    @IBAction func tapAction(_ sender: Any) {
+    // Tap handler to
+    @IBAction func handleTap(_ sender: Any) {
         // Hide keyboard
         view.endEditing(true)
         
@@ -479,10 +494,10 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         let widthMenu = screenWidth/4*3
         self.backgroundColor = .red
         // Shadow
-//        self.layer.shadowColor = UIColor.black.cgColor
-//        self.layer.shadowOpacity = 1
-//        self.layer.shadowOffset = .zero
-//        self.layer.shadowRadius = 10
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0
+        self.layer.shadowOffset = .zero
+        self.layer.shadowRadius = 10
         tableView = UITableView(frame: CGRect(x: 0, y: 0, width: widthMenu, height: screenHeight))
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
