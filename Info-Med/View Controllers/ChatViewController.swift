@@ -24,7 +24,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var inputToolBar: UIToolbar!
     
     // Variables
-    var menuController: UIViewController! //side menu view controller
+    var menuView: UIView! //side menu view controller
     var isMenuHidden = true
 
     var menuLimit: CGFloat!
@@ -74,7 +74,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 //        print("AH: ", acumulatedHeight)
 //        print("OffsetAcc: ", offsetAccum)
         
-        if menuController == nil {
+        if menuView == nil {
             createSideMenu()
         }
         
@@ -113,21 +113,27 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     // This function creates the viewcontroller for the side menu
     func createSideMenu() {
         // Set menu's width
-        let menuWidth =  messageScrollView.frame.width - menuLimit
+        let menuWidth =  UIScreen.main.bounds.width - menuLimit
         
         // Create sideMenu ViewController
-        let labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial"]
+        let labels = ["Mi cuenta", "Preguntas COVID-19", "Cuestionario médico", "Historial"]
         let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
-        menuController = MenuController(labels: labels, icons: icons)
+        menuView = MenuView(labels: labels, icons: icons)
         
         // Set menu dimensions and position
-        menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
+        menuView.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
         
         // Add subview of menu to ChatViewController
-        view.insertSubview(menuController.view, at: 0)
-        addChild(menuController)
-        menuController.didMove(toParent: self)
-        print("Added menu controller to ChatViewController")
+        view.addSubview(menuView)
+        menuView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        /*
+         
+         /// FALTA AGREGAR CONSTRAINTS
+         
+         */
+        print("Added menu view to ChatViewController")
     }
     
     //gets called when pressing the navbar hamburger button
@@ -147,7 +153,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 // Slide chat content to the right
                 self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - self.menuLimit
                 self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
-                self.menuController.view.frame.origin.x = 0
+                self.menuView.frame.origin.x = 0
             }, completion: nil)
         }
         // Hide menu
@@ -156,7 +162,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
-                self.menuController.view.frame.origin.x = -self.menuController.view.frame.width
+                self.menuView.frame.origin.x = -self.menuView.frame.width
             }, completion: nil)
         }
         
@@ -429,3 +435,85 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 }
 
 
+class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
+    
+    var tableView = UITableView()
+    var reuseIdentifier = "cell"
+    
+    let screenHeight = UIScreen.main.bounds.height
+    let screenWidth = UIScreen.main.bounds.width
+    
+    // Table data
+    var labels: [String]!
+    var icons: [UIImage]!
+    
+    // Constructor for UIView subclass
+    init(labels: [String], icons: [UIImage]) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        setupViews()
+        self.labels = labels
+        self.icons = icons
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        
+        
+        //tableView Constrains
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+//        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+//        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+//        tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+//        tableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+    }
+    
+    func setupViews() {
+        let widthMenu = screenWidth/4*3
+        self.backgroundColor = .red
+        // Shadow
+//        self.layer.shadowColor = UIColor.black.cgColor
+//        self.layer.shadowOpacity = 1
+//        self.layer.shadowOffset = .zero
+//        self.layer.shadowRadius = 10
+        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: widthMenu, height: screenHeight))
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 80
+//        tableView.isScrollEnabled = false
+        tableView.alwaysBounceVertical = false
+        self.addSubview(tableView)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        labels.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
+        cell.descritionLabel.text = labels[indexPath.row]
+        cell.iconImageView.image = icons[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Finish segue implementation here
+        switch indexPath.row {
+        case 0:
+            print("Ir a mi cuenta")
+        case 1:
+            print("Ir a bot covid")
+        case 2:
+            print("Ir a Historial")
+        default:
+            print("Default")
+        }
+    }
+}
