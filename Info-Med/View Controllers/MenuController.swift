@@ -17,13 +17,17 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var table : UITableView!
     var reuseIdentifier = "cell"
     
+    var heightViewController: CGFloat! // height of view controller
+    
     //table data
     var labels : [String]!
-    var icons : [UIImage]!
+    var icons : [UIImage?]!
+    var heightToolbar: CGFloat!
     
-    init(labels: [String], icons: [UIImage]) {
+    init(labels: [String], icons: [UIImage?], heightToolbar: CGFloat) {
         self.labels = labels
         self.icons = icons
+        self.heightToolbar = heightToolbar
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -34,6 +38,10 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // height of view controller
+        heightViewController = self.view.frame.size.height
+        print("heightViewController: ",heightViewController!)
         
         //initialize table
         table = UITableView()
@@ -57,6 +65,15 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
 //        icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
     }
     
+    /*
+     *  Height of status bar + navigation bar (if navigation bar exist)
+    */
+    var topbarHeight: CGFloat {
+        return (view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
+                (self.navigationController?.navigationBar.frame.height ?? 0.0)
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         labels.count
     }
@@ -68,6 +85,16 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        //table.rowHeight
+        if (indexPath.row == 4){
+            print("barH: ", topbarHeight)
+            print("toolH: ", heightToolbar ?? 0.0)
+            return heightViewController - (table.rowHeight * 5) - heightToolbar - topbarHeight
+        }
+        return 80;
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //Finish segue implementation here
         switch indexPath.row {
@@ -76,7 +103,11 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 1:
             print("Ir a bot covid")
         case 2:
+            print("Ir a Cuestionario médico")
+        case 3:
             print("Ir a Historial")
+        case 4:
+            print("Empty")
         default:
             print("Default")
         }

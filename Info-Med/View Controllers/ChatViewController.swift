@@ -102,9 +102,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         let menuWidth =  messageScrollView.frame.width - menuLimit
         
         // Create sideMenu ViewController
-        let labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial"]
-        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
-        menuController = MenuController(labels: labels, icons: icons)
+        let labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial", "", "Cerrar sesión"]
+        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!, nil, nil]
+        let heightToolbar = inputToolBar.frame.height
+        menuController = MenuController(labels: labels, icons: icons, heightToolbar: heightToolbar)
+       // menuController = MenuController(labels: labels, icons: icons)
         
         // Set menu dimensions and position
         menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
