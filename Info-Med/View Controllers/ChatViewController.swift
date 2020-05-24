@@ -10,10 +10,6 @@ import UIKit
 import AVFoundation
 import FirebaseAuth
 
-public struct FAQ: Codable {
-    var textInput: String
-}
-
 public enum Agent: String {
     case faq = "faq"
     case questionnaire = "questionnaire"
@@ -40,7 +36,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
-    var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
+    var toolBarOriginalFrame: CGRect! //the original position of the toolbar
     
     // Vars for agents
     var actualAgent: Agent = .faq
@@ -68,22 +64,28 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             height: view.frame.height - 100)*/
         
         // Gets original position of toolbar
-        toolBarOriginalFrame = inputToolBar.frame
-        
+        if toolBarOriginalFrame == nil {
+            toolBarOriginalFrame = inputToolBar.frame
+        }
+
 //        print("frame: ", messageScrollView.frame.height)
 //        print("CS: ", messageScrollView.contentSize.height)
 //        print("VS: ", messageScrollView.visibleSize.height)
 //        print("AH: ", acumulatedHeight)
 //        print("OffsetAcc: ", offsetAccum)
         
-        createSideMenu()
+        if menuController == nil {
+            createSideMenu()
+        }
         
         // Add sideMenu button to Navbar
         configureNavBar()
         
-        // Configure initial chat
-        startConversation()
-        
+        if isNewChat {
+            // Configure initial chat
+            startConversation()
+        }
+                
         // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
