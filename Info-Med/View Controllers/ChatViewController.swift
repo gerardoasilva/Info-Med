@@ -69,7 +69,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - NAVIGATION
     func configureNavBar(){
-        let button = UIBarButtonItem(image:  #imageLiteral(resourceName: "hamburgerMenu70Pad").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
+        let button = UIBarButtonItem(image:  #imageLiteral(resourceName: "hamburgerMenu").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
         
         // Temporary button for signing out
