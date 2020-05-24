@@ -5,7 +5,6 @@
 //  Created by user168593 on 4/21/20.
 //  Copyright © 2020 Tecnológico de Monterrey. All rights reserved.
 // something
-
 import UIKit
 import AVFoundation
 import FirebaseAuth
@@ -72,7 +71,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         if isNewChat {
             // Configure initial chat
-            startConversation()
+            //startConversation()
+        startConversation(notification: nil)
+
         }
         
         // Create gestures
@@ -84,9 +85,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        
-        
+
+    // Register to listen notification for menu option 'Cuestionario"
+    NotificationCenter.default.addObserver(self, selector: #selector(startConversation(notification:)), name: MenuView.notificationQuestionnaire, object: nil)
     }
     
     // MARK: - NAVIGATION
@@ -114,9 +115,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         let menuWidth =  UIScreen.main.bounds.width - menuLimit
         
         // Create sideMenu ViewController
-        let labels = ["Mi cuenta", "Preguntas COVID-19", "Cuestionario médico", "Historial"]
-        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
-        menuView = MenuView(labels: labels, icons: icons)
+        let labels = ["Mi cuenta", "Preguntas COVID-19", "Cuestionario médico", "Historial", "", "Cerrar sesión"]
+        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!, nil, nil]
+        let heightToolbar = inputToolBar.frame.height
+        let heightNavigationbar = self.navigationController?.navigationBar.frame.height ?? 0.0
+        let heightStatusbar = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0
+        menuView = MenuView(labels: labels, icons: icons, heightToolbar: heightToolbar, heightNavigationbar : heightNavigationbar, heightStatusbar:heightStatusbar)
         
         // Create dark view
         darkView = UIView()
@@ -189,14 +193,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - CHAT
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
-    //func startConversation() {
-    @objc func startConversation(notification: Notification?) { 
-        //print(notification?.userInfo! as Any)
+    @objc func startConversation(notification: Notification?) {
         
         // Get indexPath.row
         let index = (notification?.userInfo) as? [String: Int]
-        print("Menu option: ",index)
-        
+        print("Menu option: ",index as Any)
+
         switch actualAgent {
         case .faq:
             prepareRequest(userInput: "Hola", agent: .faq)
@@ -467,17 +469,28 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     let screenHeight = UIScreen.main.bounds.height
     let screenWidth = UIScreen.main.bounds.width
-    
+
+    var heightViewController: CGFloat! // height of view controller
+    var messageScrollHeight: CGFloat!
     // Table data
     var labels: [String]!
-    var icons: [UIImage]!
+    var icons: [UIImage?]!
+    var heightToolbar: CGFloat! // height of toolbar
+    var heightNavigationbar: CGFloat! //height of navigationbar
+    var heightStatusbar: CGFloat! // height of statusbar
+
+    // Notification for Menu Option of Questionnaire
+    static let notificationQuestionnaire = Notification.Name("UserSelectedQuestionnaire")
     
     // Constructor for UIView subclass
-    init(labels: [String], icons: [UIImage]) {
+    init(labels: [String], icons: [UIImage?], heightToolbar: CGFloat, heightNavigationbar: CGFloat, heightStatusbar: CGFloat) {
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         setupViews()
         self.labels = labels
         self.icons = icons
+        self.heightToolbar = heightToolbar
+        self.heightNavigationbar = heightNavigationbar
+        self.heightStatusbar = heightStatusbar
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
@@ -502,6 +515,11 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func setupViews() {
         let widthMenu = screenWidth/4*3
+
+        // height of view controller
+        heightViewController = UIScreen.main.bounds.height
+        print("heightViewController: ",heightViewController!)
+
         self.backgroundColor = .red
         // Shadow
         self.layer.shadowColor = UIColor.black.cgColor
@@ -516,7 +534,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.alwaysBounceVertical = false
         self.addSubview(tableView)
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         labels.count
     }
@@ -527,6 +545,17 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell.iconImageView.image = icons[indexPath.row]
         return cell
     }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if (indexPath.row == 4){
+            print("heightNavbar: ", heightNavigationbar ?? 0.0)
+            print("heightStatuslbar: ", heightStatusbar ?? 0.0)
+            let heightTableRows = tableView.rowHeight * 5
+            let topBar = heightNavigationbar + heightStatusbar
+            return heightViewController - heightTableRows - heightToolbar - topBar
+        }
+        return 80;
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //Finish segue implementation here
@@ -536,7 +565,15 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         case 1:
             print("Ir a bot covid")
         case 2:
+            print("Ir a cuestionario")
+            // Post notification of user clicking the Questionnaire menu option in NotificationCenter
+            NotificationCenter.default.post(name: MenuView.notificationQuestionnaire, object: nil, userInfo:["indexPath.row": 2])
+        case 3:
             print("Ir a Historial")
+        case 4:
+            print("Empty")
+        case 5:
+            print("Cerrar sesión")
         default:
             print("Default")
         }
