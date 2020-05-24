@@ -24,6 +24,12 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var icons : [UIImage?]!
     var heightToolbar: CGFloat!
     
+    // Notification for Menu Option of Questionnaire chat
+    static let notificationQuestionnaire = Notification.Name("UserSelectedQuestionnaire")
+    
+    // Notification for MEnu Option of signing out
+    static let notificationSignOut = Notification.Name("UserSelectedSignOut")
+    
     init(labels: [String], icons: [UIImage?], heightToolbar: CGFloat) {
         self.labels = labels
         self.icons = icons
@@ -104,10 +110,17 @@ class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSour
             print("Ir a bot covid")
         case 2:
             print("Ir a Cuestionario médico")
+            // Post notification of user clicking the Questionnaire menu option in NotificationCenter
+        NotificationCenter.default.post(name: MenuController.notificationQuestionnaire, object: nil, userInfo:["indexPath.row": 2])
+
         case 3:
             print("Ir a Historial")
         case 4:
             print("Empty")
+        case 5:
+            print("SignOut")
+            // Post notification of user clicking the Questionnaire menu option in NotificationCenter
+            NotificationCenter.default.post(name: MenuController.notificationSignOut, object: nil, userInfo:["indexPath.row": 5])
         default:
             print("Default")
         }

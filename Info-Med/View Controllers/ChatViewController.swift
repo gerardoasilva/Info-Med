@@ -81,12 +81,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Add sideMenu button to Navbar
         configureNavBar()
         
+        // Register to listen notification for menu option 'Cuestionario"
+        NotificationCenter.default.addObserver(self, selector: #selector(startConversation(notification:)), name: MenuController.notificationQuestionnaire, object: nil)
+        
+        
+        
         // Configure initial chat
-        startConversation()
+        startConversation(notification: nil)
         
         // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        
+        
     }
     
     // MARK: - NAVIGATION
@@ -165,7 +173,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - CHAT
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
-    func startConversation() {
+    //func startConversation() {
+    @objc func startConversation(notification: Notification?) { 
+        //print(notification?.userInfo! as Any)
+        
+        // Get indexPath.row
+        let index = (notification?.userInfo) as? [String: Int]
+        print("Menu option: ",index)
+        
         switch actualAgent {
         case .faq:
             prepareRequest(userInput: "Hola", agent: .faq)
