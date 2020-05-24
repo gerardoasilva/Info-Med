@@ -29,7 +29,7 @@ class MenuController: UIViewController {
         table.delegate = self
         table.dataSource = self
         table.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier) //register cells of type SideMenuCell using reuse identifier
-        table.backgroundColor = .darkGray
+        table.backgroundColor = .white
         table.separatorStyle = .none
         table.rowHeight = 80
         
@@ -42,8 +42,8 @@ class MenuController: UIViewController {
         table.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
         //initialize table data
-        labels = ["Mi cuenta", "Bot Covid-19", "Historial"]
-        icons = []
+        labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial"]
+        icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
     }
 }
 
@@ -55,8 +55,7 @@ extension MenuController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
         cell.descritionLabel.text = labels[indexPath.row]
-        //add some icons and the uncomment
-        //cell.iconImageView.image = icons[indexPath.row]
+        cell.iconImageView.image = icons[indexPath.row]
         return cell
     }
     
