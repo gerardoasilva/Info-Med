@@ -14,6 +14,11 @@ public struct FAQ: Codable {
     var textInput: String
 }
 
+public enum Agent: String {
+    case faq = "faq"
+    case questionnaire = "questionnaire"
+}
+
 class ChatViewController: UIViewController, UITextFieldDelegate {
     
     // Outlets
@@ -25,7 +30,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     // Variables
     var menuController: UIViewController! //side menu view controller
     var isMenuHidden = true
-//    let menuLimit = 130
+
     var menuLimit: CGFloat!
     
     var activeField: UITextField!
@@ -36,6 +41,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
     var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
+    
+    // Vars for agents
+    var actualAgent: Agent = .faq
+    var isNewChat = true
     
     
     override func viewDidLoad() {
@@ -71,6 +80,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         // Add sideMenu button to Navbar
         configureNavBar()
+        
+        // Configure initial chat
+        startConversation()
         
         // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -150,6 +162,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
 
     // MARK: - CHAT
+    // This function initializes the conversation with the chatbot depending on the agent chosen by the user
+    func startConversation() {
+        switch actualAgent {
+        case .faq:
+            prepareRequest(userInput: "Hola", agent: .faq)
+        default:
+            prepareRequest(userInput: "Iniciar cuestionario", agent: .questionnaire)
+        }
+        
+    }
+    
     /// This function displays a message bubble from agent in messageScrollView
     ///
     /// ```
@@ -268,7 +291,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
      }
      }*/
     
-    //when the user tries to send a message
+    // This function is called when the user sends a message to add bubble to the screen and make the request to Dialogflow
     func send(){
         if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
@@ -277,7 +300,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             //addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
             
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-            prepareRequest() //does the server request
+            prepareRequest(userInput: tfInput.text!, agent: actualAgent) //does the server request
         }
         
         tfInput.text = ""
@@ -286,17 +309,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     // MARK: - HTTP REQUEST
     
     // This function prepares an HTTP request to the server that calls Dialogflow´s API
-    func prepareRequest() {
+    func prepareRequest(userInput: String!, agent: Agent!) {
         print("Preparing request")
         
         // Validate that the user's query is valid
-        if let query = tfInput.text {
+        if let query = userInput {
             
             // Create the query to solve
             let queryToSolve = Query(query: query, contexts: contexts)
             
             // Instantiate an APIRequest object that calls FAQ Agent
-            let getRequest = APIRequest(endpoint: "faq/detectIntent")
+            let getRequest = APIRequest(endpoint: "\(agent.rawValue)/detectIntent")
             
             // Request promise
             getRequest.response(queryToSolve, completion: { result in
@@ -327,7 +350,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 }
             })
         }
-            // text input is invalid
+        // Text input is invalid, do nothing
         else {
             return
         }
