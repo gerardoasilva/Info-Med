@@ -8,15 +8,17 @@
 
 import UIKit
 
-/// a cell that belongs to the side menu
+// This is a class for the cells that the dideMenu contains
 class SideMenuCell: UITableViewCell {
     
     
-    //the cell label
-    let descritionLabel: UILabel = { //construct label
+    // Create cell label
+    let descritionLabel: UILabel = { // Label constructor
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 18)
+//        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic font size based in system preferences
+        label.adjustsFontForContentSizeCategory = true // Updates on system preference changes of font size
         label.text = "" //test sample text
         return label
     }()

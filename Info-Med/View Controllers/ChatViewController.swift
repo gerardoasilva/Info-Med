@@ -16,14 +16,17 @@ public struct FAQ: Codable {
 
 class ChatViewController: UIViewController, UITextFieldDelegate {
     
+    // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
     @IBOutlet weak var tfInput: UITextField!
     @IBOutlet weak var btSend: UIButton!
     @IBOutlet var inputToolBar: UIToolbar!
     
-    var menuController : UIViewController! //side menu view controller
-    var shouldExpand = true //if the side menu is expanded or contracted
-    let menuLimit = 130
+    // Variables
+    var menuController: UIViewController! //side menu view controller
+    var isMenuHidden = true
+//    let menuLimit = 130
+    var menuLimit: CGFloat!
     
     var activeField: UITextField!
     var bubblesList: [Bubble]!  //list of chat bubbles were new bubbles are pushed to
@@ -39,11 +42,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         tfInput.delegate = self
         
+        // Set max width side menu can have, is the horizontal space it can't cover
+        menuLimit = self.view.frame.size.width / 4
+        
         // Assign return key type to textfield
         tfInput.returnKeyType = UIReturnKeyType.send
         
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
+        messageScrollView.alwaysBounceVertical = true
         // Sets size of view
         /*messageScrollView.frame = CGRect(
             x: messageScrollView.frame.origin.x,
@@ -51,25 +58,35 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             width: messageScrollView.frame.width,
             height: view.frame.height - 100)*/
         
-        // Sets original position of toolbar
+        // Gets original position of toolbar
         toolBarOriginalFrame = inputToolBar.frame
         
-        print("frame: ", messageScrollView.frame.height)
-        print("CS: ", messageScrollView.contentSize.height)
-        print("VS: ", messageScrollView.visibleSize.height)
-        print("AH: ", acumulatedHeight)
-        print("OffsetAcc: ", offsetAccum)
+//        print("frame: ", messageScrollView.frame.height)
+//        print("CS: ", messageScrollView.contentSize.height)
+//        print("VS: ", messageScrollView.visibleSize.height)
+//        print("AH: ", acumulatedHeight)
+//        print("OffsetAcc: ", offsetAccum)
         
+        
+        // Add sideMenu button to Navbar
         configureNavBar()
         
-        // Add notification observers for keyboard shown and hidden
+        // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - NAVIGATION
     func configureNavBar(){
-        let button = UIBarButtonItem(image:  #imageLiteral(resourceName: "hamburgerMenu").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
+        
+        // Make navbar transparent
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        
+        // Set configuration for menu button image and add button to NavBar
+        let largeConfig = UIImage.SymbolConfiguration(textStyle: .largeTitle)
+        let button = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
         
         // Temporary button for signing out
@@ -83,40 +100,50 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         toggleMenuController()
     }
 
-    /// This function toggles the side menu to show or not
+    /// This function toggles the side menu to show or hide
     /// ```
     /// toggleMenuController() // Toggles the menu
     /// ```
     /// - Returns: Void
     func toggleMenuController(){
-        let menuWidth =  self.messageScrollView.frame.width - CGFloat(menuLimit)
         
-        if menuController == nil && shouldExpand{
+        // Set menu's width
+        let menuWidth =  messageScrollView.frame.width - menuLimit
+        
+        // Create sideMenu ViewController
+        if menuController == nil && isMenuHidden {
             menuController = MenuController()
-            //set menu controller dimensions
+            
+            // Set menu dimensions and position
             menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
             
+            // Add subview of menu to ChatViewController
             view.insertSubview(menuController.view, at: 0)
             addChild(menuController)
             menuController.didMove(toParent: self)
-            print("Did add menu controller")
+            print("Added menu controller to ChatViewController")
         }
         
-        if shouldExpand{ //show menu
+        // Show menu
+        if isMenuHidden {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - CGFloat(self.menuLimit)
+                // Slide chat content to the right
+                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - self.menuLimit
                 self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
                 self.menuController.view.frame.origin.x = 0
             }, completion: nil)
-        }else{
+        }
+        // Hide menu
+        else {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
                 self.menuController.view.frame.origin.x = -menuWidth
             }, completion: nil)
         }
         
-        shouldExpand = !shouldExpand
+        isMenuHidden = !isMenuHidden
     }
 
     // MARK: - CHAT
@@ -219,7 +246,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Hide keyboard
         view.endEditing(true)
         
-        if !shouldExpand{
+        if !isMenuHidden{
             toggleMenuController()
         }
     }
@@ -352,9 +379,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - TEXT FIELD DELEGATES
     
-    //sends a user message if the return buttons is pressed on the keyboard
+    // Sends user's query if the return buttons is pressed on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        view.endEditing(true)
         send()
         return false
     }
