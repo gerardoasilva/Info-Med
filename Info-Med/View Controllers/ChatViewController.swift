@@ -34,6 +34,92 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
     var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
     
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tfInput.delegate = self
+        
+        // Assign return key type to textfield
+        tfInput.returnKeyType = UIReturnKeyType.send
+        
+        // Enable view to scroll
+        messageScrollView.isScrollEnabled = true
+        // Sets size of view
+        /*messageScrollView.frame = CGRect(
+            x: messageScrollView.frame.origin.x,
+            y: messageScrollView.frame.origin.y,
+            width: messageScrollView.frame.width,
+            height: view.frame.height - 100)*/
+        
+        // Sets original position of toolbar
+        toolBarOriginalFrame = inputToolBar.frame
+        
+        print("frame: ", messageScrollView.frame.height)
+        print("CS: ", messageScrollView.contentSize.height)
+        print("VS: ", messageScrollView.visibleSize.height)
+        print("AH: ", acumulatedHeight)
+        print("OffsetAcc: ", offsetAccum)
+        
+        configureNavBar()
+        
+        // Add notification observers for keyboard shown and hidden
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    // MARK: - NAVIGATION
+    func configureNavBar(){
+        let button = UIBarButtonItem(image:  #imageLiteral(resourceName: "hamburgerMenu70Pad").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
+        navigationItem.leftBarButtonItem = button
+        
+        // Temporary button for signing out
+        let signOutButton = UIBarButtonItem(title: "Cerrar sesión", style: .plain, target: self, action: #selector(handleSignOut))
+        navigationItem.rightBarButtonItem = signOutButton
+    }
+    
+    // MARK: - SIDE MENU
+    //gets called when pressing the navbar hamburger button
+    @objc func handleMenuToggle(){
+        toggleMenuController()
+    }
+
+    /// This function toggles the side menu to show or not
+    /// ```
+    /// toggleMenuController() // Toggles the menu
+    /// ```
+    /// - Returns: Void
+    func toggleMenuController(){
+        let menuWidth =  self.messageScrollView.frame.width - CGFloat(menuLimit)
+        
+        if menuController == nil && shouldExpand{
+            menuController = MenuController()
+            //set menu controller dimensions
+            menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
+            
+            view.insertSubview(menuController.view, at: 0)
+            addChild(menuController)
+            menuController.didMove(toParent: self)
+            print("Did add menu controller")
+        }
+        
+        if shouldExpand{ //show menu
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - CGFloat(self.menuLimit)
+                self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
+                self.menuController.view.frame.origin.x = 0
+            }, completion: nil)
+        }else{
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.messageScrollView.frame.origin.x = 0
+                self.inputToolBar.frame.origin.x = 0
+                self.menuController.view.frame.origin.x = -menuWidth
+            }, completion: nil)
+        }
+        
+        shouldExpand = !shouldExpand
+    }
+
+    // MARK: - CHAT
     /// This function displays a message bubble from agent in messageScrollView
     ///
     /// ```
@@ -87,123 +173,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         print("AH: ", acumulatedHeight)
         print("OffsetAcc: ", offsetAccum)
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.tfInput.delegate = self
-        // Assign return key type to textfield
-        self.tfInput.returnKeyType = UIReturnKeyType.send
-        
-        // Enable view to scroll
-        messageScrollView.isScrollEnabled = true
-        // Sets size of view
-        /*messageScrollView.frame = CGRect(
-            x: messageScrollView.frame.origin.x,
-            y: messageScrollView.frame.origin.y,
-            width: messageScrollView.frame.width,
-            height: view.frame.height - 100)*/
-        
-        // Sets original position of toolbar
-        toolBarOriginalFrame = inputToolBar.frame
-        
-        print("frame: ", messageScrollView.frame.height)
-        print("CS: ", messageScrollView.contentSize.height)
-        print("VS: ", messageScrollView.visibleSize.height)
-        print("AH: ", acumulatedHeight)
-        print("OffsetAcc: ", offsetAccum)
-        
-        configureNavBar()
-        
-        // Add notification observers for keyboard shown and hidden
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    /// This function toggles the side menu to show or not
-    /// ```
-    /// toggleMenuController() // Toggles the menu
-    /// ```
-    /// - Returns: Void
-    func toggleMenuController(){
-        let menuWidth =  self.messageScrollView.frame.width - CGFloat(menuLimit)
-        
-        if menuController == nil && shouldExpand{
-            menuController = MenuController()
-            //set menu controller dimensions
-            menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
-            
-            view.insertSubview(menuController.view, at: 0)
-            addChild(menuController)
-            menuController.didMove(toParent: self)
-            print("Did add menu controller")
-        }
-        
-        if shouldExpand{ //show menu
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - CGFloat(self.menuLimit)
-                self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
-                self.menuController.view.frame.origin.x = 0
-            }, completion: nil)
-        }else{
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-                self.messageScrollView.frame.origin.x = 0
-                self.inputToolBar.frame.origin.x = 0
-                self.menuController.view.frame.origin.x = -menuWidth
-            }, completion: nil)
-        }
-        
-        shouldExpand = !shouldExpand
-    }
-    
-    func configureNavBar(){
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburgerMenu70Pad").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
-        navigationItem.leftBarButtonItem = button
-        
-        // Temporary button for signing out
-        let signOutButton = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(handleSignOut))
-        navigationItem.rightBarButtonItem = signOutButton
-    }
-    
-    // Show alert to end session with user
-    @objc func handleSignOut() {
-        // Create alert for sign out
-        let alertController = UIAlertController(title: nil, message: "¿Seguro que quieres cerrar sesión?", preferredStyle: .actionSheet)
-        
-        // Add option to sign out in alert
-        alertController.addAction(UIAlertAction(title: "Cerrar sesion", style: .destructive, handler: { (_) in
-            self.signOut()
-        }))
-        
-        // Add option to cancel in alert
-        alertController.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
-        
-        // Display alert
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    // End session and return to loginVewController
-    func signOut(){
-        do {
-            // Sign out user
-            try Auth.auth().signOut()
-            
-            // Go to LoginViewController
-            let loginViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.loginViewController) as? LoginViewController
-            let navController = UINavigationController(rootViewController: loginViewController!)
-            view.window?.rootViewController = navController
-            view.window?.makeKeyAndVisible()
-        }
-        catch let error {
-            print("Failed to sign out. Error: ", error)
-        }
-        
-    }
-    
-    //gets called when pressing the navbar hamburger button
-    @objc func handleMenuToggle(){
-        toggleMenuController()
-    }
-    
+
     // Move messageScrollView when keyboard is shown
     @IBAction func keyboardShows(aNotification: NSNotification) {
         //obtains the keyboard size so we know how much to move
@@ -217,7 +187,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         //moves the toolbar by the same amout as the keyboard size
         inputToolBar.frame = CGRect(
             x: inputToolBar.frame.origin.x,
-            y: inputToolBar.frame.origin.y - kbSize.height + 34,
+            y: inputToolBar.frame.origin.y - kbSize.height + 28,
             width: inputToolBar.frame.width,
             height: inputToolBar.frame.height)
     }
@@ -268,6 +238,23 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
      }
      }*/
     
+    //when the user tries to send a message
+    func send(){
+        if tfInput.text != ""{
+            addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
+            
+            //for testing only
+            //addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
+            
+            messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+            prepareRequest() //does the server request
+        }
+        
+        tfInput.text = ""
+    }
+    
+    // MARK: - HTTP REQUEST
+    
     // This function prepares an HTTP request to the server that calls Dialogflow´s API
     func prepareRequest() {
         print("Preparing request")
@@ -316,22 +303,54 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    //when the user tries to send a message
-    func send(){
-        if tfInput.text != ""{
-            addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
-            
-            //for testing only
-            //addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
-            
-            messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-            prepareRequest() //does the server request
-        }
+    
+    
+    
+    
+    
+    
+    // MARK: - SESSION
+    
+    // Show alert to end session with user
+    @objc func handleSignOut() {
+        // Create alert for sign out
+        let alertController = UIAlertController(title: nil, message: "¿Seguro que quieres cerrar sesión?", preferredStyle: .actionSheet)
         
-        tfInput.text = ""
+        // Add option to sign out in alert
+        alertController.addAction(UIAlertAction(title: "Cerrar sesión", style: .destructive, handler: { (_) in
+            self.signOut()
+        }))
+        
+        // Add option to cancel in alert
+        alertController.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
+        
+        // Display alert
+        present(alertController, animated: true, completion: nil)
     }
     
-    //MARK: - text field delegate implementations
+    // End session and return to loginVewController
+    func signOut(){
+        do {
+            // Sign out user
+            try Auth.auth().signOut()
+            
+            // Go to LoginViewController
+            let loginViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.loginViewController) as? LoginViewController
+            let navController = UINavigationController(rootViewController: loginViewController!)
+            view.window?.rootViewController = navController
+            view.window?.makeKeyAndVisible()
+        }
+        catch let error {
+            print("Failed to sign out. Error: ", error)
+        }
+        
+    }
+    
+   
+    
+    
+    
+    //MARK: - TEXT FIELD DELEGATES
     
     //sends a user message if the return buttons is pressed on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -352,18 +371,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     {
         activeField = nil
     }
-    
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }
 

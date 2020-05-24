@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ido-Wz-N7d">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ido-Wz-N7d">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -101,19 +101,21 @@
                                 <gestureRecognizers/>
                                 <items>
                                     <barButtonItem style="plain" id="ilZ-5G-OFW">
-                                        <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" textAlignment="natural" minimumFontSize="17" id="rHW-Pa-PEX">
-                                            <rect key="frame" x="20" y="10" width="278" height="34"/>
+                                        <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" minimumFontSize="17" id="rHW-Pa-PEX">
+                                            <rect key="frame" x="20" y="10" width="330" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <nil key="textColor"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         </textField>
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="Dxp-Du-2E1">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1j9-st-zH6">
-                                            <rect key="frame" x="344" y="10" width="50" height="34"/>
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1j9-st-zH6">
+                                            <rect key="frame" x="350" y="5" width="44" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                            <state key="normal" title="Enviar"/>
+                                            <color key="tintColor" red="0.086274509803921567" green="0.54509803921568623" blue="0.94901960784313721" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                                            <state key="normal" image="paperplane.fill" catalog="system">
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
+                                            </state>
                                             <connections>
                                                 <action selector="sendTapped:" destination="iJ6-mK-RR6" eventType="touchUpInside" id="vno-d9-ls3"/>
                                             </connections>
@@ -139,7 +141,6 @@
                             <outletCollection property="gestureRecognizers" destination="2CK-Gc-zRE" appends="YES" id="NPK-Dc-2dk"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Info-Med Bot" id="REq-Rf-JlL" userLabel="Info-Med Bot"/>
                     <connections>
                         <outlet property="btSend" destination="1j9-st-zH6" id="W1K-BM-GP1"/>
                         <outlet property="inputToolBar" destination="ent-pP-myu" id="TIO-2c-s3T"/>
@@ -154,7 +155,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="5057" y="651"/>
+            <point key="canvasLocation" x="5056.521739130435" y="650.89285714285711"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">
@@ -227,7 +228,6 @@
                                 <action selector="backTapped:" destination="NLP-fp-dDt" id="hcd-bu-NTi"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Sign out" id="Bzx-Q1-T0d"/>
                     </navigationItem>
                     <connections>
                         <outlet property="lbError" destination="mF5-di-2AF" id="HWn-Ff-CjP"/>
@@ -267,5 +267,6 @@
     </inferredMetricsTieBreakers>
     <resources>
         <image name="chevron.left" catalog="system" width="96" height="128"/>
+        <image name="paperplane.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>
