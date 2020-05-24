@@ -27,7 +27,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var menuView: UIView! // Side menu view controller
     var isMenuHidden = true
     var darkView: UIView!
-
+    
     var menuLimit: CGFloat!
     
     var activeField: UITextField!
@@ -38,6 +38,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
     var toolBarOriginalFrame: CGRect! //the original position of the toolbar
+    @IBOutlet weak var toolBarBottomConstraint: NSLayoutConstraint! // Outlet to move the inputbar
     
     // Vars for agents
     var actualAgent: Agent = .faq
@@ -82,8 +83,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         darkView.addGestureRecognizer(closeMenuTap)
         
         // Register to listen notification for keyboard
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHides(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - NAVIGATION
@@ -144,7 +145,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @objc func handleMenuToggle(_ sender: UITapGestureRecognizer? = nil){
         toggleMenuController()
     }
-
+    
     /// This function toggles the side menu to show or hide
     /// ```
     /// toggleMenuController() // Toggles the menu
@@ -167,7 +168,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 self.darkView.isUserInteractionEnabled = true
             }, completion: nil)
         }
-        // Hide menu
+            // Hide menu
         else {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                 // Slide chat content to the origin
@@ -183,7 +184,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         isMenuHidden = !isMenuHidden
     }
-
+    
     // MARK: - CHAT
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
@@ -249,40 +250,32 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         print("AH: ", acumulatedHeight)
         print("OffsetAcc: ", offsetAccum)
     }
-
+    
     // Move messageScrollView when keyboard is shown
-    @IBAction func keyboardShows(aNotification: NSNotification) {
-        //obtains the keyboard size so we know how much to move
-        let kbSize = (aNotification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
-        //sets a contentInset taking into acount the keyboard size and the diferences between the size of the scroll and the viewcontroller
-        let contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height + inputToolBar.frame.height - (view.frame.size.height - messageScrollView.frame.origin.y - messageScrollView.frame.size.height), right: 0.0)
+    @IBAction func keyboardWillShow(aNotification: NSNotification) {
+        // Get the keyboard size
+        let keyboardSize = (aNotification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
         
-        messageScrollView.contentInset = contentInset
-        messageScrollView.scrollIndicatorInsets = contentInset
+        // Move inputToolBar over the keyboard
+        self.toolBarBottomConstraint.constant = -keyboardSize.height + self.view.safeAreaInsets.bottom
         
-        //moves the toolbar by the same amout as the keyboard size
-        inputToolBar.frame = CGRect(
-            x: inputToolBar.frame.origin.x,
-            y: inputToolBar.frame.origin.y - kbSize.height + 28,
-            width: inputToolBar.frame.width,
-            height: inputToolBar.frame.height)
+        // Animate keyboard movement
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        
+        //        messageScrollView.setContentOffset(CGPoint(x: 0, y: keyboardSize.height + (self.view.frame.height - inputToolBar.frame.origin.y)), animated: true)
     }
     
     // Move messageScrollView when keyboard is hidden
-    @IBAction func keyboardHides(aNotification: NSNotification) {
-        //sets the tool bar back to its original position
+    @IBAction func keyboardWillHide(aNotification: NSNotification) {
+        // Change constant for inputTollBar constraint
+        self.toolBarBottomConstraint.constant = 0
         
-        self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
-        /*UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-         self.inputToolBar.frame.origin.y = self.toolBarOriginalFrame.origin.y
-         }, completion: nil)*/
-        
-        //resets the content insets to 0
-        let contentInsets = UIEdgeInsets.zero
-        messageScrollView.contentInset = contentInsets
-        messageScrollView.scrollIndicatorInsets = contentInsets
-        //?
-        messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+        // Animate keyboard movement
+        UIView.animate(withDuration: 0.01) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     //send button is pressed
@@ -299,20 +292,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             toggleMenuController()
         }
     }
-    /*
-     //tap action on the scroll
-     @IBAction func tapOnScroll(_ sender: Any) {
-     if !shouldExpand{
-     toggleMenuController()
-     }
-     }
-     
-     //tap action on the toolbar
-     @IBAction func tapOnToolBar(_ sender: Any) {
-     if !shouldExpand{
-     toggleMenuController()
-     }
-     }*/
     
     // This function is called when the user sends a message to add bubble to the screen and make the request to Dialogflow
     func send(){
@@ -373,16 +352,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 }
             })
         }
-        // Text input is invalid, do nothing
+            // Text input is invalid, do nothing
         else {
             return
         }
     }
-    
-    
-    
-    
-    
     
     
     // MARK: - SESSION
@@ -422,7 +396,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-   
+    
     
     
     
@@ -484,10 +458,6 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         //tableView Constrains
         tableView.translatesAutoresizingMaskIntoConstraints = false
-//        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-//        tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-//        tableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
     }
     
     func setupViews() {
@@ -502,7 +472,6 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.rowHeight = 80
-//        tableView.isScrollEnabled = false
         tableView.alwaysBounceVertical = false
         self.addSubview(tableView)
     }

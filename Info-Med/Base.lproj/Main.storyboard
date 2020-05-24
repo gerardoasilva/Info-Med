@@ -91,7 +91,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgn-bg-pGp">
-                                <rect key="frame" x="0.0" y="84" width="414" height="734"/>
+                                <rect key="frame" x="0.0" y="84" width="414" height="729"/>
                                 <gestureRecognizers/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="PNm-OK-xp9"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="ci8-ss-ICS"/>
@@ -99,16 +99,19 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ent-pP-myu">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="49" id="wJn-bq-Rl3"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" id="ilZ-5G-OFW">
                                         <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mensaje" minimumFontSize="17" id="rHW-Pa-PEX">
-                                            <rect key="frame" x="20" y="10" width="330" height="34"/>
+                                            <rect key="frame" x="20" y="10" width="311" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         </textField>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" id="Dxp-Du-2E1">
+                                    <barButtonItem width="100" style="plain" id="Dxp-Du-2E1">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1j9-st-zH6">
                                             <rect key="frame" x="350" y="5" width="44" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -127,11 +130,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ent-pP-myu" firstAttribute="top" secondItem="dgn-bg-pGp" secondAttribute="bottom" id="0oo-mg-DRW"/>
                             <constraint firstItem="dgn-bg-pGp" firstAttribute="top" secondItem="O1k-k1-qC2" secondAttribute="top" id="Keq-oY-5Ve"/>
                             <constraint firstItem="dgn-bg-pGp" firstAttribute="trailing" secondItem="O1k-k1-qC2" secondAttribute="trailing" id="Kky-vl-pW2"/>
                             <constraint firstItem="ent-pP-myu" firstAttribute="leading" secondItem="O1k-k1-qC2" secondAttribute="leading" id="bex-ze-mzi"/>
-                            <constraint firstItem="ent-pP-myu" firstAttribute="top" secondItem="dgn-bg-pGp" secondAttribute="bottom" id="c4z-kf-PuU"/>
+                            <constraint firstItem="ent-pP-myu" firstAttribute="top" secondItem="dgn-bg-pGp" secondAttribute="bottom" id="dC6-Jy-aeg"/>
                             <constraint firstItem="ent-pP-myu" firstAttribute="trailing" secondItem="O1k-k1-qC2" secondAttribute="trailing" id="dsO-Cc-0m4"/>
                             <constraint firstItem="ent-pP-myu" firstAttribute="bottom" secondItem="O1k-k1-qC2" secondAttribute="bottom" id="h7e-eB-JMp"/>
                             <constraint firstItem="dgn-bg-pGp" firstAttribute="leading" secondItem="O1k-k1-qC2" secondAttribute="leading" id="lg0-Tc-hd3"/>
@@ -143,6 +145,7 @@
                         <outlet property="inputToolBar" destination="ent-pP-myu" id="TIO-2c-s3T"/>
                         <outlet property="messageScrollView" destination="dgn-bg-pGp" id="Gq3-X6-p3v"/>
                         <outlet property="tfInput" destination="rHW-Pa-PEX" id="n3l-lg-HDx"/>
+                        <outlet property="toolBarBottomConstraint" destination="h7e-eB-JMp" id="ETM-z5-FXl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x7L-Wk-4Ie" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
