@@ -10,10 +10,6 @@ import UIKit
 import AVFoundation
 import FirebaseAuth
 
-public struct FAQ: Codable {
-    var textInput: String
-}
-
 public enum Agent: String {
     case faq = "faq"
     case questionnaire = "questionnaire"
@@ -28,8 +24,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var inputToolBar: UIToolbar!
     
     // Variables
-    var menuController: UIViewController! //side menu view controller
+    var menuView: UIView! // Side menu view controller
     var isMenuHidden = true
+    var darkView: UIView!
 
     var menuLimit: CGFloat!
     
@@ -40,7 +37,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
-    var toolBarOriginalFrame = CGRect(x: 0, y: 0, width: 0, height: 0) //the original position of the toolbar
+    var toolBarOriginalFrame: CGRect! //the original position of the toolbar
     
     // Vars for agents
     var actualAgent: Agent = .faq
@@ -60,34 +57,29 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         messageScrollView.alwaysBounceVertical = true
-        // Sets size of view
-        /*messageScrollView.frame = CGRect(
-            x: messageScrollView.frame.origin.x,
-            y: messageScrollView.frame.origin.y,
-            width: messageScrollView.frame.width,
-            height: view.frame.height - 100)*/
         
         // Gets original position of toolbar
-        toolBarOriginalFrame = inputToolBar.frame
+        if toolBarOriginalFrame == nil {
+            toolBarOriginalFrame = inputToolBar.frame
+        }
         
-//        print("frame: ", messageScrollView.frame.height)
-//        print("CS: ", messageScrollView.contentSize.height)
-//        print("VS: ", messageScrollView.visibleSize.height)
-//        print("AH: ", acumulatedHeight)
-//        print("OffsetAcc: ", offsetAccum)
-        
-        createSideMenu()
+        if menuView == nil {
+            createSideMenu()
+        }
         
         // Add sideMenu button to Navbar
         configureNavBar()
         
-        // Register to listen notification for menu option 'Cuestionario"
-        NotificationCenter.default.addObserver(self, selector: #selector(startConversation(notification:)), name: MenuController.notificationQuestionnaire, object: nil)
+        if isNewChat {
+            // Configure initial chat
+            startConversation()
+        }
         
+        // Create gestures
+        let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
         
-        
-        // Configure initial chat
-        startConversation(notification: nil)
+        // Add gesture to view
+        darkView.addGestureRecognizer(closeMenuTap)
         
         // Register to listen notification for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShows(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -119,27 +111,40 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     // This function creates the viewcontroller for the side menu
     func createSideMenu() {
         // Set menu's width
-        let menuWidth =  messageScrollView.frame.width - menuLimit
+        let menuWidth =  UIScreen.main.bounds.width - menuLimit
         
         // Create sideMenu ViewController
-        let labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial", "", "Cerrar sesión"]
-        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!, nil, nil]
-        let heightToolbar = inputToolBar.frame.height
-        menuController = MenuController(labels: labels, icons: icons, heightToolbar: heightToolbar)
-       // menuController = MenuController(labels: labels, icons: icons)
+        let labels = ["Mi cuenta", "Preguntas COVID-19", "Cuestionario médico", "Historial"]
+        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
+        menuView = MenuView(labels: labels, icons: icons)
         
-        // Set menu dimensions and position
-        menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
+        // Create dark view
+        darkView = UIView()
+        
+        // Set menuView and darkViewdimensions and position
+        menuView.frame = CGRect(x: -UIScreen.main.bounds.width, y: 0, width: menuWidth, height: self.view.frame.height)
+        darkView.frame = CGRect(x: -menuWidth, y: 0, width: menuLimit, height: self.view.frame.height)
         
         // Add subview of menu to ChatViewController
-        view.insertSubview(menuController.view, at: 0)
-        addChild(menuController)
-        menuController.didMove(toParent: self)
-        print("Added menu controller to ChatViewController")
+        view.addSubview(menuView)
+        view.addSubview(darkView)
+        
+        // DarkView style
+        darkView.backgroundColor = .black
+        darkView.alpha = 0
+        menuView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        /*
+         
+         /// FALTA AGREGAR CONSTRAINTS
+         
+         */
+        print("Added menu view to ChatViewController")
     }
     
     //gets called when pressing the navbar hamburger button
-    @objc func handleMenuToggle(){
+    @objc func handleMenuToggle(_ sender: UITapGestureRecognizer? = nil){
         toggleMenuController()
     }
 
@@ -151,11 +156,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     func toggleMenuController(){
         // Show menu
         if isMenuHidden {
+            
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                
                 // Slide chat content to the right
+                self.view.endEditing(true)
                 self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - self.menuLimit
                 self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
-                self.menuController.view.frame.origin.x = 0
+                self.menuView.frame.origin.x = 0
+                self.menuView.layer.shadowOpacity = 1
+                self.darkView.frame.origin.x = self.menuView.frame.width
+                self.darkView.alpha = 0.35
+                self.darkView.isUserInteractionEnabled = true
             }, completion: nil)
         }
         // Hide menu
@@ -164,7 +176,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
-                self.menuController.view.frame.origin.x = -self.menuController.view.frame.width
+                self.menuView.frame.origin.x = -self.menuView.frame.width - self.darkView.frame.width
+                self.menuView.layer.shadowOpacity = 0
+                self.darkView.frame.origin.x = -self.menuLimit
+                self.darkView.alpha = 0
+                self.darkView.isUserInteractionEnabled = false
             }, completion: nil)
         }
         
@@ -284,8 +300,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         send()
     }
     
-    //tap action anywere on the view controller
-    @IBAction func tapAction(_ sender: Any) {
+    // Tap handler to
+    @IBAction func handleTap(_ sender: Any) {
         // Hide keyboard
         view.endEditing(true)
         
@@ -444,3 +460,85 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 }
 
 
+class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
+    
+    var tableView = UITableView()
+    var reuseIdentifier = "cell"
+    
+    let screenHeight = UIScreen.main.bounds.height
+    let screenWidth = UIScreen.main.bounds.width
+    
+    // Table data
+    var labels: [String]!
+    var icons: [UIImage]!
+    
+    // Constructor for UIView subclass
+    init(labels: [String], icons: [UIImage]) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        setupViews()
+        self.labels = labels
+        self.icons = icons
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        
+        
+        //tableView Constrains
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+//        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+//        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+//        tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+//        tableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+    }
+    
+    func setupViews() {
+        let widthMenu = screenWidth/4*3
+        self.backgroundColor = .red
+        // Shadow
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0
+        self.layer.shadowOffset = .zero
+        self.layer.shadowRadius = 10
+        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: widthMenu, height: screenHeight))
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 80
+//        tableView.isScrollEnabled = false
+        tableView.alwaysBounceVertical = false
+        self.addSubview(tableView)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        labels.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
+        cell.descritionLabel.text = labels[indexPath.row]
+        cell.iconImageView.image = icons[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Finish segue implementation here
+        switch indexPath.row {
+        case 0:
+            print("Ir a mi cuenta")
+        case 1:
+            print("Ir a bot covid")
+        case 2:
+            print("Ir a Historial")
+        default:
+            print("Default")
+        }
+    }
+}
