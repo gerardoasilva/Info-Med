@@ -12,7 +12,7 @@ protocol menuOption  {
     func clickOption() -> Void
 }
 
-class MenuController: UIViewController {
+class MenuController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var table : UITableView!
     var reuseIdentifier = "cell"
@@ -20,7 +20,18 @@ class MenuController: UIViewController {
     //table data
     var labels : [String]!
     var icons : [UIImage]!
-
+    
+    init(labels: [String], icons: [UIImage]) {
+        self.labels = labels
+        self.icons = icons
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,12 +53,10 @@ class MenuController: UIViewController {
         table.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
         //initialize table data
-        labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial"]
-        icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
+//        labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial"]
+//        icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
     }
-}
-
-extension MenuController: UITableViewDelegate, UITableViewDataSource{
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         labels.count
     }
@@ -72,5 +81,4 @@ extension MenuController: UITableViewDelegate, UITableViewDataSource{
             print("Default")
         }
     }
-     
 }

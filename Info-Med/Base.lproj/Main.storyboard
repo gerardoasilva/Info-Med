@@ -137,9 +137,6 @@
                             <constraint firstItem="dgn-bg-pGp" firstAttribute="leading" secondItem="O1k-k1-qC2" secondAttribute="leading" id="lg0-Tc-hd3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="O1k-k1-qC2"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="2CK-Gc-zRE" appends="YES" id="NPK-Dc-2dk"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="btSend" destination="1j9-st-zH6" id="W1K-BM-GP1"/>
@@ -149,11 +146,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x7L-Wk-4Ie" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="2CK-Gc-zRE">
-                    <connections>
-                        <action selector="tapAction:" destination="iJ6-mK-RR6" id="ba8-F5-c0o"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="2CK-Gc-zRE"/>
             </objects>
             <point key="canvasLocation" x="5056.521739130435" y="650.89285714285711"/>
         </scene>

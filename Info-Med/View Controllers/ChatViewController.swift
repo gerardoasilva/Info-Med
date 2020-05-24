@@ -67,6 +67,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 //        print("AH: ", acumulatedHeight)
 //        print("OffsetAcc: ", offsetAccum)
         
+        createSideMenu()
         
         // Add sideMenu button to Navbar
         configureNavBar()
@@ -95,6 +96,26 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     // MARK: - SIDE MENU
+    // This function creates the viewcontroller for the side menu
+    func createSideMenu() {
+        // Set menu's width
+        let menuWidth =  messageScrollView.frame.width - menuLimit
+        
+        // Create sideMenu ViewController
+        let labels = ["Mi cuenta", "Bot Covid-19", "Cuestionario médico", "Historial"]
+        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!]
+        menuController = MenuController(labels: labels, icons: icons)
+        
+        // Set menu dimensions and position
+        menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
+        
+        // Add subview of menu to ChatViewController
+        view.insertSubview(menuController.view, at: 0)
+        addChild(menuController)
+        menuController.didMove(toParent: self)
+        print("Added menu controller to ChatViewController")
+    }
+    
     //gets called when pressing the navbar hamburger button
     @objc func handleMenuToggle(){
         toggleMenuController()
@@ -106,24 +127,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     /// ```
     /// - Returns: Void
     func toggleMenuController(){
-        
-        // Set menu's width
-        let menuWidth =  messageScrollView.frame.width - menuLimit
-        
-        // Create sideMenu ViewController
-        if menuController == nil && isMenuHidden {
-            menuController = MenuController()
-            
-            // Set menu dimensions and position
-            menuController.view.frame = CGRect(x: -menuWidth, y: 0, width: menuWidth, height: self.view.frame.height)
-            
-            // Add subview of menu to ChatViewController
-            view.insertSubview(menuController.view, at: 0)
-            addChild(menuController)
-            menuController.didMove(toParent: self)
-            print("Added menu controller to ChatViewController")
-        }
-        
         // Show menu
         if isMenuHidden {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
@@ -139,7 +142,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
-                self.menuController.view.frame.origin.x = -menuWidth
+                self.menuController.view.frame.origin.x = -self.menuController.view.frame.width
             }, completion: nil)
         }
         
