@@ -14,7 +14,12 @@ public enum Agent: String {
     case questionnaire = "questionnaire"
 }
 
-class ChatViewController: UIViewController, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleActionProtocol {
+    
+    func onOptionBubblePress(text: String) {
+        prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
+        print("Suggestion sent\n")
+    }
     
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
@@ -89,7 +94,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
 
         // Register to listen notification for menu option 'Cuestionario"
         NotificationCenter.default.addObserver(self, selector: #selector(startConversation(notification:)), name: MenuView.notificationQuestionnaire, object: nil)
-        
     }
     
     // MARK: - NAVIGATION
@@ -194,6 +198,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     // MARK: - CHAT
+    
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     @objc func startConversation(notification: Notification?) {
         
@@ -257,11 +262,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             // Add height to offset
             offsetAccum += addedHeight
         }
+        //DEBUG
+        /*
         print("frame: ", messageScrollView.frame.height)
         print("CS: ", messageScrollView.contentSize.height)
         print("VS: ", messageScrollView.visibleSize.height)
         print("AH: ", acumulatedHeight)
         print("OffsetAcc: ", offsetAccum)
+         */
     }
     
     // Move messageScrollView when keyboard is shown
@@ -311,9 +319,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
-            //for testing only
-            //addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
-            
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
             prepareRequest(userInput: tfInput.text!, agent: actualAgent) //does the server request
         }
@@ -354,9 +359,24 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                     print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
                     print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
                     
+                    /*if(response.fulfillmentMessages[0].payload?.fields.suggestions != nil){
+                        print("Suggestions values: \(response.fulfillmentMessages[0].payload?.fields.suggestions?.listValue.values)\n")
+                        print("Clinimetry: \(response.fulfillmentMessages[0].payload?.fields.clinimetry)\n")
+                    }*/
+                    
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         self.displayResponse(msg: response.fulfillmentText)
+                        
+                        //process each fulfillment message and display an option bubble for each suggestion
+                        for fm in response.fulfillmentMessages{
+                            
+                            if let values = fm.payload?.fields.suggestions?.listValue.values{
+                                for value in values{
+                                    self.addBubble(bbl: OptionBubble(view: self.messageScrollView, msg: Message(text: value.stringValue, sender: "Agent"), del: self ))
+                                }
+                            }
+                        }
                     }
                     
                 // Request went wrong
@@ -408,8 +428,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
-    
-    
     
     
     
