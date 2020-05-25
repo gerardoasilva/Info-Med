@@ -16,11 +16,6 @@ public enum Agent: String {
 
 class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleActionProtocol {
     
-    func onOptionBubblePress(text: String) {
-        prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
-        print("Suggestion sent\n")
-    }
-    
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
     @IBOutlet weak var tfInput: UITextField!
@@ -324,6 +319,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         }
         
         tfInput.text = ""
+    }
+    
+    // MARK: - Chat OptionBubble protocol implementation
+    
+    func onOptionBubblePress(text: String) {
+        prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
+        print("Suggestion sent\n")
     }
     
     // MARK: - HTTP REQUEST
