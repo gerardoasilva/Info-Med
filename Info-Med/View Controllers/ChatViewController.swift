@@ -14,7 +14,15 @@ public enum Agent: String {
     case questionnaire = "questionnaire"
 }
 
-class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleActionProtocol {
+private enum MenuOption {
+    case info
+    case faq
+    case questionnaire
+    case history
+    case signOut
+}
+
+class ChatViewController: UIViewController, UITextFieldDelegate {
     
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
@@ -73,7 +81,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         if isNewChat {
             // Configure initial chat
             //startConversation()
-            startConversation(notification: nil)
+            startConversation()
 
         }
         
@@ -88,7 +96,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         // Register to listen notification for menu option 'Cuestionario"
-        NotificationCenter.default.addObserver(self, selector: #selector(startConversation(notification:)), name: MenuView.notificationQuestionnaire, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(optionSelectionHandler(notification:)), name: MenuView.notificationOption, object: nil)
+        
     }
     
     // MARK: - NAVIGATION
@@ -110,14 +119,93 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     }
     
     // MARK: - SIDE MENU
+    
+    // Function to handles user optionSelection from the side menu
+    @objc func optionSelectionHandler(notification: NSNotification?) {
+        
+        if let optionSelected = (notification?.object) as? MenuOption {
+            switch optionSelected {
+            // Display user info viewController
+            case .info:
+                print("INFO listened")
+                /*
+                    Do user info stuff
+                 */
+                
+            // Change chatbot to FAQ
+            case .faq:
+                print("FAQ listened")
+                handleMenuToggle()
+                
+                if actualAgent != .faq {
+                    actualAgent = .faq
+                    
+                    // PENDING: Save data of conversation in history
+                    
+                    // Delete actual conversation
+                    bubblesList.removeAll()
+                    contexts.removeAll()
+                    
+                    startConversation()
+                    
+                }
+                
+            // Change chatbot to questionnaire
+            case .questionnaire:
+                print("QUESTIONNAIRE listened")
+                handleMenuToggle()
+
+                if actualAgent != .questionnaire {
+                    actualAgent = .questionnaire
+                    
+                    // PENDING: Save data of conversation in history
+                    
+                    // Delete actual conversation
+                    bubblesList.removeAll()
+                    contexts.removeAll()
+                    
+                    startConversation()
+                    
+                }
+                
+            // Show hitory of interactions
+            case .history:
+                print("HISTORY listened")
+                /*
+                    Do hisotry stuff
+                 */
+                
+            // SignOut
+            default:
+                print("SIGNOUT listened")
+                handleSignOut()
+                break
+            }
+        }
+    }
+    
     // This function creates the viewcontroller for the side menu
     func createSideMenu() {
         // Set menu's width
         let menuWidth =  UIScreen.main.bounds.width - menuLimit
         
         // Create sideMenu ViewController
-        let labels = ["Mi cuenta", "Preguntas COVID-19", "Cuestionario médico", "Historial", "", "Cerrar sesión"]
-        let icons = [UIImage(systemName: "person.fill")!, UIImage(systemName: "bubble.left.fill")!, UIImage(systemName: "doc.text.magnifyingglass")!, UIImage(systemName: "tray.full.fill")!, nil, nil]
+        let labels = [
+            "Mi cuenta",
+            "Preguntas COVID-19",
+            "Cuestionario médico",
+            "Historial",
+            "",
+            "Cerrar sesión"
+        ]
+        let icons = [
+            UIImage(systemName: "person.fill")!,
+            UIImage(systemName: "bubble.left.fill")!,
+            UIImage(systemName: "doc.text.magnifyingglass")!,
+            UIImage(systemName: "tray.full.fill")!,
+            nil,
+            UIImage(named: "exit")
+        ]
         let heightToolbar = inputToolBar.frame.height
         let heightNavigationbar = self.navigationController?.navigationBar.frame.height ?? 0.0
         let heightStatusbar = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0
@@ -150,7 +238,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     
     //gets called when pressing the navbar hamburger button
     @objc func handleMenuToggle(_ sender: UITapGestureRecognizer? = nil){
-        toggleMenuController()
+        toggleMenu()
     }
     
     /// This function toggles the side menu to show or hide
@@ -158,7 +246,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     /// toggleMenuController() // Toggles the menu
     /// ```
     /// - Returns: Void
-    func toggleMenuController(){
+    func toggleMenu(){
         // Show menu
         if isMenuHidden {
             
@@ -171,7 +259,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
                 self.menuView.frame.origin.x = 0
                 self.menuView.layer.shadowOpacity = 1
                 self.darkView.frame.origin.x = self.menuView.frame.width
-                self.darkView.alpha = 0.35
+                self.darkView.alpha = 0.2
                 self.darkView.isUserInteractionEnabled = true
             }, completion: nil)
         }
@@ -195,11 +283,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     // MARK: - CHAT
     
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
-    @objc func startConversation(notification: Notification?) {
-        
-        // Get indexPath.row
-        let index = (notification?.userInfo) as? [String: Int]
-        print("Menu option: ",index as Any)
+    func startConversation() {
 
         switch actualAgent {
         case .faq:
@@ -305,7 +389,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         view.endEditing(true)
         
         if !isMenuHidden{
-            toggleMenuController()
+            toggleMenu()
         }
     }
     
@@ -463,6 +547,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     
 }
 
+// MARK: - CLASS MENU VIEW
 
 class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
@@ -481,8 +566,8 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     var heightNavigationbar: CGFloat! //height of navigationbar
     var heightStatusbar: CGFloat! // height of statusbar
 
-    // Notification for Menu Option of Questionnaire
-    static let notificationQuestionnaire = Notification.Name("UserSelectedQuestionnaire")
+    // Declare notification for MenuOption of Questionnaire
+    static let notificationOption = Notification.Name("sideMenuUserSelection")
     
     // Constructor for UIView subclass
     init(labels: [String], icons: [UIImage?], heightToolbar: CGFloat, heightNavigationbar: CGFloat, heightStatusbar: CGFloat) {
@@ -558,21 +643,28 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         //Finish segue implementation here
         switch indexPath.row {
         case 0:
-            print("Ir a mi cuenta")
+            print("INFO tapped")
+            // Post notification for user selection
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.info)
         case 1:
-            print("Ir a bot covid")
+            print("FAQ tapped")
+            // Post notification for user selection
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.faq)
         case 2:
-            print("Ir a cuestionario")
-            // Post notification of user clicking the Questionnaire menu option in NotificationCenter
-            NotificationCenter.default.post(name: MenuView.notificationQuestionnaire, object: nil, userInfo:["indexPath.row": 2])
+            print("QUESTIONNAIRE tapped")
+            // Post notification for user selection
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.questionnaire)
         case 3:
-            print("Ir a Historial")
-        case 4:
-            print("Empty")
+            print("HISTORY tapped")
+            // Post notification for user selection
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.history)
         case 5:
-            print("Cerrar sesión")
+            print("SIGNOUT tapped")
+            // Post notification for user selection
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.signOut)
         default:
             print("Default")
         }
+        
     }
 }
