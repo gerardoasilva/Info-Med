@@ -621,19 +621,19 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         case 1:
             print("FAQ tapped")
             // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: nil, userInfo: ["optionSelected" : MenuOption.faq])
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.faq)
         case 2:
             print("QUESTIONNAIRE tapped")
             // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: nil, userInfo: ["optionSelected" : MenuOption.questionnaire])
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.questionnaire)
         case 3:
             print("HISTORY tapped")
             // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: nil, userInfo: ["optionSelected" : MenuOption.history])
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.history)
         case 5:
             print("SIGNOUT tapped")
             // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: nil, userInfo: ["optionSelected" : MenuOption.signOut])
+            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.signOut)
         default:
             print("Default")
         }
