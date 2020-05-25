@@ -15,18 +15,35 @@ protocol OptionBubbleActionProtocol {
 class OptionBubble: Bubble {
     
     var bubbleDelegate: OptionBubbleActionProtocol?
+    var pressed : Bool = false
     
-    init(view: UIView, msg: Message, del: OptionBubbleActionProtocol) {
+    init(view: UIView, msg: Message, sTxt: String, pd: Int ,del: OptionBubbleActionProtocol) {
         
-        msg.text = "     \(msg.text ?? "NIL")"
-        
+        msg.text = "        \(msg.text ?? "NIL")"
         super.init(view: view, msg: msg)
         
         bubbleDelegate = del
         
-        //moves text to the right to make space for the button
-        //self.textContainerInset = UIEdgeInsets(top: 10, left: 60, bottom: 10, right: 10)
+        //visuals
+        padd = pd
         
+        //let smallView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: self.frame.height))
+        let smallView = UILabel(frame: CGRect(x: 0, y: 0, width: 42, height: self.frame.height))
+        smallView.text = sTxt
+        smallView.backgroundColor = #colorLiteral(red: 0.06597589701, green: 0.8221061826, blue: 0.8296751976, alpha: 1)
+        smallView.layer.masksToBounds = true
+        smallView.layer.cornerRadius = 20.0
+        smallView.layer.borderWidth = 1
+        smallView.font = UIFont.preferredFont(forTextStyle: .body)
+        smallView.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        //smallView.isEditable = false
+        //smallView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        smallView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        smallView.textAlignment = NSTextAlignment.center
+        
+        self.addSubview(smallView)
+        
+        //add tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
         self.addGestureRecognizer(tapGesture)
     }
@@ -36,8 +53,11 @@ class OptionBubble: Bubble {
     }
     
     @objc func handleTap(sender: UITapGestureRecognizer){
-        print("Option Tap")
-        bubbleDelegate?.onOptionBubblePress(text: msg.text)
+        if !(pressed){
+            bubbleDelegate?.onOptionBubblePress(text: msg.text)
+            self.backgroundColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+            pressed = true
+        }
     }
     /*
     // Only override draw() if you perform custom drawing.

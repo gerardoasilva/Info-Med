@@ -372,8 +372,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
                         for fm in response.fulfillmentMessages{
                             
                             if let values = fm.payload?.fields.suggestions?.listValue.values{
-                                for value in values{
-                                    self.addBubble(bbl: OptionBubble(view: self.messageScrollView, msg: Message(text: value.stringValue, sender: "Agent"), del: self ))
+                                let len = values.count
+                                
+                                for i in 0..<len{
+                                    var padd = 2
+                                    if i == len-1{
+                                        padd = 10
+                                    }
+                                    
+                                    self.addBubble(bbl: OptionBubble(view: self.messageScrollView, msg: Message(text: values[i].stringValue, sender: "Agent"), sTxt: String(i + 1), pd: padd, del: self ))
                                 }
                             }
                         }

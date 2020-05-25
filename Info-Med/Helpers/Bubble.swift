@@ -11,7 +11,7 @@ import UIKit
 class Bubble: UITextView {
     
     var msg: Message!
-    let padd = 10
+    var padd = 10
 
     init(view: UIView, msg: Message) {
         //
