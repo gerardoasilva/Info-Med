@@ -36,8 +36,7 @@ class OptionBubble: Bubble {
         //let smallView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: self.frame.height))
         let smallView = UILabel(frame: CGRect(x: 0, y: 0, width: 42, height: self.frame.height))
         smallView.text = sTxt
-//        smallView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
-        smallView.backgroundColor = #colorLiteral(red: 0, green: 0.4901960784, blue: 0.8745098039, alpha: 1)
+        smallView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
         smallView.layer.masksToBounds = true
         smallView.layer.cornerRadius = 20.0
         smallView.layer.borderWidth = 1
