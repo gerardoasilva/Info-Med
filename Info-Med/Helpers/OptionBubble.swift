@@ -36,7 +36,8 @@ class OptionBubble: Bubble {
         //let smallView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: self.frame.height))
         let smallView = UILabel(frame: CGRect(x: 0, y: 0, width: 42, height: self.frame.height))
         smallView.text = sTxt
-        smallView.backgroundColor = #colorLiteral(red: 0.06597589701, green: 0.8221061826, blue: 0.8296751976, alpha: 1)
+//        smallView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
+        smallView.backgroundColor = #colorLiteral(red: 0, green: 0.4901960784, blue: 0.8745098039, alpha: 1)
         smallView.layer.masksToBounds = true
         smallView.layer.cornerRadius = 20.0
         smallView.layer.borderWidth = 1
@@ -44,7 +45,7 @@ class OptionBubble: Bubble {
         smallView.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         //smallView.isEditable = false
         //smallView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        smallView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        smallView.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
         smallView.textAlignment = NSTextAlignment.center
         
         self.addSubview(smallView)
@@ -63,7 +64,8 @@ class OptionBubble: Bubble {
             bubbleDelegate?.onOptionBubblePress(text: msg.text)
             //pressed = true
             deactivationDelegate?.blockFurtherActions(bbl: self)
-            self.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+            self.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
+            self.textColor = .white
         }
     }
 }

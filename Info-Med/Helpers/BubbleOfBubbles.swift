@@ -13,7 +13,7 @@ class BubbleOfBubbles: Bubble, OptionBubbleDeactivateProtocol {
     
     
 
-    var subBubbles : [OptionBubble]!
+    var subBubbles: [OptionBubble]!
     var acumulatedHeight = 0;
     var maxWidth = CGFloat(0);
     
@@ -75,6 +75,7 @@ class BubbleOfBubbles: Bubble, OptionBubbleDeactivateProtocol {
         for b in subBubbles{
             b.pressed = true
             b.backgroundColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+            
             
             
             //code for removing remaining options, and only show the selected one
