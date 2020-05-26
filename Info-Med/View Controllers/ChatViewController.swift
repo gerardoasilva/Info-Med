@@ -404,18 +404,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             
         }
         
-        // Scroll view is at the bottom when keyboard opens
-        if (scrollOffset + scrollViewHeight == scrollContentSizeHeight) {
+        // Scroll content up when keyboard shows
+        if (scrollContentSizeHeight > scrollViewHeight) {
             // Scroll content up
-            self.messageScrollView.setContentOffset(CGPoint(x: 0, y: scrollContentSizeHeight - (scrollViewHeight-keyboardSize.height) - self.view.safeAreaInsets.bottom), animated: true)
+            self.messageScrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset + keyboardSize.height - self.view.safeAreaInsets.bottom), animated: false)
         }
-        
-        
     }
         
     // Move messageScrollView when keyboard is hidden
     @IBAction func keyboardWillHide(notification: NSNotification) {
-
+        let keyboardSize = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
+        let scrollViewHeight = messageScrollView.frame.size.height;
+        let scrollOffset = messageScrollView.contentOffset.y;
         let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
         
         // Change constant for inputTollBar constraint
@@ -424,6 +424,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         // Animate keyboard movement
         UIView.animate(withDuration: duration) {
             self.view.layoutIfNeeded()
+        }
+        
+        // Scroll content down when keyboard hides
+        if (scrollOffset > scrollViewHeight - (keyboardSize.height + self.view.safeAreaInsets.bottom)) {
+            // Scroll content up
+            //scrollContentSizeHeight - (scrollViewHeight-keyboardSize.height)
+            self.messageScrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset - keyboardSize.height + self.view.safeAreaInsets.bottom), animated: false)
         }
     }
     
