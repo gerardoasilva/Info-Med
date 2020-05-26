@@ -22,7 +22,7 @@ private enum MenuOption {
     case signOut
 }
 
-class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleActionProtocol {
+class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
     
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
@@ -31,9 +31,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     @IBOutlet var inputToolBar: UIToolbar!
     
     // Variables
-    var menuView: UIView! // Side menu view controller
+    var menuView: UIView! // Side menu view
     var isMenuHidden = true
-    var darkView: UIView!
+    var darkView: UIView! // Darkens the screen when menu is open
     
     var menuLimit: CGFloat!
     
@@ -44,12 +44,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
-    var toolBarOriginalFrame: CGRect! //the original position of the toolbar
     @IBOutlet weak var toolBarBottomConstraint: NSLayoutConstraint! // Outlet to move the inputbar
     
     // Vars for agents
     var actualAgent: Agent = .faq
     var isNewChat = true
+    var viewTitle = "Preguntas Frecuentes"
     
     
     override func viewDidLoad() {
@@ -65,15 +65,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         messageScrollView.alwaysBounceVertical = true
-        
-        // Gets original position of toolbar
-        if toolBarOriginalFrame == nil {
-            toolBarOriginalFrame = inputToolBar.frame
-        }
-        
-        if menuView == nil {
-            createSideMenu()
-        }
+        messageScrollView.keyboardDismissMode = .onDrag
         
         // Add sideMenu button to Navbar
         configureNavBar()
@@ -85,15 +77,24 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
 
         }
         
-        // Create gestures
-        let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
+        if menuView == nil {
+            createSideMenu()
+        }
+
+        // Add edge pan gesture recognizer to open menu
         
-        // Add gesture to view
+        
+        // Add tap gesture to close menu when tapped outside of it
+        let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
         darkView.addGestureRecognizer(closeMenuTap)
         
+        // Add tap gesture to close keyboard when
+        let closeKeyboard = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        messageScrollView.addGestureRecognizer(closeKeyboard)
+        
         // Register to listen notification for keyboard
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(aNotification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(aNotification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         // Register to listen notification for menu option 'Cuestionario"
         NotificationCenter.default.addObserver(self, selector: #selector(optionSelectionHandler(notification:)), name: MenuView.notificationOption, object: nil)
@@ -113,9 +114,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         let button = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
         
-        // Temporary button for signing out
-        let signOutButton = UIBarButtonItem(title: "Cerrar sesión", style: .plain, target: self, action: #selector(handleSignOut))
-        navigationItem.rightBarButtonItem = signOutButton
     }
     
     // MARK: - SIDE MENU
@@ -143,9 +141,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
                     // PENDING: Save data of conversation in history
                     
                     // Delete actual conversation
-                    bubblesList.removeAll()
-                    contexts.removeAll()
-                    
                     startConversation()
                     
                 }
@@ -161,9 +156,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
                     // PENDING: Save data of conversation in history
                     
                     // Delete actual conversation
-                    bubblesList.removeAll()
-                    contexts.removeAll()
-                    
                     startConversation()
                     
                 }
@@ -188,29 +180,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     func createSideMenu() {
         // Set menu's width
         let menuWidth =  UIScreen.main.bounds.width - menuLimit
-        
-        // Create sideMenu ViewController
-        let labels = [
-            "Mi cuenta",
-            "Preguntas COVID-19",
-            "Cuestionario médico",
-            "Historial",
-            "",
-            "Cerrar sesión"
-        ]
-        let icons = [
-            UIImage(systemName: "person.fill")!,
-            UIImage(systemName: "bubble.left.fill")!,
-            UIImage(systemName: "doc.text.magnifyingglass")!,
-            UIImage(systemName: "tray.full.fill")!,
-            nil,
-            UIImage(named: "exit")
-        ]
         let heightToolbar = inputToolBar.frame.height
         let heightNavigationbar = self.navigationController?.navigationBar.frame.height ?? 0.0
         let heightStatusbar = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0
-        menuView = MenuView(labels: labels, icons: icons, heightToolbar: heightToolbar, heightNavigationbar : heightNavigationbar, heightStatusbar:heightStatusbar)
-        
+        menuView = MenuView(heightToolbar: heightToolbar, heightNavigationbar: heightNavigationbar, heightStatusbar:heightStatusbar)
         // Create dark view
         darkView = UIView()
         
@@ -250,7 +223,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         // Show menu
         if isMenuHidden {
             
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 
                 // Slide chat content to the right
                 self.view.endEditing(true)
@@ -265,7 +238,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         }
             // Hide menu
         else {
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
@@ -284,6 +257,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
+        // Delete all bubbles
+        bubblesList = nil
+        // Delete all contexts
+        contexts.removeAll()
+        // Delete chat from screen
+        messageScrollView.subviews.forEach({ $0.removeFromSuperview() })
+        acumulatedHeight = 0
+        offsetAccum = 0
+        
 
         switch actualAgent {
         case .faq:
@@ -397,28 +379,46 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     }
     
     // Move messageScrollView when keyboard is shown
-    @IBAction func keyboardWillShow(aNotification: NSNotification) {
+    @IBAction func keyboardWillShow(notification: NSNotification) {
         // Get the keyboard size
-        let keyboardSize = (aNotification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
+        let keyboardSize = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
+        let scrollViewHeight = messageScrollView.frame.size.height;
+        let scrollContentSizeHeight = messageScrollView.contentSize.height;
+        let scrollOffset = messageScrollView.contentOffset.y;
+        let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
         
+            print("scroll offset: \(scrollOffset)")
+        print("scrollViewHeight: \(scrollViewHeight)")
+        print("scrollContentSizeHeight: \(scrollContentSizeHeight)")
+//        }
         // Move inputToolBar over the keyboard
         self.toolBarBottomConstraint.constant = -keyboardSize.height + self.view.safeAreaInsets.bottom
         
         // Animate keyboard movement
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: duration) {
             self.view.layoutIfNeeded()
+            
         }
         
-        //        messageScrollView.setContentOffset(CGPoint(x: 0, y: keyboardSize.height + (self.view.frame.height - inputToolBar.frame.origin.y)), animated: true)
+        // Scroll view is at the bottom when keyboard opens
+        if (scrollOffset + scrollViewHeight == scrollContentSizeHeight) {
+            // Scroll content up
+            self.messageScrollView.setContentOffset(CGPoint(x: 0, y: scrollContentSizeHeight - (scrollViewHeight-keyboardSize.height) - self.view.safeAreaInsets.bottom), animated: true)
+        }
+        
+        
     }
-    
+        
     // Move messageScrollView when keyboard is hidden
-    @IBAction func keyboardWillHide(aNotification: NSNotification) {
+    @IBAction func keyboardWillHide(notification: NSNotification) {
+
+        let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
+        
         // Change constant for inputTollBar constraint
         self.toolBarBottomConstraint.constant = 0
         
         // Animate keyboard movement
-        UIView.animate(withDuration: 0.01) {
+        UIView.animate(withDuration: duration) {
             self.view.layoutIfNeeded()
         }
     }
@@ -428,8 +428,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
         send()
     }
     
-    // Tap handler to
+    // Tap handler to hide keyboard when tapped anywhere outside the keyboard
     @IBAction func handleTap(_ sender: Any) {
+        
         // Hide keyboard
         view.endEditing(true)
         
@@ -623,14 +624,30 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     static let notificationOption = Notification.Name("sideMenuUserSelection")
     
     // Constructor for UIView subclass
-    init(labels: [String], icons: [UIImage?], heightToolbar: CGFloat, heightNavigationbar: CGFloat, heightStatusbar: CGFloat) {
+    init(heightToolbar: CGFloat, heightNavigationbar: CGFloat, heightStatusbar: CGFloat) {
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        setupViews()
-        self.labels = labels
-        self.icons = icons
         self.heightToolbar = heightToolbar
         self.heightNavigationbar = heightNavigationbar
         self.heightStatusbar = heightStatusbar
+        setupViews()
+        // Create sideMenu ViewController
+        labels = [
+            "Mi cuenta",
+            "Preguntas COVID-19",
+            "Cuestionario médico",
+            "Historial",
+            "",
+            "Cerrar sesión"
+        ]
+        icons = [
+            UIImage(systemName: "person.fill")!,
+            UIImage(systemName: "bubble.left.fill")!,
+            UIImage(systemName: "doc.text.magnifyingglass")!,
+            UIImage(systemName: "tray.full.fill")!,
+            nil,
+            UIImage(named: "exit")
+        ]
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
@@ -643,26 +660,22 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
-        
-        
         //tableView Constrains
         tableView.translatesAutoresizingMaskIntoConstraints = false
-    }
+        }
     
     func setupViews() {
         let widthMenu = screenWidth/4*3
 
-        // height of view controller
         heightViewController = UIScreen.main.bounds.height
-        print("heightViewController: ",heightViewController!)
 
-        self.backgroundColor = .red
+        self.backgroundColor = .white
         // Shadow
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0
         self.layer.shadowOffset = .zero
         self.layer.shadowRadius = 10
-        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: widthMenu, height: screenHeight))
+        tableView = UITableView(frame: CGRect(x: 0, y: heightNavigationbar, width: widthMenu, height: screenHeight))
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.rowHeight = 80
@@ -678,13 +691,17 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
         cell.descritionLabel.text = labels[indexPath.row]
         cell.iconImageView.image = icons[indexPath.row]
+        
+        if indexPath.row == 4 {
+            cell.isUserInteractionEnabled = false
+            cell.selectionStyle = .none
+        }
+        
         return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 4){
-            print("heightNavbar: ", heightNavigationbar ?? 0.0)
-            print("heightStatuslbar: ", heightStatusbar ?? 0.0)
             let heightTableRows = tableView.rowHeight * 5
             let topBar = heightNavigationbar + heightStatusbar
             return heightViewController - heightTableRows - heightToolbar - topBar
@@ -693,31 +710,35 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //Finish segue implementation here
-        switch indexPath.row {
-        case 0:
-            print("INFO tapped")
-            // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.info)
-        case 1:
-            print("FAQ tapped")
-            // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.faq)
-        case 2:
-            print("QUESTIONNAIRE tapped")
-            // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.questionnaire)
-        case 3:
-            print("HISTORY tapped")
-            // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.history)
-        case 5:
-            print("SIGNOUT tapped")
-            // Post notification for user selection
-            NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.signOut)
-        default:
-            print("Default")
+        // Post notification depending on user selection
+        if indexPath.row != 4 {
+            switch indexPath.row {
+            case 0:
+                print("INFO tapped")
+                // Post notification for user selection
+                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.info)
+            case 1:
+                print("FAQ tapped")
+                // Post notification for user selection
+                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.faq)
+            case 2:
+                print("QUESTIONNAIRE tapped")
+                // Post notification for user selection
+                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.questionnaire)
+            case 3:
+                print("HISTORY tapped")
+                // Post notification for user selection
+                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.history)
+            case 5:
+                print("SIGNOUT tapped")
+                // Post notification for user selection
+                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.signOut)
+            default:
+                print("Default")
+            }
         }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
         
     }
 }
