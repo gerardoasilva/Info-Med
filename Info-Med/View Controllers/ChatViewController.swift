@@ -59,8 +59,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         // Set max width side menu can have, is the horizontal space it can't cover
         menuLimit = self.view.frame.size.width / 4
         
-        // Assign return key type to textfield
+        // Style tfInput
         tfInput.returnKeyType = UIReturnKeyType.send
+        tfInput.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+        tfInput.backgroundColor = .white
+        tfInput.layer.borderWidth = 1.0
+        tfInput.layer.cornerRadius = tfInput.frame.height / 2
+        tfInput.setLeftPaddingPoints(10)
+        tfInput.setRightPaddingPoints(10)
         
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
@@ -552,10 +558,10 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
             "Cerrar sesión"
         ]
         icons = [
-            UIImage(systemName: "person.fill")!,
-            UIImage(systemName: "bubble.left.fill")!,
-            UIImage(systemName: "doc.text.magnifyingglass")!,
-            UIImage(systemName: "tray.full.fill")!,
+            UIImage(named: "user")!,
+            UIImage(named: "faq")!,
+            UIImage(named: "questionnaire")!,
+            UIImage(named: "history")!,
             nil,
             UIImage(named: "exit")
         ]
@@ -604,6 +610,10 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell.descritionLabel.text = labels[indexPath.row]
         cell.iconImageView.image = icons[indexPath.row]
         
+        let view = UIView()
+        view.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235).withAlphaComponent(0.8)
+        cell.selectedBackgroundView = view
+        
         if indexPath.row == 4 {
             cell.isUserInteractionEnabled = false
             cell.selectionStyle = .none
@@ -651,5 +661,22 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
+    }
+}
+
+
+
+
+// Class extension to add padding to textField
+extension UITextField {
+    func setLeftPaddingPoints(_ amount:CGFloat){
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.leftView = paddingView
+        self.leftViewMode = .always
+    }
+    func setRightPaddingPoints(_ amount:CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.rightView = paddingView
+        self.rightViewMode = .always
     }
 }

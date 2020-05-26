@@ -37,7 +37,7 @@ class Bubble: UITextView {
         var newW = frame.width //new width
         
         if msg.sender == "user"{
-            self.backgroundColor = #colorLiteral(red: 0.0862745098, green: 0.5450980392, blue: 0.9490196078, alpha: 1)
+            self.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
             self.textColor = UIColor.white
             
             
