@@ -22,7 +22,7 @@ private enum MenuOption {
     case signOut
 }
 
-class ChatViewController: UIViewController, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleActionProtocol {
     
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
@@ -408,6 +408,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Chat OptionBubble protocol implementation
     
     func onOptionBubblePress(text: String) {
+        messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
         prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
         print("Suggestion sent\n")
     }
@@ -444,16 +445,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                     print("FULFILLMENT_MESSAGES: \(response.fulfillmentMessages)\n")
                     print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
                     print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
-                    
-                    /*if(response.fulfillmentMessages[0].payload?.fields.suggestions != nil){
-                        print("Suggestions values: \(response.fulfillmentMessages[0].payload?.fields.suggestions?.listValue.values)\n")
-                        print("Clinimetry: \(response.fulfillmentMessages[0].payload?.fields.clinimetry)\n")
-                    }*/
-                    
+                                        
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         self.displayResponse(msg: response.fulfillmentText)
                         
+                        var options : [OptionBubble]!
                         //process each fulfillment message and display an option bubble for each suggestion
                         for fm in response.fulfillmentMessages{
                             
@@ -461,13 +458,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                                 let len = values.count
                                 
                                 for i in 0..<len{
-                                    var padd = 2
-                                    if i == len-1{
-                                        padd = 10
-                                    }
+                                    let toBeAdded = OptionBubble(view: self.messageScrollView, msg: Message(text: values[i].stringValue, sender: "Agent"), sTxt: String(i + 1), pd: 2, del: self )
                                     
-                                    self.addBubble(bbl: OptionBubble(view: self.messageScrollView, msg: Message(text: values[i].stringValue, sender: "Agent"), sTxt: String(i + 1), pd: padd, del: self ))
+                                    if options == nil {
+                                        options = [toBeAdded]
+                                    }else{
+                                        options.append(toBeAdded)
+                                    }
                                 }
+                                //create a supper bubble that contains all thesuggestion bubbles 
+                                let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "Agent")
+                                self.addBubble(bbl: superBubble)
                             }
                         }
                     }

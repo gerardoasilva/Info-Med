@@ -12,9 +12,15 @@ protocol OptionBubbleActionProtocol {
     func onOptionBubblePress(text: String)
 }
 
+protocol OptionBubbleDeactivateProtocol {
+    func blockFurtherActions(bbl: OptionBubble)
+}
+
 class OptionBubble: Bubble {
     
     var bubbleDelegate: OptionBubbleActionProtocol?
+    var deactivationDelegate : OptionBubbleDeactivateProtocol?
+    
     var pressed : Bool = false
     
     init(view: UIView, msg: Message, sTxt: String, pd: Int ,del: OptionBubbleActionProtocol) {
@@ -55,16 +61,9 @@ class OptionBubble: Bubble {
     @objc func handleTap(sender: UITapGestureRecognizer){
         if !(pressed){
             bubbleDelegate?.onOptionBubblePress(text: msg.text)
-            self.backgroundColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
-            pressed = true
+            //pressed = true
+            deactivationDelegate?.blockFurtherActions(bbl: self)
+            self.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         }
     }
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }
