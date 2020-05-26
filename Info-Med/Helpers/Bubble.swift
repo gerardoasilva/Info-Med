@@ -12,6 +12,10 @@ class Bubble: UITextView {
     
     var msg: Message!
     var padd = 10
+    var leftPadd = 50
+    //var neighbors : [Bubble]!
+    var senderIcon : UIImageView!
+    var parentView : UIView!
 
     init(view: UIView, msg: Message) {
         //
@@ -24,9 +28,10 @@ class Bubble: UITextView {
         
         super.init(frame: dimensions, textContainer: nil)//intialize the UITextView to such dimensions
         initialize()
-        
+                
         self.msg = msg
         self.text = msg.text
+        self.parentView = view
         
         //------------------------------------------
         
@@ -36,6 +41,7 @@ class Bubble: UITextView {
         
         if msg.sender == "agent"{
             limit = (view.frame.width / 6) * 4
+            senderIcon = UIImageView(image: UIImage(named: "bot"))
         }
         
         var x = initX
@@ -63,7 +69,7 @@ class Bubble: UITextView {
                 newW = CGFloat(limit - CGFloat(padd))
             }
             
-            x += 50
+            x += CGFloat(leftPadd)
         }else{
             self.backgroundColor = .white
             self.textColor = .black
@@ -79,6 +85,8 @@ class Bubble: UITextView {
         //set bubble height to content (text) size
         self.frame = CGRect(x: x, y: frame.origin.y, width: newW , height: self.contentSize.height)
         self.isScrollEnabled = false
+        
+        resetIcon()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -119,7 +127,34 @@ class Bubble: UITextView {
         //self.isScrollEnabled = false
     }
     
+    func resetIcon(){
+                
+        if(msg.sender == "agent"){
+            
+            /*if neighbors != nil{
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" )
+                if let index = neighbors.firstIndex(of: self){
+                    print("INDEX ==> \(index)")
+                }
+            }*/
+            
+            senderIcon.removeFromSuperview()
+            let size = CGFloat(leftPadd-6)
+            senderIcon.frame = CGRect(
+                x: frame.origin.x - CGFloat(leftPadd),
+                y: frame.origin.y + frame.height - size,
+                width: size,
+                height: size)
+            parentView.addSubview(senderIcon)
+        }
+    }
+    
+    /*func updateNeighbors(arr : [Bubble]){
+        neighbors = arr
+    }*/
+    
     func setY(y: CGFloat){
         self.frame = CGRect(x: frame.origin.x, y: y, width: frame.width , height: frame.height)
+        resetIcon()
     }
 }

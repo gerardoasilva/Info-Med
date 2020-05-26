@@ -303,7 +303,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
     /// - Returns: Void
     func displayResponse(msg: String) {
         print("Request completed")
-        addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: msg, sender: "agent")))
+        addBubble(bbl: Bubble(view: messageScrollView ,msg: Message(text: msg, sender: "agent")))
     }
     
     /// This function adds a bubble to array of Bubbles (bubbleList)
@@ -341,13 +341,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
             // Add height to offset
             offsetAccum += addedHeight
         }
-        //DEBUG
         
+        /*for b in bubblesList{
+            b.updateNeighbors(arr: bubblesList)
+        }*/
+        //DEBUG
+        /*
         print("frame: ", messageScrollView.frame.height)
         print("CS: ", messageScrollView.contentSize.height)
         print("VS: ", messageScrollView.visibleSize.height)
         print("AH: ", acumulatedHeight)
         print("OffsetAcc: ", offsetAccum)
+         */
     }
     
     //Removes the last bubble from the scrroll view, bubble array, and resets the height, accum height, and offset
@@ -384,6 +389,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, OptionBubbleAct
                 // remove height from offset
                 offsetAccum -= subtractedHeight
             }
+            
+            /*for b in bubblesList{
+                b.updateNeighbors(arr: bubblesList)
+            }*/
         }
     }
     
