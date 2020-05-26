@@ -80,8 +80,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         if menuView == nil {
             createSideMenu()
         }
-
-        // Add edge pan gesture recognizer to open menu
         
         
         // Add tap gesture to close menu when tapped outside of it
@@ -180,10 +178,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     func createSideMenu() {
         // Set menu's width
         let menuWidth =  UIScreen.main.bounds.width - menuLimit
-        let heightToolbar = inputToolBar.frame.height
-        let heightNavigationbar = self.navigationController?.navigationBar.frame.height ?? 0.0
-        let heightStatusbar = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0
-        menuView = MenuView(heightToolbar: heightToolbar, heightNavigationbar: heightNavigationbar, heightStatusbar:heightStatusbar)
+        let toolBarFrame = inputToolBar.frame
+        let scrollViewFrame = messageScrollView.frame
+        
+        menuView = MenuView(toolBarFrame: toolBarFrame, scrollViewFrame: scrollViewFrame)
         // Create dark view
         darkView = UIView()
         
@@ -494,9 +492,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     }
     
     
-    
-    
-    
     //MARK: - TEXT FIELD DELEGATES
     
     // Sends user's query if the return buttons is pressed on the keyboard
@@ -535,19 +530,17 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     // Table data
     var labels: [String]!
     var icons: [UIImage?]!
-    var heightToolbar: CGFloat! // height of toolbar
-    var heightNavigationbar: CGFloat! //height of navigationbar
-    var heightStatusbar: CGFloat! // height of statusbar
+    private var toolBarFrame: CGRect!
+    private var scrollViewFrame: CGRect!
 
     // Declare notification for MenuOption of Questionnaire
     static let notificationOption = Notification.Name("sideMenuUserSelection")
     
     // Constructor for UIView subclass
-    init(heightToolbar: CGFloat, heightNavigationbar: CGFloat, heightStatusbar: CGFloat) {
+    init(toolBarFrame: CGRect, scrollViewFrame: CGRect) {
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        self.heightToolbar = heightToolbar
-        self.heightNavigationbar = heightNavigationbar
-        self.heightStatusbar = heightStatusbar
+        self.toolBarFrame = toolBarFrame
+        self.scrollViewFrame = scrollViewFrame
         setupViews()
         // Create sideMenu ViewController
         labels = [
@@ -594,7 +587,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         self.layer.shadowOpacity = 0
         self.layer.shadowOffset = .zero
         self.layer.shadowRadius = 10
-        tableView = UITableView(frame: CGRect(x: 0, y: heightNavigationbar, width: widthMenu, height: screenHeight))
+        tableView = UITableView(frame: CGRect(x: 0, y: scrollViewFrame.origin.y, width: widthMenu, height: screenHeight - scrollViewFrame.origin.y - toolBarFrame.height))
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.rowHeight = 80
@@ -622,8 +615,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 4){
             let heightTableRows = tableView.rowHeight * 5
-            let topBar = heightNavigationbar + heightStatusbar
-            return heightViewController - heightTableRows - heightToolbar - topBar
+            return tableView.frame.height - heightTableRows
         }
         return 80;
     }
