@@ -22,7 +22,7 @@ private enum MenuOption {
     case signOut
 }
 
-class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate, OptionBubbleActionProtocol {
     
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
@@ -258,6 +258,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     }
     
     // MARK: - CHAT
+    
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
         // Delete all bubbles
@@ -288,7 +289,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     /// - Returns: Void
     func displayResponse(msg: String) {
         print("Request completed")
-        addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: msg, sender: "agent")))
+        addBubble(bbl: Bubble(view: messageScrollView ,msg: Message(text: msg, sender: "agent")))
     }
     
     /// This function adds a bubble to array of Bubbles (bubbleList)
@@ -326,11 +327,59 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             // Add height to offset
             offsetAccum += addedHeight
         }
+        
+        /*for b in bubblesList{
+            b.updateNeighbors(arr: bubblesList)
+        }*/
+        //DEBUG
+        /*
         print("frame: ", messageScrollView.frame.height)
         print("CS: ", messageScrollView.contentSize.height)
         print("VS: ", messageScrollView.visibleSize.height)
         print("AH: ", acumulatedHeight)
         print("OffsetAcc: ", offsetAccum)
+         */
+    }
+    
+    //Removes the last bubble from the scrroll view, bubble array, and resets the height, accum height, and offset
+    func removeLastBubble(){
+        if bubblesList == nil {
+            return
+        }
+        
+        let index = bubblesList.count - 1 //the last index in the array
+        
+        if index + 1 >= 1{
+            //the bubble to remove
+            let bbl = bubblesList[index]
+            
+            //if it is the last remaining bubble
+            if index + 1 == 1{
+                acumulatedHeight -= bbl.padd
+                messageScrollView.contentSize.height = CGFloat(acumulatedHeight)
+            }
+            
+            let subtractedHeight = Int(bbl.frame.height) + bbl.padd
+            acumulatedHeight -= subtractedHeight
+            messageScrollView.contentSize.height = CGFloat(acumulatedHeight )
+            
+            bbl.removeFromSuperview()
+            bubblesList.removeLast()
+            //if it is the last remaining bubble
+            if index + 1 == 1{
+                bubblesList = nil
+            }
+            
+            // Check if content is larger than scroll view's actual height
+            if CGFloat(messageScrollView.contentSize.height) >= messageScrollView.frame.height {
+                // remove height from offset
+                offsetAccum -= subtractedHeight
+            }
+            
+            /*for b in bubblesList{
+                b.updateNeighbors(arr: bubblesList)
+            }*/
+        }
     }
     
     // Move messageScrollView when keyboard is shown
@@ -399,9 +448,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
-            //for testing only
-            //addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "agent")))
-            
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
             prepareRequest(userInput: tfInput.text!, agent: actualAgent) //does the server request
         }
@@ -409,11 +455,21 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         tfInput.text = ""
     }
     
+    // MARK: - Chat OptionBubble protocol implementation
+    
+    func onOptionBubblePress(text: String) {
+        messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+        prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
+        print("Suggestion sent\n")
+    }
+    
     // MARK: - HTTP REQUEST
     
     // This function prepares an HTTP request to the server that calls Dialogflow´s API
     func prepareRequest(userInput: String!, agent: Agent!) {
         print("Preparing request")
+        
+        addBubble(bbl: TypingBubble(view: messageScrollView))
         
         // Validate that the user's query is valid
         if let query = userInput {
@@ -441,10 +497,37 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     print("FULFILLMENT_MESSAGES: \(response.fulfillmentMessages)\n")
                     print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
                     print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
-                    
+                                        
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
+                        
+                        //remove the typing bubble
+                        self.removeLastBubble()
+                        //display the bot response
                         self.displayResponse(msg: response.fulfillmentText)
+                        
+                        var options : [OptionBubble]!
+                        
+                        //process each fulfillment message and display an option bubble for each suggestion
+                        for fm in response.fulfillmentMessages{
+                            
+                            if let values = fm.payload?.fields.suggestions?.listValue.values{
+                                let len = values.count
+                                
+                                for i in 0..<len{
+                                    let toBeAdded = OptionBubble(view: self.messageScrollView, msg: Message(text: values[i].stringValue, sender: "option"), sTxt: String(i + 1), pd: 2, del: self )
+                                    
+                                    if options == nil {
+                                        options = [toBeAdded]
+                                    }else{
+                                        options.append(toBeAdded)
+                                    }
+                                }
+                                //create a supper bubble that contains all thesuggestion bubbles 
+                                let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
+                                self.addBubble(bbl: superBubble)
+                            }
+                        }
                     }
                     
                 // Request went wrong
@@ -496,7 +579,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
         
     }
-    
     
     //MARK: - TEXT FIELD DELEGATES
     

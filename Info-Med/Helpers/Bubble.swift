@@ -11,7 +11,11 @@ import UIKit
 class Bubble: UITextView {
     
     var msg: Message!
-    let padd = 10
+    var padd = 10
+    var leftPadd = 50
+    //var neighbors : [Bubble]!
+    var senderIcon : UIImageView!
+    var parentView : UIView!
 
     init(view: UIView, msg: Message) {
         //
@@ -24,15 +28,22 @@ class Bubble: UITextView {
         
         super.init(frame: dimensions, textContainer: nil)//intialize the UITextView to such dimensions
         initialize()
-        
+                
         self.msg = msg
         self.text = msg.text
+        self.parentView = view
         
         //------------------------------------------
         
         adjustHeight()
         
-        let limit = (view.frame.width / 5) * 4 //the proportion at wich the bubble truncates
+        var limit = (view.frame.width / 5) * 4 //the proportion at wich the bubble truncates
+        
+        if msg.sender == "agent"{
+            limit = (view.frame.width / 6) * 4
+            senderIcon = UIImageView(image: UIImage(named: "bot"))
+        }
+        
         var x = initX
         var newW = frame.width //new width
         
@@ -48,7 +59,18 @@ class Bubble: UITextView {
                 x = view.frame.width - CGFloat(padd) - frame.width
             }
         }
-        else {
+        else if msg.sender == "agent"{
+            self.backgroundColor = .white
+            self.textColor = .black
+            self.layer.borderWidth = 1.0
+            self.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+            
+            if frame.width > limit - CGFloat(padd) {//if the width of the bubble after adjusting is bigger than the limit of 5/6 of the width of the screen + padding
+                newW = CGFloat(limit - CGFloat(padd))
+            }
+            
+            x += CGFloat(leftPadd)
+        }else{
             self.backgroundColor = .white
             self.textColor = .black
             self.layer.borderWidth = 1.0
@@ -63,6 +85,8 @@ class Bubble: UITextView {
         //set bubble height to content (text) size
         self.frame = CGRect(x: x, y: frame.origin.y, width: newW , height: self.contentSize.height)
         self.isScrollEnabled = false
+        
+        resetIcon()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -103,7 +127,34 @@ class Bubble: UITextView {
         //self.isScrollEnabled = false
     }
     
+    func resetIcon(){
+                
+        if(msg.sender == "agent"){
+            
+            /*if neighbors != nil{
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" )
+                if let index = neighbors.firstIndex(of: self){
+                    print("INDEX ==> \(index)")
+                }
+            }*/
+            
+            senderIcon.removeFromSuperview()
+            let size = CGFloat(leftPadd-6)
+            senderIcon.frame = CGRect(
+                x: frame.origin.x - CGFloat(leftPadd),
+                y: frame.origin.y + frame.height - size,
+                width: size,
+                height: size)
+            parentView.addSubview(senderIcon)
+        }
+    }
+    
+    /*func updateNeighbors(arr : [Bubble]){
+        neighbors = arr
+    }*/
+    
     func setY(y: CGFloat){
         self.frame = CGRect(x: frame.origin.x, y: y, width: frame.width , height: frame.height)
+        resetIcon()
     }
 }
