@@ -32,7 +32,12 @@ class Bubble: UITextView {
         
         adjustHeight()
         
-        let limit = (view.frame.width / 5) * 4 //the proportion at wich the bubble truncates
+        var limit = (view.frame.width / 5) * 4 //the proportion at wich the bubble truncates
+        
+        if msg.sender == "agent"{
+            limit = (view.frame.width / 6) * 4
+        }
+        
         var x = initX
         var newW = frame.width //new width
         
@@ -48,7 +53,18 @@ class Bubble: UITextView {
                 x = view.frame.width - CGFloat(padd) - frame.width
             }
         }
-        else {
+        else if msg.sender == "agent"{
+            self.backgroundColor = .white
+            self.textColor = .black
+            self.layer.borderWidth = 1.0
+            self.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+            
+            if frame.width > limit - CGFloat(padd) {//if the width of the bubble after adjusting is bigger than the limit of 5/6 of the width of the screen + padding
+                newW = CGFloat(limit - CGFloat(padd))
+            }
+            
+            x += 50
+        }else{
             self.backgroundColor = .white
             self.textColor = .black
             self.layer.borderWidth = 1.0

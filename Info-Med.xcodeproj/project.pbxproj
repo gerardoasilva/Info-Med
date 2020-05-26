@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		63018DA8247CD3EB0047C4C5 /* BubbleOfBubbles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63018DA7247CD3EB0047C4C5 /* BubbleOfBubbles.swift */; };
+		63018DAA247CE62B0047C4C5 /* TypingBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63018DA9247CE62B0047C4C5 /* TypingBubble.swift */; };
 		635FCD0C245023680083E984 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0B245023680083E984 /* ChatViewController.swift */; };
 		635FCD0E245023CA0083E984 /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0D245023CA0083E984 /* Classes.swift */; };
 		635FCD10245024090083E984 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0F245024090083E984 /* Bubble.swift */; };
@@ -57,6 +58,7 @@
 		473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_MedTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Info_Med_Info_MedUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63018DA7247CD3EB0047C4C5 /* BubbleOfBubbles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleOfBubbles.swift; sourceTree = "<group>"; };
+		63018DA9247CE62B0047C4C5 /* TypingBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingBubble.swift; sourceTree = "<group>"; };
 		635FCD0B245023680083E984 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		635FCD0D245023CA0083E984 /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Classes.swift; path = "Info-Med/Classes.swift"; sourceTree = SOURCE_ROOT; };
 		635FCD0F245024090083E984 /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				DCF9D326246244F900F69F29 /* ResponseFAQ.swift */,
 				637C91E3247C06880059CA80 /* OptionBubble.swift */,
 				63018DA7247CD3EB0047C4C5 /* BubbleOfBubbles.swift */,
+				63018DA9247CE62B0047C4C5 /* TypingBubble.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63018DAA247CE62B0047C4C5 /* TypingBubble.swift in Sources */,
 				63018DA8247CD3EB0047C4C5 /* BubbleOfBubbles.swift in Sources */,
 				DCB7F9C7244F78A300D8E9A8 /* LoginViewController.swift in Sources */,
 				63AFB927246A968D006EF9FD /* SideMenuCell.swift in Sources */,
