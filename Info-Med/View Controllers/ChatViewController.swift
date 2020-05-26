@@ -363,8 +363,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             acumulatedHeight -= subtractedHeight
             messageScrollView.contentSize.height = CGFloat(acumulatedHeight )
             
+            bbl.deleteIcon()
             bbl.removeFromSuperview()
             bubblesList.removeLast()
+            
             //if it is the last remaining bubble
             if index + 1 == 1{
                 bubblesList = nil
@@ -530,9 +532,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                         options.append(toBeAdded)
                                     }
                                 }
-                                //create a supper bubble that contains all thesuggestion bubbles 
-                                let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
-                                self.addBubble(bbl: superBubble)
+                                //create a supper bubble that contains all thesuggestion bubbles
+                                if options != nil && !options.isEmpty {
+                                    let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
+                                    self.addBubble(bbl: superBubble)
+                                }
                             }
                         }
                     }

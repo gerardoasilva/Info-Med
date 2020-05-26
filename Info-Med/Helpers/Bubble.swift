@@ -149,6 +149,12 @@ class Bubble: UITextView {
         }
     }
     
+    func deleteIcon(){
+        if(msg.sender == "agent"){
+            senderIcon.removeFromSuperview()
+        }
+    }
+    
     /*func updateNeighbors(arr : [Bubble]){
         neighbors = arr
     }*/
