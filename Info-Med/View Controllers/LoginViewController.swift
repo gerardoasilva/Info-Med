@@ -11,24 +11,36 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var topView: UIView!
     @IBOutlet weak var tfEmail: UITextField!
-    @IBOutlet weak var tfPhoneNumber: UITextField!
+    @IBOutlet weak var tfPassword: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var lbError: UILabel!
+    @IBOutlet weak var separatorView: UIView!
     @IBOutlet weak var registerButton: UIButton!
+
+    private var counter = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Adds tap recognizer in current view to hide keyboard
+        configureNavbar()
+        setUpElements()
+        
+        // Adds tap gesture recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
         
         // Textfield delegates
         tfEmail.delegate = self
-        tfPhoneNumber.delegate = self
+        tfPassword.delegate = self
+        
+        // Check if textfield has been edited
+        setupAddTargetIsNotEmptyTextFields()
 
-        // Do any additional setup after loading the view.
+        // Register to listen keyboard notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // Verify user authentication when view appears
@@ -45,22 +57,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    /*
-    func authenticateUser(){
-        // Check
-        if Auth.auth().currentUser == nil {
-            DispatchQueue.main.async {
-                print("login\n")
-                
-                //print(Auth.auth().currentUser?.email))
-                self.transitionToChatVC()
-            }
-        }
-        else {
-            print("Login required \n")
-        }
+    // Setup textfields to listen to edit changes
+    func setupAddTargetIsNotEmptyTextFields() {
+        loginButton.isEnabled = false
+        tfEmail.addTarget(self, action: #selector(textFieldsIsNotEmpty),
+                                 for: .editingChanged)
+        tfPassword.addTarget(self, action: #selector(textFieldsIsNotEmpty),
+                                 for: .editingChanged)
     }
- */
     
     // Hides keyboard when user taps away from keyboard
     @IBAction func dismissKeyboard() {
@@ -71,9 +75,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == tfEmail {
             textField.resignFirstResponder()
-            tfPhoneNumber.becomeFirstResponder()
+            tfPassword.becomeFirstResponder()
         }
-        else if textField == tfPhoneNumber {
+        else if textField == tfPassword {
             textField.resignFirstResponder()
             loginTapped(loginButton)
         }
@@ -85,11 +89,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // Check that all the fields are filled in
         if tfEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            tfPhoneNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) == ""{
+            tfPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == ""{
             return "Por favor llene todos los campos."
         }
     
         return nil
+    }
+    
+    @objc func textFieldsIsNotEmpty(sender: UITextField) {
+
+    sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
+
+    guard
+        let email = tfEmail.text, !email.isEmpty,
+        let password = tfPassword.text, !password.isEmpty
+    else
+    {
+        self.loginButton.isEnabled = false
+        return
+    }
+        // enable okButton if all conditions are met
+        loginButton.isEnabled = true
+//        loginButton.setTitleColor(.white, for: .normal)
     }
     
     // Authenticate user and grant access
@@ -107,7 +128,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             // Create cleaned versions of text fields
             let email = tfEmail.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            let phoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+            let phoneNumber = tfPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
          
             // Signing in the user
             Auth.auth().signIn(withEmail: email, password: phoneNumber) { (result, error) in
@@ -140,6 +161,94 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         view.window?.rootViewController = navController
         view.window?.makeKeyAndVisible()
+    }
+    
+    func configureNavbar() {
+        // Make navbar transparent
+       navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+       navigationController?.navigationBar.shadowImage = UIImage()
+       navigationController?.navigationBar.isTranslucent = true
+    }
+    
+    func setUpElements() {
+        
+        let screenHeight = self.view.bounds.height
+        let screenWhidth = self.view.bounds.width
+
+        topView.translatesAutoresizingMaskIntoConstraints = false
+        tfEmail.translatesAutoresizingMaskIntoConstraints = false
+        tfPassword.translatesAutoresizingMaskIntoConstraints = false
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
+        registerButton.translatesAutoresizingMaskIntoConstraints = false
+        lbError.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add constraints
+        topView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0).isActive = true
+        topView.heightAnchor.constraint(equalToConstant: screenHeight / 3).isActive = true
+        topView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
+        topView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
+        
+        tfEmail.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: (screenHeight - topView.frame.height)/8).isActive = true
+        tfEmail.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
+        tfEmail.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfEmail.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        lbError.textColor = #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
+        lbError.textAlignment = .center
+        lbError.bottomAnchor.constraint(equalTo: tfEmail.topAnchor, constant: -5).isActive = true
+        lbError.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
+        lbError.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
+        lbError.heightAnchor.constraint(equalToConstant: tfEmail.bounds.height).isActive = true
+        
+        tfPassword.topAnchor.constraint(equalTo: tfEmail.bottomAnchor, constant: 25).isActive = true
+        tfPassword.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
+        tfPassword.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfPassword.heightAnchor.constraint(equalToConstant: tfEmail.bounds.height).isActive = true
+        
+        loginButton.topAnchor.constraint(equalTo: tfPassword.bottomAnchor, constant: 25).isActive = true
+        loginButton.centerXAnchor.constraint(equalTo: tfPassword.centerXAnchor).isActive = true
+        loginButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: tfPassword.bounds.height).isActive = true
+        
+        registerButton.heightAnchor.constraint(equalToConstant: loginButton.bounds.height).isActive = true
+        registerButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
+        registerButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
+        
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: registerButton.topAnchor, constant: -10).isActive = true
+        separatorView.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
+        
+        
+        
+        // Hide error label
+        lbError.alpha = 0
+        
+        // Style elements
+        Utilities.styleTextField(tfEmail)
+        Utilities.styleTextField(tfPassword)
+        Utilities.styleFilledButton(loginButton)
+        
+    }
+    
+    // MARK: - KEYBOARD HANDLERS
+    
+    // Move the view up when keybord shows
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+
+    // Return the view to its original position when keyboard hides
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     /*
