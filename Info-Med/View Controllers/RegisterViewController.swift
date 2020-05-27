@@ -27,6 +27,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
 
         configureNavbar()
         setUpElements()
+        setupAddTargetIsNotEmptyTextFields()
         
         // Adds tap recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -38,6 +39,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         tfPhoneNumber.delegate = self
         tfFirstName.delegate = self
         tfLastName.delegate = self
+        
+        let panGestureBack = UIPanGestureRecognizer(target: self, action: #selector(popViewController))
+        view.addGestureRecognizer(panGestureBack)
         
     }
     
@@ -60,7 +64,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         lbError.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -5).isActive = true
         lbError.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         lbError.widthAnchor.constraint(equalToConstant: screenWhidth).isActive = true
-        lbError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        lbError.heightAnchor.constraint(equalToConstant: 30).isActive = true
 
         // Add constraints
         tfEmail.topAnchor.constraint(equalTo: lbError.bottomAnchor, constant: 5).isActive = true
@@ -100,23 +104,10 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         loginButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
-//        registerButton.heightAnchor.constraint(equalToConstant: loginButton.bounds.height).isActive = true
-//        registerButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-//        registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
-//        registerButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
-        
-        
-        
         separatorView.bottomAnchor.constraint(equalTo: loginButton.topAnchor, constant: -10).isActive = true
         separatorView.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         separatorView.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor).isActive = true
-//        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-//        separatorView.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
-//        separatorView.bottomAnchor.constraint(equalTo: registerButton.topAnchor, constant: -10).isActive = true
-//        separatorView.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
-        
-        
         
         // Hide error label
         lbError.alpha = 0
@@ -131,6 +122,14 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    // Setup textfields to listen to edit changes
+    func setupAddTargetIsNotEmptyTextFields() {
+        registerButton.isEnabled = false
+        tfEmail.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
+        tfPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
+        tfPhoneNumber.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
+    }
+    
     func configureNavbar() {
         // Make navbar transparent
        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
@@ -138,9 +137,30 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
        navigationController?.navigationBar.isTranslucent = true
     }
     
+     @objc func textFieldIsNotEmpty(sender: UITextField) {
+
+        sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
+
+        guard
+            let email = tfEmail.text, !email.isEmpty,
+            let password = tfPassword.text, !password.isEmpty,
+            let phoneNum = tfPhoneNumber.text, !phoneNum.isEmpty
+        else
+        {
+            self.registerButton.isEnabled = false
+            return
+        }
+            // enable register button if all conditions are met
+            registerButton.isEnabled = true
+        }
+    
     // Hides keyboard when user taps away from keyboard
     @IBAction func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @IBAction func popViewController() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     // Allows navigation through textfields when "return" is pressed

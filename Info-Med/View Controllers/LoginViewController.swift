@@ -60,9 +60,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     // Setup textfields to listen to edit changes
     func setupAddTargetIsNotEmptyTextFields() {
         loginButton.isEnabled = false
-        tfEmail.addTarget(self, action: #selector(textFieldsIsNotEmpty),
+        tfEmail.addTarget(self, action: #selector(textFieldIsNotEmpty),
                                  for: .editingChanged)
-        tfPassword.addTarget(self, action: #selector(textFieldsIsNotEmpty),
+        tfPassword.addTarget(self, action: #selector(textFieldIsNotEmpty),
                                  for: .editingChanged)
     }
     
@@ -96,7 +96,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return nil
     }
     
-    @objc func textFieldsIsNotEmpty(sender: UITextField) {
+    @objc func textFieldIsNotEmpty(sender: UITextField) {
 
     sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
 
@@ -108,7 +108,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.loginButton.isEnabled = false
         return
     }
-        // enable okButton if all conditions are met
+        // Enable login button if all conditions are met
         loginButton.isEnabled = true
 //        loginButton.setTitleColor(.white, for: .normal)
     }
@@ -184,6 +184,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         separatorView.translatesAutoresizingMaskIntoConstraints = false
 
         // Add constraints
+        topView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
         topView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0).isActive = true
         topView.heightAnchor.constraint(equalToConstant: screenHeight / 3).isActive = true
         topView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
@@ -199,7 +200,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         lbError.bottomAnchor.constraint(equalTo: tfEmail.topAnchor, constant: -5).isActive = true
         lbError.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
         lbError.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
-        lbError.heightAnchor.constraint(equalToConstant: tfEmail.bounds.height).isActive = true
+        lbError.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         tfPassword.topAnchor.constraint(equalTo: tfEmail.bottomAnchor, constant: 25).isActive = true
         tfPassword.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
