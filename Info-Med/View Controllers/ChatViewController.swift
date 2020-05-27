@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import FirebaseAuth
+import FirebaseFirestore
 
 public enum Agent: String {
     case faq = "faq"
@@ -39,8 +40,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     var activeField: UITextField!
     var bubblesList: [Bubble]!  //list of chat bubbles were new bubbles are pushed to
-    
+
     var contexts: [Context] = [Context]() // Declare empty Context array to store contexts from queries
+    
+    //questionary specific variables
+    var symptomsDict : [String : Double]! //saves the symptoms ad sums of the current questionary
+    var currentSymptom : String! //saves the current cuestion symptom
     
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
@@ -515,11 +520,99 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                         //display the bot response
                         self.displayResponse(msg: response.fulfillmentText)
                         
-                        var options : [OptionBubble]!
                         
-                        //process each fulfillment message and display an option bubble for each suggestion
+                        //save the syptoms clinimetry to the disctionary
+                        if self.symptomsDict == nil{
+                            self.symptomsDict = [:]
+                        }
+                                                
+                        
+                        //process each fulfillment message
+                        var options : [OptionBubble]!
                         for fm in response.fulfillmentMessages{
                             
+                            //save the syptoms clinimetry to the disctionary
+                            if let clinimetry = fm.payload?.fields.clinimetry?.numberValue{ //if there is some clinimetry to process
+                                
+                                if clinimetry == 0{//if it is the firs question of the queationaire
+                                    
+                                    //set currentSyptom to the question symptom for cases where the question is missing the symptom
+                                    if let symptom = fm.payload?.fields.symptom?.stringValue{
+                                        self.currentSymptom = symptom
+                                    }
+                                }else {//add the previous question clinimetry to the symptom
+                                    
+                                    var symp = fm.payload?.fields.symptom?.stringValue
+                                    print("SYMP: \(String(describing: symp))")
+                                    
+                                    if symp == nil{//if the answere doesnot carry a symptom use the questions default
+                                        symp = self.currentSymptom
+                                    }
+                                    
+                                    //check if key is already in dictionary
+                                    if(self.symptomsDict[symp!] == nil){
+                                         self.symptomsDict[symp!] = Double(clinimetry)
+                                    }else{
+                                        self.symptomsDict[symp!]! += Double(clinimetry)
+                                    }
+                                }
+                            }
+                            
+                            //push dictionary to DB
+                            if response.fulfillmentText == "Fin del cuestionario" && self.symptomsDict != nil{
+                                print("Pushing to DB!!")
+                                print("DIC TO PUSH = \(String(describing: self.symptomsDict))")
+                                
+                                let db = Firestore.firestore()
+                                let user = Auth.auth().currentUser
+                                
+                                print("USER = \(String(describing: user?.uid))")
+                                
+                                var docID : String!
+                                let semaphore = DispatchSemaphore(value: 0)
+                                
+                                //query for the current user's document id
+                                db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
+                                    if let error = error {
+                                        print("Error geting user document")
+                                    }else{
+                                        for document in snapshot!.documents{
+                                            let data = document.data()
+                                            docID = document.documentID
+                                            
+                                            print("USER NAME = \(String(describing: data["firstName"]))")
+                                            print("DOC ID = \(String(describing: document.documentID))")
+                                        }
+                                        
+                                    }
+                                    semaphore.signal()
+                                }
+                                
+                                semaphore.wait()
+                                //if the query was succesful then add a document with the poll results
+                                if(docID != nil){
+                                    let date = Date()
+                                    let calendar = Calendar.current
+                                    let sec = calendar.component(.second, from: date)
+                                    let minutes = calendar.component(.minute, from: date)
+                                    let hour = calendar.component(.hour, from: date)
+                                    let day = calendar.component(.day, from: date)
+                                    let month = calendar.component(.month, from: date)
+                                    let year = calendar.component(.year, from: date)
+                                    
+                                    //add poll results to database
+                                    db.collection("users").document(docID).collection("polls").document("\(year) \(month) \(day) \(hour) \(minutes) \(sec)").setData(["potato":"potato"])
+                                }else{
+                                    print("No doc ID")
+                                }
+                                
+                                //clear the dictionary to be able to use it again
+                                self.symptomsDict = nil
+                            }
+                            
+                            //print("DIC = \(String(describing: self.symptomsDict))")
+                            
+                            //display an option bubble for each suggestion
                             if let values = fm.payload?.fields.suggestions?.listValue.values{
                                 let len = values.count
                                 
