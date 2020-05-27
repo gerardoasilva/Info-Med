@@ -20,9 +20,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var registerButton: UIButton!
 
     private var counter = 0
+    private var viewOriginalFrame: CGRect!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewOriginalFrame = self.view.frame
         
         configureNavbar()
         setUpElements()
@@ -39,8 +42,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         setupAddTargetIsNotEmptyTextFields()
 
         // Register to listen keyboard notifications
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // Verify user authentication when view appears
@@ -186,31 +189,35 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Add constraints
         topView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
         topView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0).isActive = true
-        topView.heightAnchor.constraint(equalToConstant: screenHeight / 3).isActive = true
+//        topView.heightAnchor.constraint(equalToConstant: screenHeight / 3).isActive = true
+        topView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/3).isActive = true
         topView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
         topView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
         
-        tfEmail.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: (screenHeight - topView.frame.height)/8).isActive = true
+        tfEmail.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: (screenHeight - topView.frame.height)/9).isActive = true
         tfEmail.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
-        tfEmail.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+//        tfEmail.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfEmail.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 5/6).isActive = true
         tfEmail.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         lbError.textColor = #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
         lbError.textAlignment = .center
         lbError.bottomAnchor.constraint(equalTo: tfEmail.topAnchor, constant: -5).isActive = true
         lbError.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
-        lbError.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
+        lbError.widthAnchor.constraint(equalTo: tfEmail.widthAnchor).isActive = true
         lbError.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         tfPassword.topAnchor.constraint(equalTo: tfEmail.bottomAnchor, constant: 25).isActive = true
         tfPassword.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
-        tfPassword.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
-        tfPassword.heightAnchor.constraint(equalToConstant: tfEmail.bounds.height).isActive = true
+//        tfPassword.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfPassword.widthAnchor.constraint(equalTo: tfEmail.widthAnchor).isActive = true
+        tfPassword.heightAnchor.constraint(equalTo: tfEmail.heightAnchor).isActive = true
         
         loginButton.topAnchor.constraint(equalTo: tfPassword.bottomAnchor, constant: 25).isActive = true
         loginButton.centerXAnchor.constraint(equalTo: tfPassword.centerXAnchor).isActive = true
-        loginButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
-        loginButton.heightAnchor.constraint(equalToConstant: tfPassword.bounds.height).isActive = true
+//        loginButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
+        loginButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 1/2).isActive = true
+        loginButton.heightAnchor.constraint(equalTo: tfEmail.heightAnchor).isActive = true
         
         registerButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 12)
         registerButton.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
@@ -220,7 +227,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         registerButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
         
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
+        separatorView.widthAnchor.constraint(equalTo: tfEmail.widthAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: registerButton.topAnchor, constant: -10).isActive = true
         separatorView.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
         
@@ -240,18 +247,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // Move the view up when keybord shows
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, self.view.frame.height == self.viewOriginalFrame.height {
+
+            let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
+            let screenHeight = self.view.bounds.height - keyboardSize.height
+            
+            UIView.animate(withDuration: duration) {
+                self.view.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: screenHeight)
+                self.view.layoutIfNeeded()
             }
         }
     }
 
     // Return the view to its original position when keyboard hides
     @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
+        let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
+        let screenHeight = self.viewOriginalFrame.height
+        
+        self.view.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: screenHeight)
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
         }
+
     }
     
     /*
