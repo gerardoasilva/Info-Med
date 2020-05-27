@@ -131,6 +131,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     @objc func optionSelectionHandler(notification: NSNotification?) {
         
         if let optionSelected = (notification?.object) as? MenuOption {
+            
+            //clear the questionaire variables if the user changes screen
+            if actualAgent != .questionnaire{
+                //clear the dictionary to be able to use it again
+                self.symptomsDict = nil
+                self.currentSymptom = nil
+            }
+            
             switch optionSelected {
             // Display user info viewController
             case .info:
@@ -158,7 +166,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             case .questionnaire:
                 print("QUESTIONNAIRE listened")
                 handleMenuToggle()
-
+                                
                 if actualAgent != .questionnaire {
                     actualAgent = .questionnaire
                     
@@ -569,7 +577,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 print("USER = \(String(describing: user?.uid))")
                                 
                                 var docID : String!
-                                let semaphore = DispatchSemaphore(value: 0)
+                                //let semaphore = DispatchSemaphore(value: 0)
                                 
                                 //query for the current user's document id
                                 db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
@@ -585,29 +593,29 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                         }
                                         
                                     }
-                                    semaphore.signal()
+                                    //semaphore.signal()
+                                    //if the query was succesful then add a document with the poll results
+                                    if(docID != nil && self.symptomsDict != nil){
+                                        let date = Date()
+                                        let calendar = Calendar.current
+                                        let sec = calendar.component(.second, from: date)
+                                        let minutes = calendar.component(.minute, from: date)
+                                        let hour = calendar.component(.hour, from: date)
+                                        let day = calendar.component(.day, from: date)
+                                        let month = calendar.component(.month, from: date)
+                                        let year = calendar.component(.year, from: date)
+                                        
+                                        //add poll results to database
+                                        db.collection("users").document(docID).collection("polls").document("\(year) \(month) \(day) \(hour) \(minutes) \(sec)").setData(self.symptomsDict)
+                                    }else{
+                                        print("No doc ID")
+                                    }
+                                    //clear the dictionary to be able to use it again
+                                    self.symptomsDict = nil
                                 }
                                 
-                                semaphore.wait()
-                                //if the query was succesful then add a document with the poll results
-                                if(docID != nil){
-                                    let date = Date()
-                                    let calendar = Calendar.current
-                                    let sec = calendar.component(.second, from: date)
-                                    let minutes = calendar.component(.minute, from: date)
-                                    let hour = calendar.component(.hour, from: date)
-                                    let day = calendar.component(.day, from: date)
-                                    let month = calendar.component(.month, from: date)
-                                    let year = calendar.component(.year, from: date)
-                                    
-                                    //add poll results to database
-                                    db.collection("users").document(docID).collection("polls").document("\(year) \(month) \(day) \(hour) \(minutes) \(sec)").setData(["potato":"potato"])
-                                }else{
-                                    print("No doc ID")
-                                }
+                                //semaphore.wait()
                                 
-                                //clear the dictionary to be able to use it again
-                                self.symptomsDict = nil
                             }
                             
                             //print("DIC = \(String(describing: self.symptomsDict))")
