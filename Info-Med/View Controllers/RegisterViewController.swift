@@ -19,11 +19,14 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tfLastName: UITextField!
     @IBOutlet weak var lbError: UILabel!
     @IBOutlet weak var registerButton: UIButton!
+    @IBOutlet weak var separatorView: UIView!
+    @IBOutlet weak var loginButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationController?.navigationBar.isTranslucent = true
+        configureNavbar()
+        setUpElements()
         
         // Adds tap recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -36,6 +39,103 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         tfFirstName.delegate = self
         tfLastName.delegate = self
         
+    }
+    
+    func setUpElements() {
+        
+        let screenWhidth = self.view.bounds.width
+
+        lbError.translatesAutoresizingMaskIntoConstraints = false
+        tfEmail.translatesAutoresizingMaskIntoConstraints = false
+        tfPassword.translatesAutoresizingMaskIntoConstraints = false
+        tfPhoneNumber.translatesAutoresizingMaskIntoConstraints = false
+        tfFirstName.translatesAutoresizingMaskIntoConstraints = false
+        tfLastName.translatesAutoresizingMaskIntoConstraints = false
+        registerButton.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        lbError.textColor =  #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
+        lbError.textAlignment = .center
+        lbError.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -5).isActive = true
+        lbError.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        lbError.widthAnchor.constraint(equalToConstant: screenWhidth).isActive = true
+        lbError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+
+        // Add constraints
+        tfEmail.topAnchor.constraint(equalTo: lbError.bottomAnchor, constant: 5).isActive = true
+        tfEmail.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfEmail.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        tfEmail.centerXAnchor.constraint(equalTo: lbError.centerXAnchor).isActive = true
+        
+        tfPassword.topAnchor.constraint(equalTo: tfEmail.bottomAnchor, constant: 25).isActive = true
+        tfPassword.heightAnchor.constraint(equalToConstant: tfEmail.bounds.height).isActive = true
+        tfPassword.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfPassword.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
+        
+        tfPhoneNumber.topAnchor.constraint(equalTo: tfPassword.bottomAnchor, constant: 25).isActive = true
+        tfPhoneNumber.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfPhoneNumber.heightAnchor.constraint(equalToConstant: tfPassword.bounds.height).isActive = true
+        tfPhoneNumber.centerXAnchor.constraint(equalTo: tfPassword.centerXAnchor).isActive = true
+        
+        tfFirstName.topAnchor.constraint(equalTo: tfPhoneNumber.bottomAnchor, constant: 25).isActive = true
+        tfFirstName.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfFirstName.heightAnchor.constraint(equalToConstant: tfPhoneNumber.bounds.height).isActive = true
+        tfFirstName.centerXAnchor.constraint(equalTo: tfPhoneNumber.centerXAnchor).isActive = true
+        
+        tfLastName.topAnchor.constraint(equalTo: tfFirstName.bottomAnchor, constant: 25).isActive = true
+        tfLastName.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        tfLastName.heightAnchor.constraint(equalToConstant: tfFirstName.bounds.height).isActive = true
+        tfLastName.centerXAnchor.constraint(equalTo: tfFirstName.centerXAnchor).isActive = true
+
+        registerButton.topAnchor.constraint(equalTo: tfLastName.bottomAnchor, constant: 25).isActive = true
+        registerButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
+        registerButton.heightAnchor.constraint(equalToConstant: tfLastName.bounds.height).isActive = true
+        registerButton.centerXAnchor.constraint(equalTo: tfLastName.centerXAnchor).isActive = true
+        
+        loginButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 12)
+        loginButton.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        loginButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
+        loginButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        loginButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        
+//        registerButton.heightAnchor.constraint(equalToConstant: loginButton.bounds.height).isActive = true
+//        registerButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+//        registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
+//        registerButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
+        
+        
+        
+        separatorView.bottomAnchor.constraint(equalTo: loginButton.topAnchor, constant: -10).isActive = true
+        separatorView.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor).isActive = true
+//        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+//        separatorView.widthAnchor.constraint(equalToConstant: tfEmail.bounds.width).isActive = true
+//        separatorView.bottomAnchor.constraint(equalTo: registerButton.topAnchor, constant: -10).isActive = true
+//        separatorView.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
+        
+        
+        
+        // Hide error label
+        lbError.alpha = 0
+        
+        // Style elements
+        Utilities.styleTextField(tfEmail)
+        Utilities.styleTextField(tfPassword)
+        Utilities.styleTextField(tfPhoneNumber)
+        Utilities.styleTextField(tfFirstName)
+        Utilities.styleTextField(tfLastName)
+        Utilities.styleFilledButton(registerButton)
+        
+    }
+    
+    func configureNavbar() {
+        // Make navbar transparent
+       navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+       navigationController?.navigationBar.shadowImage = UIImage()
+       navigationController?.navigationBar.isTranslucent = true
     }
     
     // Hides keyboard when user taps away from keyboard
