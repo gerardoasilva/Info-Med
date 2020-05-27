@@ -106,6 +106,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     guard
         let email = tfEmail.text, !email.isEmpty,
         let password = tfPassword.text, !password.isEmpty
+        
     else
     {
         self.loginButton.isEnabled = false
@@ -221,14 +222,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         registerButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 12)
         registerButton.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
-        registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//        registerButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        registerButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/13).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
+        registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor).isActive = true
         registerButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
         
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         separatorView.widthAnchor.constraint(equalTo: tfEmail.widthAnchor).isActive = true
-        separatorView.bottomAnchor.constraint(equalTo: registerButton.topAnchor, constant: -10).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: registerButton.topAnchor).isActive = true
         separatorView.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
         
         

@@ -45,6 +45,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    
     func setUpElements() {
         
         let screenWhidth = self.view.bounds.width
@@ -99,12 +100,12 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         loginButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 12)
         loginButton.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
-        loginButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
+        loginButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor).isActive = true
         loginButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        loginButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/13).isActive = true
         loginButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
-        separatorView.bottomAnchor.constraint(equalTo: loginButton.topAnchor, constant: -10).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: loginButton.topAnchor).isActive = true
         separatorView.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         separatorView.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor).isActive = true
