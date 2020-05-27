@@ -39,8 +39,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         setupAddTargetIsNotEmptyTextFields()
 
         // Register to listen keyboard notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // Verify user authentication when view appears
@@ -211,7 +211,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         loginButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
         loginButton.heightAnchor.constraint(equalToConstant: tfPassword.bounds.height).isActive = true
         
-        registerButton.heightAnchor.constraint(equalToConstant: loginButton.bounds.height).isActive = true
+        registerButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 12)
+        registerButton.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -10).isActive = true
         registerButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true

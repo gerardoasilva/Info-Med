@@ -13,7 +13,6 @@
 		635FCD0E245023CA0083E984 /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0D245023CA0083E984 /* Classes.swift */; };
 		635FCD10245024090083E984 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0F245024090083E984 /* Bubble.swift */; };
 		637C91E4247C06880059CA80 /* OptionBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637C91E3247C06880059CA80 /* OptionBubble.swift */; };
-		63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB924246A8DB2006EF9FD /* MenuController.swift */; };
 		63AFB927246A968D006EF9FD /* SideMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB926246A968D006EF9FD /* SideMenuCell.swift */; };
 		6C8549DDE252DFCCBB5CA858 /* Pods_Info_Med_Info_MedUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */; };
 		DB65092BD89BEC084BA4A7D0 /* Pods_Info_MedTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */; };
@@ -63,7 +62,6 @@
 		635FCD0D245023CA0083E984 /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Classes.swift; path = "Info-Med/Classes.swift"; sourceTree = SOURCE_ROOT; };
 		635FCD0F245024090083E984 /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
 		637C91E3247C06880059CA80 /* OptionBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBubble.swift; sourceTree = "<group>"; };
-		63AFB924246A8DB2006EF9FD /* MenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		63AFB926246A968D006EF9FD /* SideMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCell.swift; sourceTree = "<group>"; };
 		6FD835AC9DFFB1A2444592E3 /* Pods-Info-Med-Info-MedUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.release.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.release.xcconfig"; sourceTree = "<group>"; };
 		78DD32B7A751FD85306DBE8F /* Pods-Info-Med-Info-MedUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -207,7 +205,6 @@
 			children = (
 				635FCD0B245023680083E984 /* ChatViewController.swift */,
 				63AFB926246A968D006EF9FD /* SideMenuCell.swift */,
-				63AFB924246A8DB2006EF9FD /* MenuController.swift */,
 				DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */,
 				DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */,
 			);
@@ -483,7 +480,6 @@
 				DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */,
 				635FCD0E245023CA0083E984 /* Classes.swift in Sources */,
 				635FCD0C245023680083E984 /* ChatViewController.swift in Sources */,
-				63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */,
 				637C91E4247C06880059CA80 /* OptionBubble.swift in Sources */,
 				DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */,
 			);
