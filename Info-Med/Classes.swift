@@ -8,6 +8,21 @@
 
 import UIKit
 
+// Enum that has the type of agents available in dialogflow
+enum Agent: String {
+    case faq = "faq"
+    case questionnaire = "questionnaire"
+}
+
+// Enum to know what option from the side menu is pressed
+enum MenuOption {
+    case info
+    case faq
+    case questionnaire
+    case history
+    case signOut
+}
+
 class Message: Codable {
     var text: String!
     var sender: String!
@@ -28,6 +43,7 @@ class Context: Codable {
     }
 }
 
+// Class query that is encoded to send as json to make a request to the API
 class Query: Codable {
     
     var query: String!

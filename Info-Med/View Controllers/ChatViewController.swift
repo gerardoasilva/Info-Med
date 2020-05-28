@@ -10,18 +10,7 @@ import AVFoundation
 import FirebaseAuth
 import FirebaseFirestore
 
-public enum Agent: String {
-    case faq = "faq"
-    case questionnaire = "questionnaire"
-}
 
-private enum MenuOption {
-    case info
-    case faq
-    case questionnaire
-    case history
-    case signOut
-}
 
 class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate, OptionBubbleActionProtocol {
     
@@ -54,29 +43,23 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // Vars for agents
     var actualAgent: Agent = .faq
     var isNewChat = true
-    var viewTitle = "Preguntas Frecuentes"
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tfInput.delegate = self
         
         // Set max width side menu can have, is the horizontal space it can't cover
         menuLimit = self.view.frame.size.width / 4
         
-        // Style tfInput
-        tfInput.returnKeyType = UIReturnKeyType.send
-        tfInput.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
-        tfInput.backgroundColor = .white
-        tfInput.layer.borderWidth = 1.0
-        tfInput.layer.cornerRadius = tfInput.frame.height / 2
-        tfInput.setLeftPaddingPoints(10)
-        tfInput.setRightPaddingPoints(10)
-        
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         messageScrollView.alwaysBounceVertical = true
         messageScrollView.keyboardDismissMode = .onDrag
+        
+        // Style tfInput
+        setupTextField()
         
         // Add sideMenu button to Navbar
         configureNavBar()
@@ -91,10 +74,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         if menuView == nil {
             createSideMenu()
         }
-        
-        
+           
         // Add tap gesture to close menu when tapped outside of it
         let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
+        let closeMenuSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
+        closeMenuSwipe.direction = .left
+        darkView.addGestureRecognizer(closeMenuSwipe)
         darkView.addGestureRecognizer(closeMenuTap)
         
         // Add tap gesture to close keyboard when
@@ -272,6 +257,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     // MARK: - CHAT
     
+    func setupTextField() {
+        tfInput.returnKeyType = UIReturnKeyType.send
+        tfInput.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+        tfInput.backgroundColor = .white
+        tfInput.layer.borderWidth = 1.0
+        tfInput.layer.cornerRadius = tfInput.frame.height / 2
+        tfInput.setLeftPaddingPoints(10)
+        tfInput.setRightPaddingPoints(10)
+    }
+    
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
         // Delete all bubbles
@@ -340,18 +335,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             // Add height to offset
             offsetAccum += addedHeight
         }
-        
-        /*for b in bubblesList{
-            b.updateNeighbors(arr: bubblesList)
-        }*/
-        //DEBUG
-        /*
-        print("frame: ", messageScrollView.frame.height)
-        print("CS: ", messageScrollView.contentSize.height)
-        print("VS: ", messageScrollView.visibleSize.height)
-        print("AH: ", acumulatedHeight)
-        print("OffsetAcc: ", offsetAccum)
-         */
     }
     
     //Removes the last bubble from the scrroll view, bubble array, and resets the height, accum height, and offset
@@ -406,10 +389,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         let scrollOffset = messageScrollView.contentOffset.y;
         let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
         
-            print("scroll offset: \(scrollOffset)")
-        print("scrollViewHeight: \(scrollViewHeight)")
-        print("scrollContentSizeHeight: \(scrollContentSizeHeight)")
-//        }
+
         // Move inputToolBar over the keyboard
         self.toolBarBottomConstraint.constant = -keyboardSize.height + self.view.safeAreaInsets.bottom
         
@@ -477,7 +457,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         tfInput.text = ""
     }
     
-    // MARK: - Chat OptionBubble protocol implementation
+    // MARK: - CHAT OPTION BUBBLE PROTOCOL IMPLEMENTATION
     
     func onOptionBubblePress(text: String) {
         messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
@@ -516,9 +496,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     
                     print("Contexts self: \(self.contexts)")
                     print("FULL RESPONSE: \(response)\n")
-                    print("FULFILLMENT_MESSAGES: \(response.fulfillmentMessages)\n")
-                    print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
-                    print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
                                         
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
@@ -716,149 +693,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
 }
 
 // MARK: - CLASS MENU VIEW
-
-class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
-    
-    var tableView = UITableView()
-    var reuseIdentifier = "cell"
-    
-    let screenHeight = UIScreen.main.bounds.height
-    let screenWidth = UIScreen.main.bounds.width
-
-    var heightViewController: CGFloat! // height of view controller
-    var messageScrollHeight: CGFloat!
-    // Table data
-    var labels: [String]!
-    var icons: [UIImage?]!
-    private var toolBarFrame: CGRect!
-    private var scrollViewFrame: CGRect!
-
-    // Declare notification for MenuOption of Questionnaire
-    static let notificationOption = Notification.Name("sideMenuUserSelection")
-    
-    // Constructor for UIView subclass
-    init(toolBarFrame: CGRect, scrollViewFrame: CGRect) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        self.toolBarFrame = toolBarFrame
-        self.scrollViewFrame = scrollViewFrame
-        setupViews()
-        // Create sideMenu ViewController
-        labels = [
-            "Mi cuenta",
-            "Preguntas COVID-19",
-            "Cuestionario médico",
-            "Historial",
-            "",
-            "Cerrar sesión"
-        ]
-        icons = [
-            UIImage(named: "user")!,
-            UIImage(named: "faq")!,
-            UIImage(named: "questionnaire")!,
-            UIImage(named: "history")!,
-            nil,
-            UIImage(named: "exit")
-        ]
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: newSuperview)
-        //tableView Constrains
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        }
-    
-    func setupViews() {
-        let widthMenu = screenWidth/4*3
-
-        heightViewController = UIScreen.main.bounds.height
-
-        self.backgroundColor = .white
-        // Shadow
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0
-        self.layer.shadowOffset = .zero
-        self.layer.shadowRadius = 10
-        tableView = UITableView(frame: CGRect(x: 0, y: scrollViewFrame.origin.y, width: widthMenu, height: screenHeight - scrollViewFrame.origin.y - toolBarFrame.height))
-        tableView.backgroundColor = .white
-        tableView.separatorStyle = .none
-        tableView.rowHeight = 80
-        tableView.alwaysBounceVertical = false
-        self.addSubview(tableView)
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        labels.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
-        cell.descritionLabel.text = labels[indexPath.row]
-        cell.iconImageView.image = icons[indexPath.row]
-        
-        let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235).withAlphaComponent(0.8)
-        cell.selectedBackgroundView = view
-        
-        if indexPath.row == 4 {
-            cell.isUserInteractionEnabled = false
-            cell.selectionStyle = .none
-        }
-        
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == 4){
-            let heightTableRows = tableView.rowHeight * 5
-            return tableView.frame.height - heightTableRows
-        }
-        return 80;
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Post notification depending on user selection
-        if indexPath.row != 4 {
-            switch indexPath.row {
-            case 0:
-                print("INFO tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.info)
-            case 1:
-                print("FAQ tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.faq)
-            case 2:
-                print("QUESTIONNAIRE tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.questionnaire)
-            case 3:
-                print("HISTORY tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.history)
-            case 5:
-                print("SIGNOUT tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.signOut)
-            default:
-                print("Default")
-            }
-        }
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-    }
-}
-
-
 
 
 // Class extension to add padding to textField
