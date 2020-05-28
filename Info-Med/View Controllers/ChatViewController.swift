@@ -12,7 +12,7 @@ import FirebaseFirestore
 
 
 
-class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate, OptionBubbleActionProtocol {
+class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate, OptionBubbleActionProtocol, UIScrollViewDelegate {
     
     // Outlets
     @IBOutlet weak var messageScrollView: UIScrollView!
@@ -44,6 +44,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     var actualAgent: Agent = .faq
     var isNewChat = true
     
+    private var keyBSize: CGSize!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -298,6 +299,19 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     func displayResponse(msg: String) {
         print("Request completed")
         addBubble(bbl: Bubble(view: messageScrollView ,msg: Message(text: msg, sender: "agent")))
+        
+        // Scroll the screen to the last message displayed
+        if messageScrollView.contentSize.height > messageScrollView.frame.size.height  {
+            let bottomOffset: CGPoint!
+            // Scroll the screen to the beggining of last bubble added if it is grerater than the screen size
+            if let lastBubbleFrame = bubblesList.last?.frame, lastBubbleFrame.size.height > messageScrollView.frame.size.height {
+                bottomOffset = CGPoint(x: 0, y: messageScrollView.contentSize.height - (lastBubbleFrame.size.height + 20))
+            } else {
+                bottomOffset = CGPoint(x: 0, y: messageScrollView.contentSize.height - messageScrollView.frame.size.height)
+            }
+            // Set offset
+            messageScrollView.setContentOffset(bottomOffset, animated: true)
+        }
     }
     
     /// This function adds a bubble to array of Bubbles (bubbleList)
@@ -384,6 +398,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     @IBAction func keyboardWillShow(notification: NSNotification) {
         // Get the keyboard size
         let keyboardSize = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
+        self.keyBSize = keyboardSize
         let scrollViewHeight = messageScrollView.frame.size.height;
         let scrollContentSizeHeight = messageScrollView.contentSize.height;
         let scrollOffset = messageScrollView.contentOffset.y;
@@ -400,7 +415,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
         
         // Scroll content up when keyboard shows
-        if (scrollContentSizeHeight > scrollViewHeight) {
+        if (scrollContentSizeHeight > scrollViewHeight - keyboardSize.height && messageScrollView.contentOffset.y >= messageScrollView.frame.size.height - keyboardSize.height) {
             // Scroll content up
             self.messageScrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset + keyboardSize.height - self.view.safeAreaInsets.bottom), animated: false)
         }
@@ -422,10 +437,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
         
         // Scroll content down when keyboard hides
-        if (scrollOffset > scrollViewHeight - (keyboardSize.height + self.view.safeAreaInsets.bottom)) {
-            // Scroll content up
-            //scrollContentSizeHeight - (scrollViewHeight-keyboardSize.height)
-            self.messageScrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset - keyboardSize.height + self.view.safeAreaInsets.bottom), animated: false)
+        if scrollOffset > scrollViewHeight {
+            let offset = CGPoint(x: 0, y: scrollOffset-keyboardSize.height+self.view.safeAreaInsets.bottom)
+            messageScrollView.setContentOffset(offset, animated: false)
         }
     }
     
@@ -450,11 +464,39 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         if tfInput.text != ""{
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
-            messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-            prepareRequest(userInput: tfInput.text!, agent: actualAgent) //does the server request
+
+//            if CGFloat(offsetAccum) > self.messageScrollView.frame.height {
+//                messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+//            }
+            if messageScrollView.contentSize.height > messageScrollView.frame.size.height {
+                let bottomOffset = CGPoint(x: 0, y: messageScrollView.contentSize.height - messageScrollView.frame.size.height)
+                messageScrollView.setContentOffset(bottomOffset, animated: true)
+            }
+            prepareRequest(userInput: tfInput.text!, agent: actualAgent) // Does the server request
         }
         
         tfInput.text = ""
+    }
+    
+    // Detect change in scroll view
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+
+        print("scrollViewWillBeginDecelerating")
+
+        let actualPosition = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
+        if (actualPosition.y > 0){
+            // Dragging down
+
+            UIView.animate(withDuration: 3, animations: {
+               //Change the color of view
+            })
+        }else{
+            // Dragging up
+
+            UIView.animate(withDuration: 3, animations: {
+                //Change the color of view
+            })
+        }
     }
     
     // MARK: - CHAT OPTION BUBBLE PROTOCOL IMPLEMENTATION
@@ -500,50 +542,50 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         
-                        //remove the typing bubble
+                        // Remove the typing bubble
                         self.removeLastBubble()
-                        //display the bot response
+                        // Display the bot response
                         self.displayResponse(msg: response.fulfillmentText)
                         
                         
-                        //save the syptoms clinimetry to the disctionary
+                        // Save the syptoms clinimetry to the dictionary
                         if self.symptomsDict == nil{
                             self.symptomsDict = [:]
                         }
                                                 
                         
-                        //process each fulfillment message
+                        // Process each fulfillment message
                         var options : [OptionBubble]!
-                        for fm in response.fulfillmentMessages{
+                        for fm in response.fulfillmentMessages {
                             
-                            //save the syptoms clinimetry to the disctionary
-                            if let clinimetry = fm.payload?.fields.clinimetry?.numberValue{ //if there is some clinimetry to process
+                            // Save the syptoms clinimetry to the disctionary
+                            if let clinimetry = fm.payload?.fields.clinimetry?.numberValue { // If there is some clinimetry to process
                                 
-                                if clinimetry == 0{//if it is the firs question of the queationaire
+                                if clinimetry == 0{// It is the firs question of the queationaire
                                     
-                                    //set currentSyptom to the question symptom for cases where the question is missing the symptom
-                                    if let symptom = fm.payload?.fields.symptom?.stringValue{
+                                    // Set currentSyptom to the question symptom for cases where the question is missing the symptom
+                                    if let symptom = fm.payload?.fields.symptom?.stringValue {
                                         self.currentSymptom = symptom
                                     }
-                                }else {//add the previous question clinimetry to the symptom
+                                } else { // Add the previous question clinimetry to the symptom
                                     
                                     var symp = fm.payload?.fields.symptom?.stringValue
                                     print("SYMP: \(String(describing: symp))")
                                     
-                                    if symp == nil{//if the answere doesnot carry a symptom use the questions default
+                                    if symp == nil{// If the answere doesnot carry a symptom use the questions default
                                         symp = self.currentSymptom
                                     }
                                     
-                                    //check if key is already in dictionary
-                                    if(self.symptomsDict[symp!] == nil){
+                                    // Check if key is already in dictionary
+                                    if self.symptomsDict[symp!] == nil {
                                          self.symptomsDict[symp!] = Double(clinimetry)
-                                    }else{
+                                    } else {
                                         self.symptomsDict[symp!]! += Double(clinimetry)
                                     }
                                 }
                             }
                             
-                            //push dictionary to DB
+                            // Dush dictionary to DB
                             if response.fulfillmentText == "Fin del cuestionario" && self.symptomsDict != nil{
                                 print("Pushing to DB!!")
                                 print("DIC TO PUSH = \(String(describing: self.symptomsDict))")
@@ -559,7 +601,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 //query for the current user's document id
                                 db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
                                     if let error = error {
-                                        print("Error geting user document")
+                                        print("Error geting user document: \(error)")
                                     }else{
                                         for document in snapshot!.documents{
                                             let data = document.data()
@@ -570,9 +612,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                         }
                                         
                                     }
-                                    //semaphore.signal()
-                                    //if the query was succesful then add a document with the poll results
-                                    if(docID != nil && self.symptomsDict != nil){
+                                    // Semaphore.signal()
+                                    // If the query was successful then add a document with the poll results
+                                    if (docID != nil && self.symptomsDict != nil) {
                                         let date = Date()
                                         let calendar = Calendar.current
                                         let sec = calendar.component(.second, from: date)
@@ -582,38 +624,43 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                         let month = calendar.component(.month, from: date)
                                         let year = calendar.component(.year, from: date)
                                         
-                                        //add poll results to database
+                                        // Add poll results to database
                                         db.collection("users").document(docID).collection("polls").document("\(year) \(month) \(day) \(hour) \(minutes) \(sec)").setData(self.symptomsDict)
-                                    }else{
+                                    } else {
                                         print("No doc ID")
                                     }
-                                    //clear the dictionary to be able to use it again
+                                    // Clear the dictionary to be able to use it again
                                     self.symptomsDict = nil
                                 }
                                 
-                                //semaphore.wait()
-                                
+                                // Semaphore.wait()
                             }
                             
-                            //print("DIC = \(String(describing: self.symptomsDict))")
+                            // Print("DIC = \(String(describing: self.symptomsDict))")
                             
-                            //display an option bubble for each suggestion
-                            if let values = fm.payload?.fields.suggestions?.listValue.values{
+                            // Display an option bubble for each suggestion
+                            if let values = fm.payload?.fields.suggestions?.listValue.values {
                                 let len = values.count
                                 
-                                for i in 0..<len{
+                                for i in 0..<len {
                                     let toBeAdded = OptionBubble(view: self.messageScrollView, msg: Message(text: values[i].stringValue, sender: "option"), sTxt: String(i + 1), pd: 2, del: self )
                                     
                                     if options == nil {
                                         options = [toBeAdded]
-                                    }else{
+                                    } else {
                                         options.append(toBeAdded)
                                     }
                                 }
-                                //create a supper bubble that contains all thesuggestion bubbles
+                                // Create a supper bubble that contains all thesuggestion bubbles
                                 if options != nil && !options.isEmpty {
                                     let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
                                     self.addBubble(bbl: superBubble)
+                                    
+                                    // Scroll chat to last bubble of suggestions added
+                                    if self.messageScrollView.contentSize.height > self.messageScrollView.frame.size.height  {
+                                        let bottomOffset = CGPoint(x: 0, y: self.messageScrollView.contentSize.height - self.messageScrollView.frame.size.height)
+                                        self.messageScrollView.setContentOffset(bottomOffset, animated: true)
+                                    }
                                 }
                             }
                         }
