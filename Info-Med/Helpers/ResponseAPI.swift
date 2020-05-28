@@ -1,5 +1,5 @@
 //
-//  ResponseFAQ.swift
+//  ResponseAPI.swift
 //  Info-Med
 //
 //  Created by Gerardo Silva Razo on 05/05/20.

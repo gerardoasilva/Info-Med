@@ -11,7 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class RegisterViewController: UIViewController, UITextFieldDelegate {
-
+    
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var tfPassword: UITextField!
     @IBOutlet weak var tfPhoneNumber: UITextField!
@@ -24,7 +24,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Elements setup
         configureNavbar()
         setUpElements()
         setupAddTargetIsNotEmptyTextFields()
@@ -40,17 +41,20 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         tfFirstName.delegate = self
         tfLastName.delegate = self
         
+        // Gesture recognizer to go back sliding the edge of the screen to the right
         let leftEdgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(popViewController))
         leftEdgePan.edges = .left
         view.addGestureRecognizer(leftEdgePan)
         
     }
     
+    // MARK: - SETUP
     
+    // Add constraints and style
     func setUpElements() {
         
         let screenWhidth = self.view.bounds.width
-
+        
         lbError.translatesAutoresizingMaskIntoConstraints = false
         tfEmail.translatesAutoresizingMaskIntoConstraints = false
         tfPassword.translatesAutoresizingMaskIntoConstraints = false
@@ -66,9 +70,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         lbError.textAlignment = .center
         lbError.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -15).isActive = true
         lbError.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        lbError.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 4/6).isActive = true
-        lbError.heightAnchor.constraint(equalToConstant: 70).isActive = true
-
+        lbError.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 5/6).isActive = true
+        lbError.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
         // Add constraints
         tfEmail.topAnchor.constraint(equalTo: lbError.bottomAnchor, constant: 5).isActive = true
         tfEmail.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
@@ -94,7 +98,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         tfLastName.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
         tfLastName.heightAnchor.constraint(equalToConstant: tfFirstName.bounds.height).isActive = true
         tfLastName.centerXAnchor.constraint(equalTo: tfFirstName.centerXAnchor).isActive = true
-
+        
         registerButton.topAnchor.constraint(equalTo: tfLastName.bottomAnchor, constant: 25).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: tfLastName.bounds.height).isActive = true
@@ -135,35 +139,44 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     func configureNavbar() {
         // Make navbar transparent
-       navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-       navigationController?.navigationBar.shadowImage = UIImage()
-       navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
     }
     
-     @objc func textFieldIsNotEmpty(sender: UITextField) {
-
-        sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
-
-        guard
-            let email = tfEmail.text, !email.isEmpty,
-            let password = tfPassword.text, !password.isEmpty,
-            let phoneNum = tfPhoneNumber.text, !phoneNum.isEmpty
-        else
-        {
-            self.registerButton.isEnabled = false
-            return
-        }
-            // enable register button if all conditions are met
-            registerButton.isEnabled = true
-        }
+    // MARK: - TEXTFIELD HANDLERS
     
-    // Hides keyboard when user taps away from keyboard
-    @IBAction func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
-    @IBAction func popViewController() {
-        self.navigationController?.popViewController(animated: true)
+    // Check the fields and validate. If everything is correct, return nil. Otherwise, return the error message.
+    func validateFields() -> String? {
+        
+        // Check that all the fields are filled in
+        if tfEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
+            tfPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" || tfPhoneNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            return "Por favor llene todos los campos requeridos."
+        }
+        
+        // Check if email is valid
+        let cleanedEmail = tfEmail.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        if Utilities.isEmailValid(cleanedEmail) == false {
+            // Email is not valid
+            return "Correo electrónico inválido."
+        }
+        
+        // Check if password is valid
+        let cleanedPassword = tfPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        if Utilities.isPasswordValid(cleanedPassword) == false {
+            // Password is not valid
+            return "La contraseña debe ser de 8 o más caracteres con una mayúscula y un caracter especial."
+        }
+        
+        // Check if phoneNumber is valid
+        let cleanedPhoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        if Utilities.isPhoneNumberValid(cleanedPhoneNumber) == false {
+            // Phone number is not valid
+            return "Teléfono inválido."
+        }
+        
+        return nil
     }
     
     // Allows navigation through textfields when "return" is pressed
@@ -185,40 +198,53 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         return true
     }
-
     
-    // Check the fields and validate. If everything is correct, return nil. Otherwise, return the error message.
-    func validateFields() -> String? {
+    // Makes sure to enable register button only when required textflieds have content inside
+    @objc func textFieldIsNotEmpty(sender: UITextField) {
         
-        // Check that all the fields are filled in
-        if tfEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-        tfPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" || tfPhoneNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            return "Por favor llene todos los campos requeridos."
-        }
+        sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
         
-        // Check if email is valid
-        let cleanedEmail = tfEmail.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        if Utilities.isEmailValid(cleanedEmail) == false {
-            // Email is not valid
-            return "Correo electrónico inválido."
+        guard
+            let email = tfEmail.text, !email.isEmpty,
+            let password = tfPassword.text, !password.isEmpty,
+            let phoneNum = tfPhoneNumber.text, !phoneNum.isEmpty
+            else
+        {
+            self.registerButton.isEnabled = false
+            return
         }
-        
-        // Check if password is valid
-        let cleanedPassword = tfPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        if Utilities.isPasswordValid(cleanedPassword) == false {
-            // Password is not valid
-            return "La contraseña debe contener al menos 8 caracteres incluyendo una letra y un caracter especial."
-        }
-        
-        // Check if phoneNumber is valid
-        let cleanedPhoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        if Utilities.isPhoneNumberValid(cleanedPhoneNumber) == false {
-            // Phone number is not valid
-            return "Teléfono inválido."
-        }
-    
-        return nil
+        // enable register button if all conditions are met
+        registerButton.isEnabled = true
     }
+    
+    // MARK: - KEYBOARD
+    
+    // Hides keyboard when user taps away from keyboard
+    @IBAction func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    // MARK: - NAVIGATION
+    @IBAction func popViewController() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    // Transitions view to chat
+    func transitionToChatVC() {
+        let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
+        //adds a nav controler to the newly instantiated view so that the side menu is visible
+        let navController = UINavigationController(rootViewController: chatViewController!)
+        
+        view.window?.rootViewController = navController
+        //view.window?.rootViewController = chatViewController
+        view.window?.makeKeyAndVisible()
+    }
+    
+    @IBAction func backTapped(_ sender: UIButton) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    
     
     // Authenticate user and grant access
     @IBAction func registerTapped(_ sender: UIButton) {
@@ -237,7 +263,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             let phoneNumber = tfPhoneNumber.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let firstName = tfFirstName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let lastName = tfLastName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-
+            
             //Create user
             Auth.auth().createUser(withEmail: email, password: password) { (result, err) in
                 
@@ -272,35 +298,11 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // Display error message in the form
+    // Display error message in lbError
     func showError(_ message:String) {
         lbError.text = message
         lbError.alpha = 1
     }
-    
-    // Transitions view to chat
-    func transitionToChatVC() {
-        let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
-        //adds a nav controler to the newly instantiated view so that the side menu is visible
-        let navController = UINavigationController(rootViewController: chatViewController!)
-        
-        view.window?.rootViewController = navController
-        //view.window?.rootViewController = chatViewController
-        view.window?.makeKeyAndVisible()
-    }
 
-    @IBAction func backTapped(_ sender: UIButton) {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
