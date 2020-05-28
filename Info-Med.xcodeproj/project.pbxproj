@@ -13,7 +13,6 @@
 		635FCD0E245023CA0083E984 /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0D245023CA0083E984 /* Classes.swift */; };
 		635FCD10245024090083E984 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCD0F245024090083E984 /* Bubble.swift */; };
 		637C91E4247C06880059CA80 /* OptionBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637C91E3247C06880059CA80 /* OptionBubble.swift */; };
-		63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB924246A8DB2006EF9FD /* MenuController.swift */; };
 		63AFB927246A968D006EF9FD /* SideMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB926246A968D006EF9FD /* SideMenuCell.swift */; };
 		6C8549DDE252DFCCBB5CA858 /* Pods_Info_Med_Info_MedUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */; };
 		6FDD3AE3247DC5ED00025EC1 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */; };
@@ -26,13 +25,14 @@
 		DC838505244E91FB00BA40AD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC838503244E91FB00BA40AD /* LaunchScreen.storyboard */; };
 		DC838510244E91FC00BA40AD /* Info_MedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC83850F244E91FC00BA40AD /* Info_MedTests.swift */; };
 		DC83851B244E91FC00BA40AD /* Info_MedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC83851A244E91FC00BA40AD /* Info_MedUITests.swift */; };
+		DC9AC682247F741700BEED29 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9AC681247F741700BEED29 /* MenuView.swift */; };
 		DCB7F9C7244F78A300D8E9A8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */; };
 		DCB7F9C9244F7CC100D8E9A8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DCB7F9C8244F7CC000D8E9A8 /* GoogleService-Info.plist */; };
 		DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */; };
 		DCB7F9CE244F9F5900D8E9A8 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */; };
 		DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7F9CF244FB08900D8E9A8 /* Constants.swift */; };
 		DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9D324246220C900F69F29 /* APIRequest.swift */; };
-		DCF9D327246244F900F69F29 /* ResponseFAQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9D326246244F900F69F29 /* ResponseFAQ.swift */; };
+		DCF9D327246244F900F69F29 /* ResponseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9D326246244F900F69F29 /* ResponseAPI.swift */; };
 		FB5327AB28D4864FF569F7F3 /* Pods_Info_Med.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A66310D517DC1EBFE645DEA /* Pods_Info_Med.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,7 +64,6 @@
 		635FCD0D245023CA0083E984 /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Classes.swift; path = "Info-Med/Classes.swift"; sourceTree = SOURCE_ROOT; };
 		635FCD0F245024090083E984 /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
 		637C91E3247C06880059CA80 /* OptionBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBubble.swift; sourceTree = "<group>"; };
-		63AFB924246A8DB2006EF9FD /* MenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		63AFB926246A968D006EF9FD /* SideMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCell.swift; sourceTree = "<group>"; };
 		6FD835AC9DFFB1A2444592E3 /* Pods-Info-Med-Info-MedUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.release.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.release.xcconfig"; sourceTree = "<group>"; };
 		6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
@@ -85,13 +84,14 @@
 		DC838516244E91FC00BA40AD /* Info-MedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Info-MedUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC83851A244E91FC00BA40AD /* Info_MedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info_MedUITests.swift; sourceTree = "<group>"; };
 		DC83851C244E91FC00BA40AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DC9AC681247F741700BEED29 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		DCB7F9C8244F7CC000D8E9A8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DCB7F9CB244F9EFA00D8E9A8 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		DCB7F9CF244FB08900D8E9A8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		DCF9D324246220C900F69F29 /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
-		DCF9D326246244F900F69F29 /* ResponseFAQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFAQ.swift; sourceTree = "<group>"; };
+		DCF9D326246244F900F69F29 /* ResponseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseAPI.swift; sourceTree = "<group>"; };
 		F33507A55DF10063C676242A /* Pods-Info-Med.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med/Pods-Info-Med.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -208,8 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				635FCD0B245023680083E984 /* ChatViewController.swift */,
-				63AFB926246A968D006EF9FD /* SideMenuCell.swift */,
-				63AFB924246A8DB2006EF9FD /* MenuController.swift */,
 				DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */,
 				DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */,
 				6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */,
@@ -224,10 +222,12 @@
 				DCB7F9CF244FB08900D8E9A8 /* Constants.swift */,
 				635FCD0D245023CA0083E984 /* Classes.swift */,
 				635FCD0F245024090083E984 /* Bubble.swift */,
-				DCF9D326246244F900F69F29 /* ResponseFAQ.swift */,
+				DCF9D326246244F900F69F29 /* ResponseAPI.swift */,
 				637C91E3247C06880059CA80 /* OptionBubble.swift */,
 				63018DA7247CD3EB0047C4C5 /* BubbleOfBubbles.swift */,
 				63018DA9247CE62B0047C4C5 /* TypingBubble.swift */,
+				63AFB926246A968D006EF9FD /* SideMenuCell.swift */,
+				DC9AC681247F741700BEED29 /* MenuView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -480,14 +480,14 @@
 				DC8384F6244E91FB00BA40AD /* AppDelegate.swift in Sources */,
 				DC838500244E91FB00BA40AD /* Info_Med.xcdatamodeld in Sources */,
 				DCB7F9CE244F9F5900D8E9A8 /* RegisterViewController.swift in Sources */,
+				DC9AC682247F741700BEED29 /* MenuView.swift in Sources */,
 				DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */,
 				635FCD10245024090083E984 /* Bubble.swift in Sources */,
 				DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */,
-				DCF9D327246244F900F69F29 /* ResponseFAQ.swift in Sources */,
+				DCF9D327246244F900F69F29 /* ResponseAPI.swift in Sources */,
 				DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */,
 				635FCD0E245023CA0083E984 /* Classes.swift in Sources */,
 				635FCD0C245023680083E984 /* ChatViewController.swift in Sources */,
-				63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */,
 				637C91E4247C06880059CA80 /* OptionBubble.swift in Sources */,
 				DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */,
 			);

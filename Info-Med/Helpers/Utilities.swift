@@ -11,6 +11,50 @@ import UIKit
 
 class Utilities: NSObject {
     
+    static func styleTextField(_ textField: UITextField) {
+        
+        // Remove border on textfield
+        textField.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        textField.backgroundColor = .white
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = textField.bounds.height / 2
+        textField.textAlignment = .center
+        textField.font = UIFont(name: "Helvetica Neue", size: 20)
+        textField.layer.shadowColor = UIColor.black.cgColor
+        textField.layer.shadowOpacity = 0.1
+        textField.layer.shadowRadius = 5
+        textField.layer.shadowOffset = CGSize(width: 0, height: 10)
+        
+        textField.setLeftPaddingPoints(10)
+        textField.setRightPaddingPoints(10)
+        
+        //        textField.layer.addSublayer(bottomLine)
+    }
+    
+    static func styleFilledButton(_ button: UIButton) {
+        // Filled rounded corner style
+        button.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
+        button.layer.cornerRadius = button.frame.height / 2
+        button.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        button.titleLabel?.textAlignment = .center
+        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5), for: .disabled)
+        button.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 20)
+        button.titleLabel?.textColor = .white
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.1
+        button.layer.shadowRadius = 5
+        button.layer.shadowOffset = CGSize(width: 0, height: 10)
+    }
+    
+    static func styleHollowButton(_ button: UIButton) {
+        // Holow rounded corner style
+        button.layer.borderWidth = 2
+        button.layer.borderColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
+        button.layer.cornerRadius = button.frame.height / 2
+        button.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+    }
+    
     // Validate if email has correct format
     static func isEmailValid(_ email: String) -> Bool {
         
@@ -22,7 +66,7 @@ class Utilities: NSObject {
     // Validate if password has correct format
     static func isPasswordValid(_ password: String) -> Bool {
         // Password has at least 8 characters
-        if (password.count < 8){
+        if (password.count < 8) {
             return false
         }
         
@@ -34,9 +78,6 @@ class Utilities: NSObject {
         // Password has at least one upper case character
         let upperCaseTest = NSPredicate(format: "SELF MATCHES %@", ".*[A-Z]+.*")
         
-        
-        //let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")// modify this REGEX to make password friendlier
-        
         return upperCaseTest.evaluate(with: password)
     }
     
@@ -47,5 +88,5 @@ class Utilities: NSObject {
         
         return phoneNumberTest.evaluate(with: phoneNumber)
     }
-
+    
 }

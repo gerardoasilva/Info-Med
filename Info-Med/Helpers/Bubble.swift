@@ -16,19 +16,19 @@ class Bubble: UITextView {
     //var neighbors : [Bubble]!
     var senderIcon : UIImageView!
     var parentView : UIView!
-
+    
     init(view: UIView, msg: Message) {
         //
         let initX = CGFloat(padd)
         let initY = CGFloat(padd)
         let initW = view.frame.width
         let initH = CGFloat(40)
-                
+        
         let dimensions = CGRect(x: initX, y: initY, width: initW, height: initH)
         
         super.init(frame: dimensions, textContainer: nil)//intialize the UITextView to such dimensions
         initialize()
-                
+        
         self.msg = msg
         self.text = msg.text
         self.parentView = view
@@ -61,7 +61,7 @@ class Bubble: UITextView {
         }
         else if msg.sender == "agent"{
             self.backgroundColor = .white
-            self.textColor = .black
+            self.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
             self.layer.borderWidth = 1.0
             self.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
             
@@ -72,7 +72,7 @@ class Bubble: UITextView {
             x += CGFloat(leftPadd)
         }else{
             self.backgroundColor = .white
-            self.textColor = .black
+            self.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
             self.layer.borderWidth = 1.0
             self.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
             
@@ -104,11 +104,12 @@ class Bubble: UITextView {
         self.layer.cornerRadius = 20.0
         // Set the thickness of the border.
         self.layer.borderWidth = 0
-        // Set the font.
+        // Set font
+        self.font = UIFont(name: "Helvetica Neue", size: 14)
         self.font = UIFont.preferredFont(forTextStyle: .body)
         self.adjustsFontForContentSizeCategory = true
         // Set font color.
-        self.textColor = UIColor.black
+        self.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         // Set left justified.
         self.textAlignment = NSTextAlignment.left
         // Automatically detect links, dates, etc. and convert them to links.
@@ -128,15 +129,15 @@ class Bubble: UITextView {
     }
     
     func resetIcon(){
-                
+        
         if(msg.sender == "agent"){
             
             /*if neighbors != nil{
-                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" )
-                if let index = neighbors.firstIndex(of: self){
-                    print("INDEX ==> \(index)")
-                }
-            }*/
+             print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" )
+             if let index = neighbors.firstIndex(of: self){
+             print("INDEX ==> \(index)")
+             }
+             }*/
             
             senderIcon.removeFromSuperview()
             let size = CGFloat(leftPadd-6)
@@ -149,9 +150,15 @@ class Bubble: UITextView {
         }
     }
     
+    func deleteIcon(){
+        if(msg.sender == "agent"){
+            senderIcon.removeFromSuperview()
+        }
+    }
+    
     /*func updateNeighbors(arr : [Bubble]){
-        neighbors = arr
-    }*/
+     neighbors = arr
+     }*/
     
     func setY(y: CGFloat){
         self.frame = CGRect(x: frame.origin.x, y: y, width: frame.width , height: frame.height)

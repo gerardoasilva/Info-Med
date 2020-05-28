@@ -15,8 +15,8 @@ class SideMenuCell: UITableViewCell {
     // Create cell label
     let descritionLabel: UILabel = { // Label constructor
         let label = UILabel()
-        label.textColor = .black
-//        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        label.font = UIFont(name: "Helvetica Neue", size: 20)
         label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic font size based in system preferences
         label.adjustsFontForContentSizeCategory = true // Updates on system preference changes of font size
         label.text = "" //test sample text
@@ -27,18 +27,18 @@ class SideMenuCell: UITableViewCell {
     let iconImageView: UIImageView = { //construct icon
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.tintColor = .black // icon bgColor
+        iv.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1) // icon bgColor
         iv.clipsToBounds = true
         
-//        iv.backgroundColor = .blue //test color for visualization
+        //        iv.backgroundColor = .blue //test color for visualization
         return iv
     }()
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .white // cell bgColor
-                
+        
         //add icon sub view and center the icon to the left
         addSubview(iconImageView)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false

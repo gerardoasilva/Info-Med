@@ -8,19 +8,9 @@
 import UIKit
 import AVFoundation
 import FirebaseAuth
+import FirebaseFirestore
 
-public enum Agent: String {
-    case faq = "faq"
-    case questionnaire = "questionnaire"
-}
 
-private enum MenuOption {
-    case info
-    case faq
-    case questionnaire
-    case history
-    case signOut
-}
 
 class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate, OptionBubbleActionProtocol {
     
@@ -39,8 +29,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     var activeField: UITextField!
     var bubblesList: [Bubble]!  //list of chat bubbles were new bubbles are pushed to
-    
+
     var contexts: [Context] = [Context]() // Declare empty Context array to store contexts from queries
+    
+    //questionary specific variables
+    var symptomsDict : [String : Double]! //saves the symptoms ad sums of the current questionary
+    var currentSymptom : String! //saves the current cuestion symptom
     
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
@@ -49,29 +43,23 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // Vars for agents
     var actualAgent: Agent = .faq
     var isNewChat = true
-    var viewTitle = "Preguntas Frecuentes"
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tfInput.delegate = self
         
         // Set max width side menu can have, is the horizontal space it can't cover
         menuLimit = self.view.frame.size.width / 4
         
-        // Style tfInput
-        tfInput.returnKeyType = UIReturnKeyType.send
-        tfInput.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
-        tfInput.backgroundColor = .white
-        tfInput.layer.borderWidth = 1.0
-        tfInput.layer.cornerRadius = tfInput.frame.height / 2
-        tfInput.setLeftPaddingPoints(10)
-        tfInput.setRightPaddingPoints(10)
-        
         // Enable view to scroll
         messageScrollView.isScrollEnabled = true
         messageScrollView.alwaysBounceVertical = true
         messageScrollView.keyboardDismissMode = .onDrag
+        
+        // Style tfInput
+        setupTextField()
         
         // Add sideMenu button to Navbar
         configureNavBar()
@@ -86,10 +74,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         if menuView == nil {
             createSideMenu()
         }
-        
-        
+           
         // Add tap gesture to close menu when tapped outside of it
         let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
+        let closeMenuSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
+        closeMenuSwipe.direction = .left
+        darkView.addGestureRecognizer(closeMenuSwipe)
         darkView.addGestureRecognizer(closeMenuTap)
         
         // Add tap gesture to close keyboard when
@@ -126,6 +116,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     @objc func optionSelectionHandler(notification: NSNotification?) {
         
         if let optionSelected = (notification?.object) as? MenuOption {
+            
+            //clear the questionaire variables if the user changes screen
+            if actualAgent != .questionnaire{
+                //clear the dictionary to be able to use it again
+                self.symptomsDict = nil
+                self.currentSymptom = nil
+            }
+            
             switch optionSelected {
             // Display user info viewController
             case .info:
@@ -159,7 +157,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             case .questionnaire:
                 print("QUESTIONNAIRE listened")
                 handleMenuToggle()
-
+                                
                 if actualAgent != .questionnaire {
                     actualAgent = .questionnaire
                     
@@ -265,6 +263,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     // MARK: - CHAT
     
+    func setupTextField() {
+        tfInput.returnKeyType = UIReturnKeyType.send
+        tfInput.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
+        tfInput.backgroundColor = .white
+        tfInput.layer.borderWidth = 1.0
+        tfInput.layer.cornerRadius = tfInput.frame.height / 2
+        tfInput.setLeftPaddingPoints(10)
+        tfInput.setRightPaddingPoints(10)
+    }
+    
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
         // Delete all bubbles
@@ -333,18 +341,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             // Add height to offset
             offsetAccum += addedHeight
         }
-        
-        /*for b in bubblesList{
-            b.updateNeighbors(arr: bubblesList)
-        }*/
-        //DEBUG
-        /*
-        print("frame: ", messageScrollView.frame.height)
-        print("CS: ", messageScrollView.contentSize.height)
-        print("VS: ", messageScrollView.visibleSize.height)
-        print("AH: ", acumulatedHeight)
-        print("OffsetAcc: ", offsetAccum)
-         */
     }
     
     //Removes the last bubble from the scrroll view, bubble array, and resets the height, accum height, and offset
@@ -369,8 +365,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             acumulatedHeight -= subtractedHeight
             messageScrollView.contentSize.height = CGFloat(acumulatedHeight )
             
+            bbl.deleteIcon()
             bbl.removeFromSuperview()
             bubblesList.removeLast()
+            
             //if it is the last remaining bubble
             if index + 1 == 1{
                 bubblesList = nil
@@ -397,10 +395,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         let scrollOffset = messageScrollView.contentOffset.y;
         let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
         
-            print("scroll offset: \(scrollOffset)")
-        print("scrollViewHeight: \(scrollViewHeight)")
-        print("scrollContentSizeHeight: \(scrollContentSizeHeight)")
-//        }
+
         // Move inputToolBar over the keyboard
         self.toolBarBottomConstraint.constant = -keyboardSize.height + self.view.safeAreaInsets.bottom
         
@@ -468,7 +463,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         tfInput.text = ""
     }
     
-    // MARK: - Chat OptionBubble protocol implementation
+    // MARK: - CHAT OPTION BUBBLE PROTOCOL IMPLEMENTATION
     
     func onOptionBubblePress(text: String) {
         messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
@@ -507,9 +502,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     
                     print("Contexts self: \(self.contexts)")
                     print("FULL RESPONSE: \(response)\n")
-                    print("FULFILLMENT_MESSAGES: \(response.fulfillmentMessages)\n")
-                    print("OUTPUT_CONTEXTs: \(response.outputContexts)\n")
-                    print("FULFILLMENT_TEXT: \(response.fulfillmentText)\n")
                                         
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
@@ -519,11 +511,99 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                         //display the bot response
                         self.displayResponse(msg: response.fulfillmentText)
                         
-                        var options : [OptionBubble]!
                         
-                        //process each fulfillment message and display an option bubble for each suggestion
+                        //save the syptoms clinimetry to the disctionary
+                        if self.symptomsDict == nil{
+                            self.symptomsDict = [:]
+                        }
+                                                
+                        
+                        //process each fulfillment message
+                        var options : [OptionBubble]!
                         for fm in response.fulfillmentMessages{
                             
+                            //save the syptoms clinimetry to the disctionary
+                            if let clinimetry = fm.payload?.fields.clinimetry?.numberValue{ //if there is some clinimetry to process
+                                
+                                if clinimetry == 0{//if it is the firs question of the queationaire
+                                    
+                                    //set currentSyptom to the question symptom for cases where the question is missing the symptom
+                                    if let symptom = fm.payload?.fields.symptom?.stringValue{
+                                        self.currentSymptom = symptom
+                                    }
+                                }else {//add the previous question clinimetry to the symptom
+                                    
+                                    var symp = fm.payload?.fields.symptom?.stringValue
+                                    print("SYMP: \(String(describing: symp))")
+                                    
+                                    if symp == nil{//if the answere doesnot carry a symptom use the questions default
+                                        symp = self.currentSymptom
+                                    }
+                                    
+                                    //check if key is already in dictionary
+                                    if(self.symptomsDict[symp!] == nil){
+                                         self.symptomsDict[symp!] = Double(clinimetry)
+                                    }else{
+                                        self.symptomsDict[symp!]! += Double(clinimetry)
+                                    }
+                                }
+                            }
+                            
+                            //push dictionary to DB
+                            if response.fulfillmentText == "Fin del cuestionario" && self.symptomsDict != nil{
+                                print("Pushing to DB!!")
+                                print("DIC TO PUSH = \(String(describing: self.symptomsDict))")
+                                
+                                let db = Firestore.firestore()
+                                let user = Auth.auth().currentUser
+                                
+                                print("USER = \(String(describing: user?.uid))")
+                                
+                                var docID : String!
+                                //let semaphore = DispatchSemaphore(value: 0)
+                                
+                                //query for the current user's document id
+                                db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
+                                    if let error = error {
+                                        print("Error geting user document")
+                                    }else{
+                                        for document in snapshot!.documents{
+                                            let data = document.data()
+                                            docID = document.documentID
+                                            
+                                            print("USER NAME = \(String(describing: data["firstName"]))")
+                                            print("DOC ID = \(String(describing: document.documentID))")
+                                        }
+                                        
+                                    }
+                                    //semaphore.signal()
+                                    //if the query was succesful then add a document with the poll results
+                                    if(docID != nil && self.symptomsDict != nil){
+                                        let date = Date()
+                                        let calendar = Calendar.current
+                                        let sec = calendar.component(.second, from: date)
+                                        let minutes = calendar.component(.minute, from: date)
+                                        let hour = calendar.component(.hour, from: date)
+                                        let day = calendar.component(.day, from: date)
+                                        let month = calendar.component(.month, from: date)
+                                        let year = calendar.component(.year, from: date)
+                                        
+                                        //add poll results to database
+                                        db.collection("users").document(docID).collection("polls").document("\(year) \(month) \(day) \(hour) \(minutes) \(sec)").setData(self.symptomsDict)
+                                    }else{
+                                        print("No doc ID")
+                                    }
+                                    //clear the dictionary to be able to use it again
+                                    self.symptomsDict = nil
+                                }
+                                
+                                //semaphore.wait()
+                                
+                            }
+                            
+                            //print("DIC = \(String(describing: self.symptomsDict))")
+                            
+                            //display an option bubble for each suggestion
                             if let values = fm.payload?.fields.suggestions?.listValue.values{
                                 let len = values.count
                                 
@@ -536,9 +616,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                         options.append(toBeAdded)
                                     }
                                 }
-                                //create a supper bubble that contains all thesuggestion bubbles 
-                                let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
-                                self.addBubble(bbl: superBubble)
+                                //create a supper bubble that contains all thesuggestion bubbles
+                                if options != nil && !options.isEmpty {
+                                    let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
+                                    self.addBubble(bbl: superBubble)
+                                }
                             }
                         }
                     }
@@ -617,149 +699,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
 }
 
 // MARK: - CLASS MENU VIEW
-
-class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
-    
-    var tableView = UITableView()
-    var reuseIdentifier = "cell"
-    
-    let screenHeight = UIScreen.main.bounds.height
-    let screenWidth = UIScreen.main.bounds.width
-
-    var heightViewController: CGFloat! // height of view controller
-    var messageScrollHeight: CGFloat!
-    // Table data
-    var labels: [String]!
-    var icons: [UIImage?]!
-    private var toolBarFrame: CGRect!
-    private var scrollViewFrame: CGRect!
-
-    // Declare notification for MenuOption of Questionnaire
-    static let notificationOption = Notification.Name("sideMenuUserSelection")
-    
-    // Constructor for UIView subclass
-    init(toolBarFrame: CGRect, scrollViewFrame: CGRect) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        self.toolBarFrame = toolBarFrame
-        self.scrollViewFrame = scrollViewFrame
-        setupViews()
-        // Create sideMenu ViewController
-        labels = [
-            "Mi cuenta",
-            "Preguntas COVID-19",
-            "Cuestionario médico",
-            "Historial",
-            "",
-            "Cerrar sesión"
-        ]
-        icons = [
-            UIImage(named: "user")!,
-            UIImage(named: "faq")!,
-            UIImage(named: "questionnaire")!,
-            UIImage(named: "history")!,
-            nil,
-            UIImage(named: "exit")
-        ]
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: newSuperview)
-        //tableView Constrains
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        }
-    
-    func setupViews() {
-        let widthMenu = screenWidth/4*3
-
-        heightViewController = UIScreen.main.bounds.height
-
-        self.backgroundColor = .white
-        // Shadow
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0
-        self.layer.shadowOffset = .zero
-        self.layer.shadowRadius = 10
-        tableView = UITableView(frame: CGRect(x: 0, y: scrollViewFrame.origin.y, width: widthMenu, height: screenHeight - scrollViewFrame.origin.y - toolBarFrame.height))
-        tableView.backgroundColor = .white
-        tableView.separatorStyle = .none
-        tableView.rowHeight = 80
-        tableView.alwaysBounceVertical = false
-        self.addSubview(tableView)
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        labels.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
-        cell.descritionLabel.text = labels[indexPath.row]
-        cell.iconImageView.image = icons[indexPath.row]
-        
-        let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235).withAlphaComponent(0.8)
-        cell.selectedBackgroundView = view
-        
-        if indexPath.row == 4 {
-            cell.isUserInteractionEnabled = false
-            cell.selectionStyle = .none
-        }
-        
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == 4){
-            let heightTableRows = tableView.rowHeight * 5
-            return tableView.frame.height - heightTableRows
-        }
-        return 80;
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Post notification depending on user selection
-        if indexPath.row != 4 {
-            switch indexPath.row {
-            case 0:
-                print("INFO tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.info)
-            case 1:
-                print("FAQ tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.faq)
-            case 2:
-                print("QUESTIONNAIRE tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.questionnaire)
-            case 3:
-                print("HISTORY tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.history)
-            case 5:
-                print("SIGNOUT tapped")
-                // Post notification for user selection
-                NotificationCenter.default.post(name: MenuView.notificationOption, object: MenuOption.signOut)
-            default:
-                print("Default")
-            }
-        }
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-    }
-}
-
-
 
 
 // Class extension to add padding to textField

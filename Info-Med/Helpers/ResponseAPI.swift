@@ -1,5 +1,5 @@
 //
-//  ResponseFAQ.swift
+//  ResponseAPI.swift
 //  Info-Med
 //
 //  Created by Gerardo Silva Razo on 05/05/20.
@@ -16,6 +16,9 @@ struct Response: Decodable {
                 struct Clinimetry: Decodable {
                     var numberValue: Int?
                 }
+                struct Symptom: Decodable {
+                    var stringValue: String?
+                }
                 struct Suggestions: Decodable {
                     struct ListValue: Decodable {
                         struct Value: Decodable {
@@ -27,6 +30,7 @@ struct Response: Decodable {
                 }
                 var clinimetry: Clinimetry?
                 var suggestions: Suggestions?
+                var symptom: Symptom?
             }
             var fields: Fields
         }
