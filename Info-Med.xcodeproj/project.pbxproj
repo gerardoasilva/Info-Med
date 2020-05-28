@@ -16,6 +16,7 @@
 		63AFB925246A8DB2006EF9FD /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB924246A8DB2006EF9FD /* MenuController.swift */; };
 		63AFB927246A968D006EF9FD /* SideMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AFB926246A968D006EF9FD /* SideMenuCell.swift */; };
 		6C8549DDE252DFCCBB5CA858 /* Pods_Info_Med_Info_MedUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */; };
+		6FDD3AE3247DC5ED00025EC1 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */; };
 		DB65092BD89BEC084BA4A7D0 /* Pods_Info_MedTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */; };
 		DC8384F6244E91FB00BA40AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8384F5244E91FB00BA40AD /* AppDelegate.swift */; };
 		DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */; };
@@ -66,6 +67,7 @@
 		63AFB924246A8DB2006EF9FD /* MenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		63AFB926246A968D006EF9FD /* SideMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCell.swift; sourceTree = "<group>"; };
 		6FD835AC9DFFB1A2444592E3 /* Pods-Info-Med-Info-MedUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.release.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.release.xcconfig"; sourceTree = "<group>"; };
+		6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		78DD32B7A751FD85306DBE8F /* Pods-Info-Med-Info-MedUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A408450063D2290428FAA4B4 /* Pods-Info-MedTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-MedTests.debug.xcconfig"; path = "Target Support Files/Pods-Info-MedTests/Pods-Info-MedTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CC530C47578044D97EE7F522 /* Pods-Info-MedTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-MedTests.release.xcconfig"; path = "Target Support Files/Pods-Info-MedTests/Pods-Info-MedTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 				63AFB924246A8DB2006EF9FD /* MenuController.swift */,
 				DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */,
 				DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */,
+				6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 				63018DAA247CE62B0047C4C5 /* TypingBubble.swift in Sources */,
 				63018DA8247CD3EB0047C4C5 /* BubbleOfBubbles.swift in Sources */,
 				DCB7F9C7244F78A300D8E9A8 /* LoginViewController.swift in Sources */,
+				6FDD3AE3247DC5ED00025EC1 /* InfoTableViewController.swift in Sources */,
 				63AFB927246A968D006EF9FD /* SideMenuCell.swift in Sources */,
 				DC8384F6244E91FB00BA40AD /* AppDelegate.swift in Sources */,
 				DC838500244E91FB00BA40AD /* Info_Med.xcdatamodeld in Sources */,

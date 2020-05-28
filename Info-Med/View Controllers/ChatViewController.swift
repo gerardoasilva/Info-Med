@@ -133,6 +133,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 /*
                     Do user info stuff
                  */
+                let infoTableViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.infoTableViewController) as? InfoTableViewController
+                //infoViewController?.modalPresentationStyle = .custom
+                // let infoViewController = UIViewController()
+                //infoViewController.view.backgroundColor =
+                //infoTableViewController?.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/2)
+                self.present(infoTableViewController!, animated: true, completion: nil)
                 
             // Change chatbot to FAQ
             case .faq:
