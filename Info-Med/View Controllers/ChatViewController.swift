@@ -137,7 +137,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 // let infoViewController = UIViewController()
                 //infoViewController.view.backgroundColor =
                 //infoTableViewController?.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/2)
-                self.present(infoTableViewController!, animated: true, completion: nil)
+//                self.present(infoTableViewController!, animated: true, completion: nil)
+                self.navigationController?.pushViewController(infoTableViewController!, animated: true)
                 
             // Change chatbot to FAQ
             case .faq:

@@ -32,12 +32,17 @@ class InfoTableViewController: UITableViewController {
     var firstName: String!
     var lastName: String!
     var phoneNumber: String!
+    var password: String = "Cambia tu contraseña"
 
     // Reference  of "users" collection
     var usersCollectionRef: CollectionReference!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Register custom header view
+        tableView.register(CustomHeader.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
+        
 
         // Path to collection of users in Firebase
         usersCollectionRef = Firestore.firestore().collection("users")
@@ -45,9 +50,13 @@ class InfoTableViewController: UITableViewController {
         // Initialization of label names
         labels = [
                 "Nombre",
-                "Telefono",
-                "Correo"
+                "Correo electrónico",
+                "Teléfono",
+                "Contraseña"
         ]
+        
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -105,8 +114,9 @@ class InfoTableViewController: UITableViewController {
                         // Insert user information in array
                         let fullName = self.firstName + " " + self.lastName
                         self.userInfo.append(fullName)
-                        self.userInfo.append(self.phoneNumber)
                         self.userInfo.append(self.email)
+                        self.userInfo.append(self.phoneNumber)
+                        self.userInfo.append(self.password)
                 }
             }
             // Reload data from tableView after fetching data from DB
@@ -117,8 +127,21 @@ class InfoTableViewController: UITableViewController {
         }
     }
 
-    // MARK: - Table view data source
+    // MARK: - TABLE VIEW DATA SOURCE
 
+    // Header
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        100
+    }
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! CustomHeader
+        headerView.title.text = "Información personal"
+        headerView.image.image = UIImage(systemName: "person.crop.circle")
+        return headerView
+    }
+    
+
+    // Rows
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -127,23 +150,27 @@ class InfoTableViewController: UITableViewController {
         return labels.count
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        // Style
+        cell.lbLabel.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        cell.lbLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+        
+        cell.lbUserData.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        cell.lbUserData.font = UIFont(name: "HelveticaNeue", size: 14)
+        
         cell.lbLabel.text = labels[indexPath.row]
 
-    // Insert default value when data hasnt been fetched from DB
+        // Insert default value when data hasnt been fetched from DB
         if userInfo.isEmpty {
             cell.lbUserData.text = "Cargando..."
-         }
+        }
         else {
             cell.lbUserData.text = userInfo[indexPath.row]
         }
         return cell
     }
+
 
     /*
     // MARK: - Navigation
@@ -156,3 +183,47 @@ class InfoTableViewController: UITableViewController {
     */
 }
 
+// MARK: - CUSTOM HEADER
+
+// This class is fot the section header used in the table view
+class CustomHeader: UITableViewHeaderFooterView {
+    let title = UILabel()
+    let image = UIImageView()
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        configureContents()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureContents() {
+        image.translatesAutoresizingMaskIntoConstraints = false
+        title.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(image)
+        contentView.addSubview(title)
+        
+        // Add style
+        image.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        
+        title.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        title.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
+        
+        // Add constraints to elements
+        NSLayoutConstraint.activate([
+            image.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            image.widthAnchor.constraint(equalToConstant: 40),
+            image.heightAnchor.constraint(equalToConstant: 40),
+            image.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            title.heightAnchor.constraint(equalToConstant: 30),
+            title.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 10),
+            title.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            title.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+        
+    }
+}
