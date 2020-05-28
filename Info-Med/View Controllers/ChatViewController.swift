@@ -566,8 +566,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 }
                             }
                             
-                            //push dictionary to DB
-                            if response.fulfillmentText == "Fin del cuestionario" && self.symptomsDict != nil{
+                            //push dictionary to DB //response.fulfillmentText == "Fin del cuestionario"
+                            if  (response.fulfillmentMessages[0].payload?.fields.suggestions?.listValue.values.isEmpty)! && self.symptomsDict != nil{
                                 print("Pushing to DB!!")
                                 print("DIC TO PUSH = \(String(describing: self.symptomsDict))")
                                 
@@ -584,6 +584,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                     if let error = error {
                                         print("Error geting user document")
                                     }else{
+                                        //iterate the documents resulting from the query
                                         for document in snapshot!.documents{
                                             let data = document.data()
                                             docID = document.documentID
@@ -591,11 +592,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                             print("USER NAME = \(String(describing: data["firstName"]))")
                                             print("DOC ID = \(String(describing: document.documentID))")
                                         }
-                                        
                                     }
                                     //semaphore.signal()
                                     //if the query was succesful then add a document with the poll results
                                     if(docID != nil && self.symptomsDict != nil){
+                                        //prepare date data to be used as document id name
                                         let date = Date()
                                         let calendar = Calendar.current
                                         let sec = calendar.component(.second, from: date)
@@ -613,9 +614,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                     //clear the dictionary to be able to use it again
                                     self.symptomsDict = nil
                                 }
-                                
                                 //semaphore.wait()
-                                
                             }
                             
                             //print("DIC = \(String(describing: self.symptomsDict))")
