@@ -60,3 +60,33 @@ class Query: Codable {
         try container.encode(contexts, forKey: .contexts)
     }
 }
+/*
+class User: Codable {
+    var firstName: String!
+    var lastName: String!
+    var phoneNumber: String!
+    var email: String!
+
+    init(firstName: String, lastName: String, phoneNumber: String, email: String) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.phoneNumber = phoneNumber
+        self.email = email
+    }
+}
+
+struct currentUser  {
+    var uid: String
+    var firstName: String
+    var lastName: String
+    var phoneNumber: String
+
+    init(uid: String, dictionary: [String: Any]) {
+    self.uid = uid
+    self.firstName = dictionary["firstName"] as? String ?? "-"
+    self.lastName = dictionary["lastName"] as? String ?? "-"
+    self.phoneNumber = dictionary["phoneNumber"] as? String ?? "-"
+    }
+    
+}
+ */

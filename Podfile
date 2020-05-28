@@ -22,6 +22,7 @@ target 'Info-Med' do
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Database'
   
   # Dialog pods
   # pod 'ApiAI'
