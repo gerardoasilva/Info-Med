@@ -16,6 +16,8 @@ class CustomTableViewCell : UITableViewCell {
 
     @IBOutlet weak var lbLabel: UILabel!
     @IBOutlet weak var lbUserData: UILabel!
+    @IBOutlet weak var imgIcon: UIImageView!
+    
 }
 
 class InfoTableViewController: UITableViewController {
@@ -41,7 +43,9 @@ class InfoTableViewController: UITableViewController {
         super.viewDidLoad()
         
         // Register custom header view
-        tableView.register(CustomHeader.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
+        tableView.register(CustomHeaderForTableView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
+        
+        configureNavBar()
         
 
         // Path to collection of users in Firebase
@@ -55,6 +59,10 @@ class InfoTableViewController: UITableViewController {
                 "Contraseña"
         ]
         
+        // Add gesture recognizer to go back
+        let backPanEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(goBack))
+        self.view.addGestureRecognizer(backPanEdgeGesture)
+        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
     }
@@ -62,6 +70,20 @@ class InfoTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         getUserAuth()
         getDbInformation()
+    }
+    
+     func configureNavBar(){
+          
+          // Make navbar transparent
+          navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+          navigationController?.navigationBar.shadowImage = UIImage()
+          navigationController?.navigationBar.isTranslucent = true
+          
+          
+      }
+    
+    @objc func goBack() {
+        self.navigationController?.popViewController(animated: true)
     }
     
      
@@ -131,10 +153,11 @@ class InfoTableViewController: UITableViewController {
 
     // Header
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        100
+        return 100
     }
+    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! CustomHeader
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! CustomHeaderForTableView
         headerView.title.text = "Información personal"
         headerView.image.image = UIImage(systemName: "person.crop.circle")
         return headerView
@@ -157,9 +180,16 @@ class InfoTableViewController: UITableViewController {
         cell.lbLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
         
         cell.lbUserData.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-        cell.lbUserData.font = UIFont(name: "HelveticaNeue", size: 14)
+        cell.lbUserData.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
+        
+        cell.isUserInteractionEnabled = false
         
         cell.lbLabel.text = labels[indexPath.row]
+        
+        if indexPath.row == 3 {
+            cell.imgIcon.image = UIImage(systemName: "chevron.right")
+            cell.imgIcon.tintColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        }
 
         // Insert default value when data hasnt been fetched from DB
         if userInfo.isEmpty {
@@ -181,49 +211,4 @@ class InfoTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
-}
-
-// MARK: - CUSTOM HEADER
-
-// This class is fot the section header used in the table view
-class CustomHeader: UITableViewHeaderFooterView {
-    let title = UILabel()
-    let image = UIImageView()
-    
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        configureContents()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configureContents() {
-        image.translatesAutoresizingMaskIntoConstraints = false
-        title.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.addSubview(image)
-        contentView.addSubview(title)
-        
-        // Add style
-        image.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
-        
-        title.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
-        title.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
-        
-        // Add constraints to elements
-        NSLayoutConstraint.activate([
-            image.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            image.widthAnchor.constraint(equalToConstant: 40),
-            image.heightAnchor.constraint(equalToConstant: 40),
-            image.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            title.heightAnchor.constraint(equalToConstant: 30),
-            title.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 10),
-            title.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
-            title.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
-        
-    }
 }

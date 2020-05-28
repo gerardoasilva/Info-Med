@@ -173,7 +173,7 @@
         <scene sceneID="umh-0M-DL1">
             <objects>
                 <tableViewController storyboardIdentifier="InfoVC" id="fDX-zx-zin" customClass="InfoTableViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" sectionIndexMinimumDisplayRowCount="1" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="byC-PA-JSV">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" sectionIndexMinimumDisplayRowCount="1" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="byC-PA-JSV">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -194,6 +194,13 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KqW-PB-YgC" userLabel="icon">
+                                            <rect key="frame" x="374" y="44.5" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="20" id="4Gg-7t-Hsa"/>
+                                                <constraint firstAttribute="height" constant="20" id="xp1-O5-Aih"/>
+                                            </constraints>
+                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fus-KE-NJe" userLabel="lbTitle">
                                             <rect key="frame" x="20" y="10" width="339" height="20"/>
                                             <constraints>
@@ -205,6 +212,8 @@
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="KqW-PB-YgC" secondAttribute="trailing" constant="20" id="HRd-fA-bj8"/>
+                                        <constraint firstItem="KqW-PB-YgC" firstAttribute="centerY" secondItem="hFv-Nm-x8Q" secondAttribute="centerY" id="MhE-6u-VxE"/>
                                         <constraint firstItem="h1M-gl-KPx" firstAttribute="top" secondItem="Fus-KE-NJe" secondAttribute="bottom" constant="5" id="QGO-xF-mtr"/>
                                         <constraint firstItem="h1M-gl-KPx" firstAttribute="leading" secondItem="hFv-Nm-x8Q" secondAttribute="leading" constant="20" id="SaC-jO-Ro4"/>
                                         <constraint firstAttribute="bottom" secondItem="h1M-gl-KPx" secondAttribute="bottom" constant="10" id="gkF-J2-MRG"/>
@@ -215,6 +224,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="imgIcon" destination="KqW-PB-YgC" id="xev-vE-3Hi"/>
                                     <outlet property="lbLabel" destination="Fus-KE-NJe" id="U5g-5D-kc0"/>
                                     <outlet property="lbUserData" destination="h1M-gl-KPx" id="ujM-N6-nWi"/>
                                 </connections>

@@ -109,6 +109,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         let button = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
         
+        // Style for pushed view controller's nav bar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
     }
     
     // MARK: - SIDE MENU
@@ -138,7 +141,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 //infoViewController.view.backgroundColor =
                 //infoTableViewController?.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/2)
 //                self.present(infoTableViewController!, animated: true, completion: nil)
+                        
                 self.navigationController?.pushViewController(infoTableViewController!, animated: true)
+                
+                
                 
             // Change chatbot to FAQ
             case .faq:
