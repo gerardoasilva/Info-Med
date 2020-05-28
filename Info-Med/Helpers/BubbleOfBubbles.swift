@@ -71,7 +71,7 @@ class BubbleOfBubbles: Bubble, OptionBubbleDeactivateProtocol {
     
     // MARK: - OptionBubble protocol implementation
     
-    func blockFurtherActions(bbl: OptionBubble) {
+    func blockFurtherActions(bbl: OptionBubble!) {
         for b in subBubbles{
             b.pressed = true
             b.backgroundColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)

@@ -47,6 +47,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     var symptomsDict : [String : Double]! //saves the symptoms ad sums of the current questionary
     var currentSymptom : String! //saves the current cuestion symptom
     
+    var lastSuperBubble : BubbleOfBubbles!
+    var typingBubbleIsPresent = false
+    
     var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
     var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
     @IBOutlet weak var toolBarBottomConstraint: NSLayoutConstraint! // Outlet to move the inputbar
@@ -468,6 +471,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // This function is called when the user sends a message to add bubble to the screen and make the request to Dialogflow
     func send(){
         if tfInput.text != ""{
+            
+            //remove the typing bubble if it exists, before adding the next typing bubble and the user's bubble
+            if typingBubbleIsPresent{
+                self.removeLastBubble()
+                typingBubbleIsPresent = false
+            }
+            
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
             messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
@@ -490,8 +500,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // This function prepares an HTTP request to the server that calls Dialogflow´s API
     func prepareRequest(userInput: String!, agent: Agent!) {
         print("Preparing request")
-        
+                
+        //add the (...) typing bubble to indicate that a request is being fulfilled
         addBubble(bbl: TypingBubble(view: messageScrollView))
+        typingBubbleIsPresent = true
+        
+        if lastSuperBubble != nil{
+            lastSuperBubble.blockFurtherActions(bbl: nil)
+        }
         
         // Validate that the user's query is valid
         if let query = userInput {
@@ -510,6 +526,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     
                     // Store contexts from query
                     self.contexts.removeAll()
+                    
                     for context in response.outputContexts {
                         self.contexts.append(Context(name: context.name, lifespanCount: context.lifespanCount))
                     }
@@ -523,17 +540,19 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         
-                        //remove the typing bubble
-                        self.removeLastBubble()
+                        //remove the typing bubble if present, before pushing the response bubble
+                        if self.typingBubbleIsPresent{
+                            self.removeLastBubble()
+                            self.typingBubbleIsPresent = false
+                        }
+                        
                         //display the bot response
                         self.displayResponse(msg: response.fulfillmentText)
                         
-                        
-                        //save the syptoms clinimetry to the disctionary
+                        //initiate the symptoms dictionary if needed
                         if self.symptomsDict == nil{
                             self.symptomsDict = [:]
                         }
-                                                
                         
                         //process each fulfillment message
                         var options : [OptionBubble]!
@@ -566,8 +585,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 }
                             }
                             
-                            //push dictionary to DB //response.fulfillmentText == "Fin del cuestionario"
-                            if  (response.fulfillmentMessages[0].payload?.fields.suggestions?.listValue.values.isEmpty)! && self.symptomsDict != nil{
+                            //chech if the suggestions array is empty
+                            var sugEmpty = false
+                            if fm.payload != nil && fm.payload?.fields.suggestions != nil{
+                                if ((fm.payload?.fields.suggestions?.listValue.values.isEmpty)!){
+                                    sugEmpty = true
+                                }
+                            }
+                                
+                            //push dictionary to DB when the poll is finnished. That its indicated by an empty suggestions array. Do not push if there is nothing to push
+                            if  sugEmpty && self.symptomsDict != nil{
                                 print("Pushing to DB!!")
                                 print("DIC TO PUSH = \(String(describing: self.symptomsDict))")
                                 
@@ -636,6 +663,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 if options != nil && !options.isEmpty {
                                     let superBubble = BubbleOfBubbles(view: self.messageScrollView, subB: options, send: "option")
                                     self.addBubble(bbl: superBubble)
+                                    self.lastSuperBubble = superBubble
                                 }
                             }
                         }
