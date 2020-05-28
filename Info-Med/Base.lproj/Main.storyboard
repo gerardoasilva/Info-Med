@@ -15,7 +15,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Correo electrónico" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HxR-Uq-gcG">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Correo electrónico" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="HxR-Uq-gcG">
                                 <rect key="frame" x="48" y="332" width="321" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -57,9 +57,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Info-Med Bot" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bic-ql-srU">
-                                        <rect key="frame" x="47" y="95" width="320.5" height="60"/>
+                                        <rect key="frame" x="47" y="119.5" width="320.5" height="60"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="4g2-Yc-n4e"/>
                                             <constraint firstAttribute="width" constant="320.5" id="OGd-6Z-9TR"/>
                                             <constraint firstAttribute="height" constant="60" id="T8g-AN-J5G"/>
                                         </constraints>
@@ -170,6 +169,67 @@
             </objects>
             <point key="canvasLocation" x="5056.521739130435" y="650.89285714285711"/>
         </scene>
+        <!--Info Table View Controller-->
+        <scene sceneID="umh-0M-DL1">
+            <objects>
+                <tableViewController storyboardIdentifier="InfoVC" id="fDX-zx-zin" customClass="InfoTableViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" sectionIndexMinimumDisplayRowCount="1" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="byC-PA-JSV">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="109" id="Isd-K9-AP0" customClass="CustomTableViewCell" customModule="Info_Med" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="55.5" width="414" height="109"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Isd-K9-AP0" id="hFv-Nm-x8Q">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="109"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h1M-gl-KPx" userLabel="lbData">
+                                            <rect key="frame" x="20" y="35" width="339" height="63"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="63" id="LqB-dL-WMS"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fus-KE-NJe" userLabel="lbTitle">
+                                            <rect key="frame" x="20" y="10" width="339" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="rLq-70-aDJ"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="16"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="h1M-gl-KPx" firstAttribute="top" secondItem="Fus-KE-NJe" secondAttribute="bottom" constant="5" id="QGO-xF-mtr"/>
+                                        <constraint firstItem="h1M-gl-KPx" firstAttribute="leading" secondItem="hFv-Nm-x8Q" secondAttribute="leading" constant="20" id="SaC-jO-Ro4"/>
+                                        <constraint firstAttribute="bottom" secondItem="h1M-gl-KPx" secondAttribute="bottom" constant="10" id="gkF-J2-MRG"/>
+                                        <constraint firstItem="Fus-KE-NJe" firstAttribute="leading" secondItem="hFv-Nm-x8Q" secondAttribute="leading" constant="20" id="ho5-Kq-mHh"/>
+                                        <constraint firstAttribute="trailing" secondItem="h1M-gl-KPx" secondAttribute="trailing" constant="55" id="lN1-oq-hd0"/>
+                                        <constraint firstItem="Fus-KE-NJe" firstAttribute="top" secondItem="hFv-Nm-x8Q" secondAttribute="top" constant="10" id="qUV-Va-qQm"/>
+                                        <constraint firstAttribute="trailing" secondItem="Fus-KE-NJe" secondAttribute="trailing" constant="55" id="sMq-O7-nfd"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="lbLabel" destination="Fus-KE-NJe" id="U5g-5D-kc0"/>
+                                    <outlet property="lbUserData" destination="h1M-gl-KPx" id="ujM-N6-nWi"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="fDX-zx-zin" id="Lhq-nP-rGk"/>
+                            <outlet property="delegate" destination="fDX-zx-zin" id="hNz-zT-V8O"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QIf-Lu-UnN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5868.115942028986" y="650.89285714285711"/>
+        </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">
             <objects>
@@ -178,19 +238,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Teléfono *" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="42H-nm-WzR">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Teléfono *" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="42H-nm-WzR">
                                 <rect key="frame" x="47" y="318" width="320.5" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="tel"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Nombre" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yPJ-a7-GKC">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Nombre" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yPJ-a7-GKC">
                                 <rect key="frame" x="47" y="386" width="320.5" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" textContentType="name"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Apellido" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cev-dP-vMj">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Apellido" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="cev-dP-vMj">
                                 <rect key="frame" x="47" y="454" width="320.5" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -229,8 +289,8 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                 <state key="normal" title="¿Ya tienes cuenta?"/>
                                 <connections>
+                                    <action selector="backTapped:" destination="NLP-fp-dDt" eventType="touchUpInside" id="C1k-ai-yAc"/>
                                     <action selector="loginTapped:" destination="dkt-nE-AGt" eventType="touchUpInside" id="x9R-WW-D2I"/>
-                                    <action selector="registerTapped:" destination="NLP-fp-dDt" eventType="touchUpInside" id="FdG-6q-byb"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Correo electrónico *" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yS9-4m-wZ4">
@@ -245,6 +305,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Gju-9C-cRZ">
                         <barButtonItem key="leftBarButtonItem" title="Atrás" image="chevron.left" catalog="system" largeContentSizeImage="chevron.left" id="VjV-16-9hZ">
+                            <color key="tintColor" red="0.086274509799999996" green="0.5450980392" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="backTapped:" destination="NLP-fp-dDt" id="hcd-bu-NTi"/>
                             </connections>

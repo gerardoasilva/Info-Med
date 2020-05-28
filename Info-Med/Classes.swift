@@ -8,6 +8,21 @@
 
 import UIKit
 
+// Enum that has the type of agents available in dialogflow
+enum Agent: String {
+    case faq = "faq"
+    case questionnaire = "questionnaire"
+}
+
+// Enum to know what option from the side menu is pressed
+enum MenuOption {
+    case info
+    case faq
+    case questionnaire
+    case history
+    case signOut
+}
+
 class Message: Codable {
     var text: String!
     var sender: String!
@@ -28,6 +43,7 @@ class Context: Codable {
     }
 }
 
+// Class query that is encoded to send as json to make a request to the API
 class Query: Codable {
     
     var query: String!
@@ -44,3 +60,33 @@ class Query: Codable {
         try container.encode(contexts, forKey: .contexts)
     }
 }
+/*
+class User: Codable {
+    var firstName: String!
+    var lastName: String!
+    var phoneNumber: String!
+    var email: String!
+
+    init(firstName: String, lastName: String, phoneNumber: String, email: String) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.phoneNumber = phoneNumber
+        self.email = email
+    }
+}
+
+struct currentUser  {
+    var uid: String
+    var firstName: String
+    var lastName: String
+    var phoneNumber: String
+
+    init(uid: String, dictionary: [String: Any]) {
+    self.uid = uid
+    self.firstName = dictionary["firstName"] as? String ?? "-"
+    self.lastName = dictionary["lastName"] as? String ?? "-"
+    self.phoneNumber = dictionary["phoneNumber"] as? String ?? "-"
+    }
+    
+}
+ */

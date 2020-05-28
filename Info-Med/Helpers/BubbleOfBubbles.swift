@@ -12,7 +12,7 @@ import UIKit
 class BubbleOfBubbles: Bubble, OptionBubbleDeactivateProtocol {
     
     
-
+    
     var subBubbles: [OptionBubble]!
     var acumulatedHeight = 0;
     var maxWidth = CGFloat(0);
@@ -80,12 +80,12 @@ class BubbleOfBubbles: Bubble, OptionBubbleDeactivateProtocol {
             
             //code for removing remaining options, and only show the selected one
             /*
-            for view in self.subviews{
-                view.removeFromSuperview()
-            }
-        
-            subBubbles = [bbl]
-            addBubbles()*/
+             for view in self.subviews{
+             view.removeFromSuperview()
+             }
+             
+             subBubbles = [bbl]
+             addBubbles()*/
         }
     }
 }

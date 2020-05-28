@@ -13,11 +13,6 @@ class Utilities: NSObject {
     
     static func styleTextField(_ textField: UITextField) {
         
-        // Create a bottom line
-//        let bottomLine = CALayer()
-//        bottomLine.frame = CGRect(x: 0, y: textField.frame.height - 2, width: textField.frame.width, height: 2)
-//        bottomLine.backgroundColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
-        
         // Remove border on textfield
         textField.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         textField.backgroundColor = .white
@@ -33,7 +28,7 @@ class Utilities: NSObject {
         textField.setLeftPaddingPoints(10)
         textField.setRightPaddingPoints(10)
         
-//        textField.layer.addSublayer(bottomLine)
+        //        textField.layer.addSublayer(bottomLine)
     }
     
     static func styleFilledButton(_ button: UIButton) {
@@ -83,9 +78,6 @@ class Utilities: NSObject {
         // Password has at least one upper case character
         let upperCaseTest = NSPredicate(format: "SELF MATCHES %@", ".*[A-Z]+.*")
         
-        
-        //let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")// modify this REGEX to make password friendlier
-        
         return upperCaseTest.evaluate(with: password)
     }
     
@@ -96,5 +88,5 @@ class Utilities: NSObject {
         
         return phoneNumberTest.evaluate(with: phoneNumber)
     }
-
+    
 }
