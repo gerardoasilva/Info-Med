@@ -189,7 +189,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         // Add constraints
         topView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
-        topView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0).isActive = true
+        topView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
 //        topView.heightAnchor.constraint(equalToConstant: screenHeight / 3).isActive = true
         topView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/3).isActive = true
         topView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true

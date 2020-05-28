@@ -57,9 +57,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Info-Med Bot" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bic-ql-srU">
-                                        <rect key="frame" x="47" y="95" width="320.5" height="60"/>
+                                        <rect key="frame" x="47" y="119.5" width="320.5" height="60"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="4g2-Yc-n4e"/>
                                             <constraint firstAttribute="width" constant="320.5" id="OGd-6Z-9TR"/>
                                             <constraint firstAttribute="height" constant="60" id="T8g-AN-J5G"/>
                                         </constraints>

@@ -40,8 +40,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         tfFirstName.delegate = self
         tfLastName.delegate = self
         
-        let panGestureBack = UIPanGestureRecognizer(target: self, action: #selector(popViewController))
-        view.addGestureRecognizer(panGestureBack)
+        let leftEdgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(popViewController))
+        leftEdgePan.edges = .left
+        view.addGestureRecognizer(leftEdgePan)
         
     }
     
@@ -61,11 +62,12 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         
         lbError.textColor =  #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
+        lbError.numberOfLines = 3
         lbError.textAlignment = .center
-        lbError.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -5).isActive = true
+        lbError.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -15).isActive = true
         lbError.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        lbError.widthAnchor.constraint(equalToConstant: screenWhidth).isActive = true
-        lbError.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        lbError.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 4/6).isActive = true
+        lbError.heightAnchor.constraint(equalToConstant: 70).isActive = true
 
         // Add constraints
         tfEmail.topAnchor.constraint(equalTo: lbError.bottomAnchor, constant: 5).isActive = true
