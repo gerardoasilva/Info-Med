@@ -203,6 +203,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         darkView.backgroundColor = .black
         darkView.alpha = 0
         menuView.translatesAutoresizingMaskIntoConstraints = false
+        darkView.translatesAutoresizingMaskIntoConstraints = false
+        
+        menuView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 3/4).isActive = true
+        menuView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        menuView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
+        menuView.rightAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        
+        darkView.leftAnchor.constraint(equalTo: menuView.rightAnchor).isActive = true
+        darkView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        darkView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
+        darkView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         
         
         /*
@@ -231,11 +242,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 
                 // Slide chat content to the right
                 self.view.endEditing(true)
-                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - self.menuLimit
-                self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
-                self.menuView.frame.origin.x = 0
                 self.menuView.layer.shadowOpacity = 1
-                self.darkView.frame.origin.x = self.menuView.frame.width
+                self.view.frame.origin.x += self.menuView.frame.width
                 self.darkView.alpha = 0.2
                 self.darkView.isUserInteractionEnabled = true
             }, completion: nil)
@@ -243,12 +251,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             // Hide menu
         else {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
-                // Slide chat content to the origin
-                self.messageScrollView.frame.origin.x = 0
-                self.inputToolBar.frame.origin.x = 0
-                self.menuView.frame.origin.x = -self.menuView.frame.width - self.darkView.frame.width
+                
+                // Slide content to original position
                 self.menuView.layer.shadowOpacity = 0
-                self.darkView.frame.origin.x = -self.menuLimit
+                self.view.frame.origin.x = 0
                 self.darkView.alpha = 0
                 self.darkView.isUserInteractionEnabled = false
             }, completion: nil)
