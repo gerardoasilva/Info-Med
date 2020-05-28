@@ -54,7 +54,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SideMenuCell.self, forCellReuseIdentifier: reuseIdentifier)
-        tableView.translatesAutoresizingMaskIntoConstraints = false        
+        
     }
     
     required init?(coder: NSCoder) {

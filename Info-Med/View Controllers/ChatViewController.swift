@@ -189,13 +189,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         darkView.alpha = 0
         menuView.translatesAutoresizingMaskIntoConstraints = false
         
-        setupMenu()
         
+        /*
+         
+         /// FALTA AGREGAR CONSTRAINTS
+         
+         */
         print("Added menu view to ChatViewController")
-    }
-    
-    func setupMenu() {
-        
     }
     
     //gets called when pressing the navbar hamburger button
