@@ -46,6 +46,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     private var keyBSize: CGSize!
     
+    var menuRightConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -93,13 +95,24 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         // Register to listen notification for menu option 'Cuestionario"
         NotificationCenter.default.addObserver(self, selector: #selector(optionSelectionHandler(notification:)), name: MenuView.notificationOption, object: nil)
         
+        print("ISHIDDEN from willLoad: \(isMenuHidden)")
+        
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.backgroundColor = .none
+         print("ISHIDDEN from WillAppear: \(isMenuHidden)")
+        print(menuView.frame)
+        
+        if !isMenuHidden && menuView.frame.origin.x < 0 {
+            isMenuHidden = !isMenuHidden
+            handleMenuToggle()
+        }
     }
 
     
@@ -157,8 +170,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 if actualAgent != .faq {
                     actualAgent = .faq
                     
-                    // PENDING: Save data of conversation in history
-                    
                     // Delete actual conversation
                     startConversation()
                     
@@ -171,8 +182,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 
                 if actualAgent != .questionnaire {
                     actualAgent = .questionnaire
-                    
-                    // PENDING: Save data of conversation in history
                     
                     // Delete actual conversation
                     startConversation()
@@ -202,28 +211,40 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         let scrollViewFrame = messageScrollView.frame
         
         menuView = MenuView(toolBarFrame: toolBarFrame, scrollViewFrame: scrollViewFrame)
+
         // Create dark view
         darkView = UIView()
         
         // Set menuView and darkViewdimensions and position
-        menuView.frame = CGRect(x: -UIScreen.main.bounds.width, y: 0, width: menuWidth, height: self.view.frame.height)
-        darkView.frame = CGRect(x: -menuWidth, y: 0, width: menuLimit, height: self.view.frame.height)
+        menuView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        darkView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         
         // Add subview of menu to ChatViewController
-        view.addSubview(menuView)
         view.addSubview(darkView)
-        
+        view.addSubview(menuView)
+
         // DarkView style
         darkView.backgroundColor = .black
         darkView.alpha = 0
+        darkView.isUserInteractionEnabled = false
         menuView.translatesAutoresizingMaskIntoConstraints = false
+        darkView.translatesAutoresizingMaskIntoConstraints = false
         
-        
-        /*
-         
-         /// FALTA AGREGAR CONSTRAINTS
-         
-         */
+        menuRightConstraint = menuView.rightAnchor.constraint(equalTo: self.view.leftAnchor)
+
+        NSLayoutConstraint.activate([
+            menuRightConstraint,
+            menuView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
+            menuView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 3/4),
+            menuView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            
+            darkView.leftAnchor.constraint(equalTo: menuView.rightAnchor, constant: -50),
+            darkView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            darkView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            darkView.topAnchor.constraint(equalTo: self.view.topAnchor)
+            
+        ])
+
         print("Added menu view to ChatViewController")
     }
     
@@ -238,6 +259,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     /// ```
     /// - Returns: Void
     func toggleMenu(){
+        
+        // Set menu's width
+        let menuWidth =  UIScreen.main.bounds.width - menuLimit
         // Show menu
         if isMenuHidden {
             
@@ -245,34 +269,42 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 
                 // Slide chat content to the right
                 self.view.endEditing(true)
-                self.messageScrollView.frame.origin.x = self.messageScrollView.frame.width - self.menuLimit
-                self.inputToolBar.frame.origin.x = self.messageScrollView.frame.origin.x
-                self.menuView.frame.origin.x = 0
+//                self.menuView.frame.origin.x = 0
+                self.menuRightConstraint.constant = menuWidth
+//                self.messageScrollView.frame.origin.x += menuWidth
+//                self.inputToolBar.frame.origin.x = menuWidth
+//                self.menuView.frame.origin.x = 0
+//                self.darkView.frame.origin.x = self.menuView.frame.width
                 self.menuView.layer.shadowOpacity = 1
-                self.darkView.frame.origin.x = self.menuView.frame.width
                 self.darkView.alpha = 0.2
                 self.darkView.isUserInteractionEnabled = true
+                self.view.layoutIfNeeded()
             }, completion: nil)
+            isMenuHidden = !isMenuHidden
         }
             // Hide menu
         else {
             UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 // Slide chat content to the origin
-                self.messageScrollView.frame.origin.x = 0
-                self.inputToolBar.frame.origin.x = 0
-                self.menuView.frame.origin.x = -self.menuView.frame.width - self.darkView.frame.width
+//                self.menuView.frame.origin.x = -menuWidth
+                self.menuRightConstraint.constant = 0
+//                self.messageScrollView.frame.origin.x -= 0
+//                self.inputToolBar.frame.origin.x = 0
+//                self.menuView.frame.origin.x = -self.menuView.frame.width - self.darkView.frame.width
+//                self.darkView.frame.origin.x = -self.menuLimit
                 self.menuView.layer.shadowOpacity = 0
-                self.darkView.frame.origin.x = -self.menuLimit
                 self.darkView.alpha = 0
                 self.darkView.isUserInteractionEnabled = false
+                self.view.layoutIfNeeded()
             }, completion: nil)
+            isMenuHidden = !isMenuHidden
         }
         
-        isMenuHidden = !isMenuHidden
     }
     
     // MARK: - CHAT
     
+    // Add style for the input text field
     func setupTextField() {
         tfInput.font = UIFont(name: "HelveticaNeue", size: 18)
         tfInput.returnKeyType = UIReturnKeyType.send
@@ -768,8 +800,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     }
     
 }
-
-// MARK: - CLASS MENU VIEW
 
 
 // Class extension to add padding to textField

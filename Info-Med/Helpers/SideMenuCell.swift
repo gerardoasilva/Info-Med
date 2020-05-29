@@ -13,12 +13,12 @@ class SideMenuCell: UITableViewCell {
     
     
     // Create cell label
-    let descritionLabel: UILabel = { // Label constructor
+    let title: UILabel = { // Label constructor
         let label = UILabel()
         label.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         label.font = UIFont(name: "Helvetica Neue", size: 20)
-        label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic font size based in system preferences
-        label.adjustsFontForContentSizeCategory = true // Updates on system preference changes of font size
+//        label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic font size based in system preferences
+//        label.adjustsFontForContentSizeCategory = true // Updates on system preference changes of font size
         label.text = "" //test sample text
         return label
     }()
@@ -48,10 +48,10 @@ class SideMenuCell: UITableViewCell {
         iconImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         
         //add label sub view and center 
-        addSubview(descritionLabel)
-        descritionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descritionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        descritionLabel.leftAnchor.constraint(equalTo: iconImageView.rightAnchor, constant: 12).isActive = true //anchors to the right of the image
+        addSubview(title)
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        title.leftAnchor.constraint(equalTo: iconImageView.rightAnchor, constant: 12).isActive = true //anchors to the right of the image
         
     }
     
