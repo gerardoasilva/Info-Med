@@ -55,8 +55,6 @@ class HistoryTableViewController: UITableViewController {
                 self.tableView.reloadData()
             }
         }
-            
-        
     }
     
     // MARK: - DATABASE QUERIES

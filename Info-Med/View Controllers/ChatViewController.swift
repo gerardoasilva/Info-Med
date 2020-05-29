@@ -507,6 +507,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     func onOptionBubblePress(text: String) {
         messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
+        
+        //remove the typing bubble if it exists, before adding the next typing bubble and the user's bubble
+        if typingBubbleIsPresent{
+            self.removeLastBubble()
+            typingBubbleIsPresent = false
+        }
+        
         prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
         print("Suggestion sent\n")
     }
