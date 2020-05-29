@@ -30,15 +30,16 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         setUpElements()
         setupAddTargetIsNotEmptyTextFields()
         
-        // Adds tap recognizer in current view to hide keyboard
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
-        
         // Textfield delegates
         tfEmail.delegate = self
         tfPassword.delegate = self
         tfPhoneNumber.delegate = self
         tfFirstName.delegate = self
+        
+        // Adds tap recognizer in current view to hide keyboard
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+        
         tfLastName.delegate = self
         
         // Gesture recognizer to go back sliding the edge of the screen to the right
