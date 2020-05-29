@@ -190,12 +190,13 @@ class InfoTableViewController: UITableViewController {
         cell.lbUserData.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         cell.lbUserData.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
         
-        // cell.isUserInteractionEnabled = false
+         cell.isUserInteractionEnabled = false
         
         cell.lbLabel.text = labels[indexPath.row]
         
         if indexPath.row == 3 {
             cell.accessoryType = .disclosureIndicator
+            cell.isUserInteractionEnabled = true
         }
 
         // Insert default value when data hasnt been fetched from DB

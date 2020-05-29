@@ -93,13 +93,10 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -50),
-            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50)
-//            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, multiplier: ),
-//            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-//            tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: self.scrollViewFrame.origin.y)
+            tableView.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor),
+            tableView.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
         ])
     }
     
@@ -128,7 +125,8 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 4){
             let heightTableRows = tableView.rowHeight * 5
-            return self.toolBarFrame.origin.y - self.scrollViewFrame.origin.y - heightTableRows
+            return tableView.bounds.height - heightTableRows
+//            return (self.toolBarFrame.origin.y - self.scrollViewFrame.origin.y) - (heightTableRows + self.scrollViewFrame.origin.y)
         }
         return 80;
     }
