@@ -24,12 +24,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     var menuView: UIView! // Side menu view
     var isMenuHidden = true
     var darkView: UIView! // Darkens the screen when menu is open
-    
     var menuLimit: CGFloat!
-    
     var activeField: UITextField!
     var bubblesList: [Bubble]!  //list of chat bubbles were new bubbles are pushed to
-
     var contexts: [Context] = [Context]() // Declare empty Context array to store contexts from queries
     
     //questionary specific variables
@@ -67,7 +64,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         
         if isNewChat {
             // Configure initial chat
-            //startConversation()
             startConversation()
 
         }
@@ -83,7 +79,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         darkView.addGestureRecognizer(closeMenuSwipe)
         darkView.addGestureRecognizer(closeMenuTap)
         
-        // Add tap gesture to close keyboard when
+        // Add tap gesture to scroll view to hide keyboard
         let closeKeyboard = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         messageScrollView.addGestureRecognizer(closeKeyboard)
         

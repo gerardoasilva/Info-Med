@@ -43,7 +43,7 @@ class InfoTableViewController: UITableViewController {
         super.viewDidLoad()
         
         // Register custom header view
-        tableView.register(CustomHeaderForTableView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
+        tableView.register(TitleHeaderForTableView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
         
         configureNavBar()
         
@@ -157,7 +157,7 @@ class InfoTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! CustomHeaderForTableView
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! TitleHeaderForTableView
         headerView.title.text = "Información personal"
         headerView.image.image = UIImage(systemName: "person.crop.circle")
         return headerView
