@@ -3,4 +3,54 @@
    uuid = "96C12E1F-ED1B-4B0E-9748-6FAEC8684AEB"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3F040B89-B163-4D4E-A374-89D8762598E7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Info-Med/View Controllers/HistoryTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "getDataFromDB()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3F040B89-B163-4D4E-A374-89D8762598E7 - bd152fd457f4c96b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Info_Med.HistoryTableViewController.getDataFromDB() -&gt; ()"
+                  moduleName = "Info-Med"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gerardosilvarazo/Desktop/Desarrollo%20Mo%CC%81vil/ProyectoFinal/Info-Med/Info-Med/View%20Controllers/HistoryTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "1000">
+               </Location>
+               <Location
+                  uuid = "3F040B89-B163-4D4E-A374-89D8762598E7 - b985f4be3e31cba6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Info_Med.HistoryTableViewController.getDataFromDB() -&gt; ()"
+                  moduleName = "Info-Med"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gerardosilvarazo/Desktop/Desarrollo%20Mo%CC%81vil/ProyectoFinal/Info-Med/Info-Med/View%20Controllers/HistoryTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "100"
+                  endingLineNumber = "100"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

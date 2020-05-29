@@ -17,6 +17,8 @@
 		6C8549DDE252DFCCBB5CA858 /* Pods_Info_Med_Info_MedUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C87819FFE14C234A687DCE9 /* Pods_Info_Med_Info_MedUITests.framework */; };
 		6FDD3AE3247DC5ED00025EC1 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */; };
 		DB65092BD89BEC084BA4A7D0 /* Pods_Info_MedTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473FE9F490C1CFFBDFA1C6A0 /* Pods_Info_MedTests.framework */; };
+		DC6ED911248099BF00E25137 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6ED910248099BF00E25137 /* HistoryTableViewController.swift */; };
+		DC6ED9132480AA5700E25137 /* DetailHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6ED9122480AA5700E25137 /* DetailHistoryTableViewController.swift */; };
 		DC8384F6244E91FB00BA40AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8384F5244E91FB00BA40AD /* AppDelegate.swift */; };
 		DC8384F8244E91FB00BA40AD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */; };
 		DC8384FD244E91FB00BA40AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC8384FB244E91FB00BA40AD /* Main.storyboard */; };
@@ -71,6 +73,8 @@
 		78DD32B7A751FD85306DBE8F /* Pods-Info-Med-Info-MedUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-Med-Info-MedUITests.debug.xcconfig"; path = "Target Support Files/Pods-Info-Med-Info-MedUITests/Pods-Info-Med-Info-MedUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A408450063D2290428FAA4B4 /* Pods-Info-MedTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-MedTests.debug.xcconfig"; path = "Target Support Files/Pods-Info-MedTests/Pods-Info-MedTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CC530C47578044D97EE7F522 /* Pods-Info-MedTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Info-MedTests.release.xcconfig"; path = "Target Support Files/Pods-Info-MedTests/Pods-Info-MedTests.release.xcconfig"; sourceTree = "<group>"; };
+		DC6ED910248099BF00E25137 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+		DC6ED9122480AA5700E25137 /* DetailHistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHistoryTableViewController.swift; sourceTree = "<group>"; };
 		DC8384F2244E91FB00BA40AD /* Info-Med.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Info-Med.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC8384F5244E91FB00BA40AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -175,12 +179,11 @@
 			children = (
 				DCB7F9CA244F9EE400D8E9A8 /* Helpers */,
 				DCB7F9C5244F782100D8E9A8 /* View Controllers */,
-				DCF9D324246220C900F69F29 /* APIRequest.swift */,
-				DC8384F5244E91FB00BA40AD /* AppDelegate.swift */,
-				DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */,
 				DC8384FB244E91FB00BA40AD /* Main.storyboard */,
 				DC838501244E91FB00BA40AD /* Assets.xcassets */,
+				DC8384F5244E91FB00BA40AD /* AppDelegate.swift */,
 				DC838503244E91FB00BA40AD /* LaunchScreen.storyboard */,
+				DC8384F7244E91FB00BA40AD /* SceneDelegate.swift */,
 				DC838506244E91FB00BA40AD /* Info.plist */,
 				DC8384FE244E91FB00BA40AD /* Info_Med.xcdatamodeld */,
 				DCB7F9C8244F7CC000D8E9A8 /* GoogleService-Info.plist */,
@@ -213,6 +216,8 @@
 				6FDD3AE2247DC5ED00025EC1 /* InfoTableViewController.swift */,
 				DCB7F9C6244F78A300D8E9A8 /* LoginViewController.swift */,
 				DCB7F9CD244F9F5900D8E9A8 /* RegisterViewController.swift */,
+				DC6ED910248099BF00E25137 /* HistoryTableViewController.swift */,
+				DC6ED9122480AA5700E25137 /* DetailHistoryTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 				63AFB926246A968D006EF9FD /* SideMenuCell.swift */,
 				DC9AC681247F741700BEED29 /* MenuView.swift */,
 				DC9AC6832480626700BEED29 /* CustomTableViewHeaders.swift */,
+				DCF9D324246220C900F69F29 /* APIRequest.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -488,7 +494,9 @@
 				DCB7F9D0244FB08900D8E9A8 /* Constants.swift in Sources */,
 				635FCD10245024090083E984 /* Bubble.swift in Sources */,
 				DCB7F9CC244F9EFA00D8E9A8 /* Utilities.swift in Sources */,
+				DC6ED911248099BF00E25137 /* HistoryTableViewController.swift in Sources */,
 				DCF9D327246244F900F69F29 /* ResponseAPI.swift in Sources */,
+				DC6ED9132480AA5700E25137 /* DetailHistoryTableViewController.swift in Sources */,
 				DCF9D325246220C900F69F29 /* APIRequest.swift in Sources */,
 				635FCD0E245023CA0083E984 /* Classes.swift in Sources */,
 				635FCD0C245023680083E984 /* ChatViewController.swift in Sources */,

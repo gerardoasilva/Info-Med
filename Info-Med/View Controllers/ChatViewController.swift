@@ -132,11 +132,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                     Do user info stuff
                  */
                 let infoTableViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.infoTableViewController) as? InfoTableViewController
-                //infoViewController?.modalPresentationStyle = .custom
-                // let infoViewController = UIViewController()
-                //infoViewController.view.backgroundColor =
-                //infoTableViewController?.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/2)
-//                self.present(infoTableViewController!, animated: true, completion: nil)
+                
                         
                 self.navigationController?.pushViewController(infoTableViewController!, animated: true)
                 
@@ -175,9 +171,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             // Show hitory of interactions
             case .history:
                 print("HISTORY listened")
-                /*
-                    Do hisotry stuff
-                 */
+                let historyTableViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.historyTableViewController) as? HistoryTableViewController
+                self.navigationController?.pushViewController(historyTableViewController!, animated: true)
                 
             // SignOut
             default:
@@ -268,6 +263,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // MARK: - CHAT
     
     func setupTextField() {
+        tfInput.font = UIFont(name: "HelveticaNeue", size: 18)
         tfInput.returnKeyType = UIReturnKeyType.send
         tfInput.layer.borderColor = #colorLiteral(red: 0.8352941176, green: 0.8470588235, blue: 0.8588235294, alpha: 1)
         tfInput.backgroundColor = .white
@@ -487,26 +483,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         tfInput.text = ""
     }
     
-    // Detect change in scroll view
-    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-
-        print("scrollViewWillBeginDecelerating")
-
-        let actualPosition = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
-        if (actualPosition.y > 0){
-            // Dragging down
-
-            UIView.animate(withDuration: 3, animations: {
-               //Change the color of view
-            })
-        }else{
-            // Dragging up
-
-            UIView.animate(withDuration: 3, animations: {
-                //Change the color of view
-            })
-        }
-    }
     
     // MARK: - CHAT OPTION BUBBLE PROTOCOL IMPLEMENTATION
     
