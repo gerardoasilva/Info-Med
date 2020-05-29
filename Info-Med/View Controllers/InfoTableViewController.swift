@@ -181,7 +181,7 @@ class InfoTableViewController: UITableViewController {
         cell.lbUserData.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         cell.lbUserData.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
         
-        cell.isUserInteractionEnabled = false
+        // cell.isUserInteractionEnabled = false
         
         cell.lbLabel.text = labels[indexPath.row]
         
@@ -198,6 +198,14 @@ class InfoTableViewController: UITableViewController {
         }
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(indexPath.row == 3) {
+            let passwordViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.passwordViewController) as? PasswordViewController
+            self.navigationController?.pushViewController(passwordViewController!, animated: true)
+        }
+    }
+    
 
 
     /*
