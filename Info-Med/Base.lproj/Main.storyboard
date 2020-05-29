@@ -377,11 +377,19 @@
                                     <action selector="pressCancel:" destination="QXm-f6-7oE" eventType="touchUpInside" id="3vH-d0-01q"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uHk-Jb-Wab">
+                                <rect key="frame" x="120" y="84" width="176" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="ZWm-Os-uuW"/>
                     </view>
                     <connections>
+                        <outlet property="lbError" destination="uHk-Jb-Wab" id="azy-bd-1Id"/>
                         <outlet property="saveButton" destination="2Oh-mL-IBP" id="2iS-UE-qu6"/>
                         <outlet property="tfConfirmPassword" destination="hce-MR-Ugs" id="fMe-ik-VeW"/>
                         <outlet property="tfCurrentPassword" destination="qtF-HG-7oe" id="ZE3-zE-CJL"/>
@@ -390,7 +398,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q4v-6a-UYE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5990" y="1371"/>
+            <point key="canvasLocation" x="6056.521739130435" y="1366.7410714285713"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">

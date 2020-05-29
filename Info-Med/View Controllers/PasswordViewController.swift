@@ -11,6 +11,8 @@ import FirebaseAuth
 
 class PasswordViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet weak var lbError: UILabel!
+    
     @IBOutlet weak var tfCurrentPassword: UITextField!
     @IBOutlet weak var tfNewPassword: UITextField!
     @IBOutlet weak var tfConfirmPassword: UITextField!
@@ -28,6 +30,11 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         tfCurrentPassword.delegate = self
         tfNewPassword.delegate = self
         tfConfirmPassword.delegate = self
+        
+        lbError.textColor = #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
+        
+        // Hides label
+        lbError.alpha = 0
         
         
         // Do any additional setup after loading the view.
@@ -87,7 +94,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         if error != nil {
             // There was somwthing wrong with the textfields
             print(error!)
-            //showError()
+            showError(error!)
         }
 
         else {
@@ -102,7 +109,9 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
             // Reauthenticate user with credential
             user?.reauthenticate(with: credential, completion: { (result, error) in
                 if let err = error {
+                    print("ERROR REAUTH")
                     print(err)
+                    self.showError("Constraseña actual del usuario no coincide")
                 } else{
                     // Set new password
                     let newPassword = self.tfNewPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -119,20 +128,16 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func showError(_ message: String) {
+        lbError.text = message
+        lbError.alpha = 1
+    }
+    
     
     // function to return to previous VC
     @IBAction func pressCancel(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 
     /*
