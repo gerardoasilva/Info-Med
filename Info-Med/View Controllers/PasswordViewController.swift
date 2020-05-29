@@ -9,19 +9,44 @@
 import UIKit
 import FirebaseAuth
 
-class PasswordViewController: UIViewController {
+class PasswordViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var tfCurrentPassword: UITextField!
     @IBOutlet weak var tfNewPassword: UITextField!
     @IBOutlet weak var tfConfirmPassword: UITextField!
     
-
+    @IBOutlet weak var saveButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Add tap recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        // Texfield Delegates
+        tfCurrentPassword.delegate = self
+        tfNewPassword.delegate = self
+        tfConfirmPassword.delegate = self
+        
+        
         // Do any additional setup after loading the view.
+    }
+    
+    // Allows navigation throguh textfields when "return" is pressed
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        case tfCurrentPassword:
+            tfNewPassword.becomeFirstResponder()
+        case tfNewPassword:
+            tfConfirmPassword.becomeFirstResponder()
+        case tfConfirmPassword:
+            pressSaveChanges(saveButton)
+        default:
+            textField.resignFirstResponder()
+
+        }
+        return true
     }
     
     
@@ -85,10 +110,8 @@ class PasswordViewController: UIViewController {
                         if let err = error {
                             print(err)
                         } else {
-                            // Go to previous VC
-                            print("Success")
+                            // Go to profile VC
                             self.navigationController?.popViewController(animated: true)
-                            // Go back to menu or profile?
                         }
                     }
                 }
@@ -97,7 +120,7 @@ class PasswordViewController: UIViewController {
     }
     
     
-    
+    // function to return to previous VC
     @IBAction func pressCancel(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }

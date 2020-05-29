@@ -382,6 +382,7 @@
                         <viewLayoutGuide key="safeArea" id="ZWm-Os-uuW"/>
                     </view>
                     <connections>
+                        <outlet property="saveButton" destination="2Oh-mL-IBP" id="2iS-UE-qu6"/>
                         <outlet property="tfConfirmPassword" destination="hce-MR-Ugs" id="fMe-ik-VeW"/>
                         <outlet property="tfCurrentPassword" destination="qtF-HG-7oe" id="ZE3-zE-CJL"/>
                         <outlet property="tfNewPassword" destination="edn-9C-eOE" id="PBB-Fy-H7E"/>
