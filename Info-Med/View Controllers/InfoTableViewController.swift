@@ -204,8 +204,8 @@ class InfoTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //if
         if(indexPath.row == 3) {
-        let passwordTableViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.passwordTableViewController) as? PasswordTableViewController
-        self.navigationController?.pushViewController(passwordTableViewController!, animated: true)
+        let passwordViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.passwordViewController) as? PasswordViewController
+        self.navigationController?.pushViewController(passwordViewController!, animated: true)
     }
     }
 

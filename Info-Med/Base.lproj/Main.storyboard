@@ -169,71 +169,6 @@
             </objects>
             <point key="canvasLocation" x="5056.521739130435" y="650.89285714285711"/>
         </scene>
-        <!--Password Table View Controller-->
-        <scene sceneID="8jt-mM-J17">
-            <objects>
-                <tableViewController storyboardIdentifier="PassVC" id="XIl-uG-QKI" customClass="PasswordTableViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Bjp-1B-Zke">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="333" id="yKm-FS-PgG" customClass="CustomPassTableViewCell" customModule="Info_Med" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="333"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yKm-FS-PgG" id="yy2-Cq-8Mo">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="333"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="krQ-7h-5EZ">
-                                            <rect key="frame" x="89" y="26" width="229" height="34"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                        <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XKO-tO-mnx">
-                                            <rect key="frame" x="89" y="90" width="229" height="34"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                        <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7OI-cs-QtE">
-                                            <rect key="frame" x="89" y="149" width="229" height="34"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgq-JS-8AO">
-                                            <rect key="frame" x="175" y="222" width="56" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Guardar"/>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GJc-Sb-pMB">
-                                            <rect key="frame" x="173" y="276" width="61" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Cancelar"/>
-                                        </button>
-                                    </subviews>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="bttnCancel" destination="GJc-Sb-pMB" id="Lfw-Tm-APx"/>
-                                    <outlet property="bttnSaveChanges" destination="Fgq-JS-8AO" id="NJ1-JI-V9y"/>
-                                    <outlet property="tfConfirmPassword" destination="7OI-cs-QtE" id="Meu-Cd-DuX"/>
-                                    <outlet property="tfCurrentPassword" destination="krQ-7h-5EZ" id="7Nq-ec-FE0"/>
-                                    <outlet property="tfNewPassword" destination="XKO-tO-mnx" id="ZRR-8b-4SQ"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="XIl-uG-QKI" id="ajZ-a9-bf3"/>
-                            <outlet property="delegate" destination="XIl-uG-QKI" id="f7a-ki-8QY"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="svZ-Fa-oGF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5828.985507246377" y="1358.7053571428571"/>
-        </scene>
         <!--Info Table View Controller-->
         <scene sceneID="umh-0M-DL1">
             <objects>
@@ -304,6 +239,62 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QIf-Lu-UnN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5057" y="1360"/>
+        </scene>
+        <!--Password View Controller-->
+        <scene sceneID="a7M-LI-uS0">
+            <objects>
+                <viewController storyboardIdentifier="PassVC" id="J87-2h-BJu" customClass="PasswordViewController" customModule="Info_Med" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1KH-lx-XYF">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GNh-cH-Zmv">
+                                <rect key="frame" x="132" y="110" width="151" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZXU-UJ-AMP">
+                                <rect key="frame" x="143" y="204" width="140" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tGq-OE-vNi">
+                                <rect key="frame" x="184" y="395" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="pressSaveChanges:" destination="J87-2h-BJu" eventType="touchUpInside" id="awW-JW-Plh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ad-dG-cSk">
+                                <rect key="frame" x="183" y="465" width="48" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="pressCancel:" destination="J87-2h-BJu" eventType="touchUpInside" id="r18-ap-Slq"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BYK-gh-3Lw">
+                                <rect key="frame" x="143" y="292" width="140" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="cTQ-F2-rrY"/>
+                    </view>
+                    <connections>
+                        <outlet property="tfConfirmPassword" destination="BYK-gh-3Lw" id="e1Y-R6-pYG"/>
+                        <outlet property="tfCurrentPassword" destination="GNh-cH-Zmv" id="RQf-Z1-Qgp"/>
+                        <outlet property="tfNewPassword" destination="ZXU-UJ-AMP" id="b8f-Vs-3zG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bIA-Vq-cTf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5973.913043478261" y="1360.0446428571429"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="aDN-Th-QEz">
