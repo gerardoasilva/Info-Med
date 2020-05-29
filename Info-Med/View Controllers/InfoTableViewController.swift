@@ -16,7 +16,6 @@ class UserInfoCustomTableViewCell : UITableViewCell {
 
     @IBOutlet weak var lbLabel: UILabel!
     @IBOutlet weak var lbUserData: UILabel!
-    @IBOutlet weak var imgIcon: UIImageView!
     
 }
 
@@ -187,8 +186,7 @@ class InfoTableViewController: UITableViewController {
         cell.lbLabel.text = labels[indexPath.row]
         
         if indexPath.row == 3 {
-            cell.imgIcon.image = UIImage(systemName: "chevron.right")
-            cell.imgIcon.tintColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+            cell.accessoryType = .disclosureIndicator
         }
 
         // Insert default value when data hasnt been fetched from DB

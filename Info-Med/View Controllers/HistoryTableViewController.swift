@@ -11,26 +11,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseDatabase
 
-class Poll {
-    var name: String!
-    var results = [String: Double]()
-    
-    init(name: String) {
-        self.name = name
-    }
-    
-    func append(symptom: String!, clinimetry: String!) {
-        results[symptom] = Double(clinimetry)
-    }
-    
-    func display() {
-        print("Poll: \(name!)")
-        print("Results:")
-        for (key, val) in results {
-            print("\(key) = \(val)")
-        }
-    }
-}
 //class HistoryCustomTableViewCell : UITableViewCell {
 //
 //
@@ -58,6 +38,9 @@ class HistoryTableViewController: UITableViewController {
         
         userCollectionRef = Firestore.firestore().collection("users")
         
+        // Register custom header view
+        tableView.register(TitleHeaderForTableView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -72,6 +55,8 @@ class HistoryTableViewController: UITableViewController {
                 self.tableView.reloadData()
             }
         }
+            
+        
     }
     
     // MARK: - DATABASE QUERIES
@@ -112,12 +97,10 @@ class HistoryTableViewController: UITableViewController {
                             
                             for poll in polls!.documents {
                                 let pollObj = Poll(name: poll.documentID)
-//                                print("\n\nCrea PollObj con nombre: \(poll.documentID)")
+                                
                                 for (symptom, clinimetry) in poll.data() {
                                     pollObj.append(symptom: symptom, clinimetry: String(describing: clinimetry))
-//                                    print("Agrega sintoma: \(symptom) = \(clinimetry)")
                                 }
-                                pollObj.display()
                                 // Add poll to data structure
                                 self.pollsList.append(pollObj)
                             }
@@ -131,22 +114,24 @@ class HistoryTableViewController: UITableViewController {
                     }
                 }
                 completion(true)
-                // Reload data from table view
-//                DispatchQueue.main.async {
-//                    self.tableView.reloadData()
-//                }
-                
             }
         }
     }
 
     // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 100
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! TitleHeaderForTableView
+        headerView.title.text = "Historial"
+        headerView.image.image = UIImage(named: "history.white")
+        return headerView
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // REVISAR............
-        // Cambiar a que cada sección sea una fecha?????
-        // Si el usuario hizo 3 cuestionarios el mismo día que sean tres rows de una misma sección???
-        // REVISAR............
         return 1
     }
 
@@ -172,14 +157,21 @@ class HistoryTableViewController: UITableViewController {
         }
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
 
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        let detailView = segue.destination as! DetailHistoryTableViewController
+        let indexPath = tableView.indexPathForSelectedRow!
+        
+        detailView.poll = pollsList[indexPath.row]
+        
     }
 
 }

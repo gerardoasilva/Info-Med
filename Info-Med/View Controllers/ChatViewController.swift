@@ -92,6 +92,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.backgroundColor = .none
+    }
+
+    
     // MARK: - NAVIGATION
     func configureNavBar(){
         
@@ -230,7 +238,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         // Show menu
         if isMenuHidden {
             
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 
                 // Slide chat content to the right
                 self.view.endEditing(true)
@@ -245,7 +253,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
             // Hide menu
         else {
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 // Slide chat content to the origin
                 self.messageScrollView.frame.origin.x = 0
                 self.inputToolBar.frame.origin.x = 0
