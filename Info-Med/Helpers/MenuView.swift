@@ -10,7 +10,7 @@ import UIKit
 
 class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    var tableView = UITableView()
+    public var tableView = UITableView()
     var reuseIdentifier = "cell"
     
     let screenHeight = UIScreen.main.bounds.height
@@ -27,12 +27,14 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     // Declare notification for MenuOption of Questionnaire
     static let notificationOption = Notification.Name("sideMenuUserSelection")
     
-    // Constructor for UIView subclass
+    // Constructor for UIView subclass MenuView
     init(toolBarFrame: CGRect, scrollViewFrame: CGRect) {
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         self.toolBarFrame = toolBarFrame
         self.scrollViewFrame = scrollViewFrame
+        
         setupViews()
+        
         // Create sideMenu ViewController
         labels = [
             "Mi cuenta",
@@ -42,6 +44,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
             "",
             "Cerrar sesión"
         ]
+        
         icons = [
             UIImage(named: "user")!,
             UIImage(named: "faq")!,
@@ -71,18 +74,33 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         heightViewController = UIScreen.main.bounds.height
         
+        // Style views
         self.backgroundColor = .white
-        // Shadow
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0
         self.layer.shadowOffset = .zero
         self.layer.shadowRadius = 10
+        self.layer.cornerRadius = 15
+        
+        // Create table view
         tableView = UITableView(frame: CGRect(x: 0, y: scrollViewFrame.origin.y, width: widthMenu, height: screenHeight - scrollViewFrame.origin.y - toolBarFrame.height))
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.rowHeight = 80
         tableView.alwaysBounceVertical = false
         self.addSubview(tableView)
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -50),
+            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50)
+//            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, multiplier: ),
+//            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+//            tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: self.scrollViewFrame.origin.y)
+        ])
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -91,12 +109,13 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
-        cell.descritionLabel.text = labels[indexPath.row]
+        cell.title.text = labels[indexPath.row]
         cell.iconImageView.image = icons[indexPath.row]
         
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235).withAlphaComponent(0.8)
+        view.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
         cell.selectedBackgroundView = view
+        cell.title.highlightedTextColor = .white
         
         if indexPath.row == 4 {
             cell.isUserInteractionEnabled = false
@@ -109,7 +128,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 4){
             let heightTableRows = tableView.rowHeight * 5
-            return tableView.frame.height - heightTableRows
+            return self.toolBarFrame.origin.y - self.scrollViewFrame.origin.y - heightTableRows
         }
         return 80;
     }
