@@ -13,7 +13,7 @@ protocol OptionBubbleActionProtocol {
 }
 
 protocol OptionBubbleDeactivateProtocol {
-    func blockFurtherActions(bbl: OptionBubble)
+    func blockFurtherActions(bbl: OptionBubble!)
 }
 
 class OptionBubble: Bubble {
