@@ -19,7 +19,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var separatorView: UIView!
     @IBOutlet weak var registerButton: UIButton!
     
-    private var counter = 0
     private var viewOriginalFrame: CGRect!
     
     override func viewDidLoad() {

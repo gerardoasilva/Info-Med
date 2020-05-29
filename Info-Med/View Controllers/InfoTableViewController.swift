@@ -69,6 +69,11 @@ class InfoTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         getUserAuth()
         getDataFromDB()
+        
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.backgroundColor = .none
     }
     
      func configureNavBar(){
@@ -78,6 +83,10 @@ class InfoTableViewController: UITableViewController {
           navigationController?.navigationBar.shadowImage = UIImage()
           navigationController?.navigationBar.isTranslucent = true
           
+        
+        // Style for pushed view controller's nav bar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
           
       }
     
@@ -181,7 +190,7 @@ class InfoTableViewController: UITableViewController {
         cell.lbUserData.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         cell.lbUserData.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
         
-        cell.isUserInteractionEnabled = false
+        // cell.isUserInteractionEnabled = false
         
         cell.lbLabel.text = labels[indexPath.row]
         
@@ -198,6 +207,14 @@ class InfoTableViewController: UITableViewController {
         }
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(indexPath.row == 3) {
+            let passwordViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.passwordViewController) as? PasswordViewController
+            self.navigationController?.pushViewController(passwordViewController!, animated: true)
+        }
+    }
+    
 
 
     /*
