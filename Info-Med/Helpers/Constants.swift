@@ -16,5 +16,6 @@ struct Constants {
         static let chatViewController = "ChatVC"
         static let loginViewController = "LoginVC"
         static let infoTableViewController = "InfoVC"
+        static let historyTableViewController = "HistoryVC"
     }
 }

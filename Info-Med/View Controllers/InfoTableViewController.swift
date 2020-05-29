@@ -12,11 +12,10 @@ import FirebaseFirestore
 import FirebaseDatabase
 
 
-class CustomTableViewCell : UITableViewCell {
+class UserInfoCustomTableViewCell : UITableViewCell {
 
     @IBOutlet weak var lbLabel: UILabel!
     @IBOutlet weak var lbUserData: UILabel!
-    @IBOutlet weak var imgIcon: UIImageView!
     
 }
 
@@ -69,7 +68,7 @@ class InfoTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         getUserAuth()
-        getDbInformation()
+        getDataFromDB()
     }
     
      func configureNavBar(){
@@ -97,7 +96,7 @@ class InfoTableViewController: UITableViewController {
     }
 
     // Asynchronous query to get information from DB
-    func getDbInformation() {
+    func getDataFromDB() {
 
     // Get documents found in "users" collection
         usersCollectionRef.getDocuments { (snapshot, error) in
@@ -174,7 +173,7 @@ class InfoTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UserInfoCustomTableViewCell
         // Style
         cell.lbLabel.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         cell.lbLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
@@ -187,8 +186,7 @@ class InfoTableViewController: UITableViewController {
         cell.lbLabel.text = labels[indexPath.row]
         
         if indexPath.row == 3 {
-            cell.imgIcon.image = UIImage(systemName: "chevron.right")
-            cell.imgIcon.tintColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+            cell.accessoryType = .disclosureIndicator
         }
 
         // Insert default value when data hasnt been fetched from DB
