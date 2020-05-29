@@ -11,7 +11,26 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseDatabase
 
-
+class Poll {
+    var name: String!
+    var results = [String: Double]()
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    func append(symptom: String!, clinimetry: String!) {
+        results[symptom] = Double(clinimetry)
+    }
+    
+    func display() {
+        print("Poll: \(name!)")
+        print("Results:")
+        for (key, val) in results {
+            print("\(key) = \(val)")
+        }
+    }
+}
 //class HistoryCustomTableViewCell : UITableViewCell {
 //
 //
@@ -24,9 +43,18 @@ class HistoryTableViewController: UITableViewController {
     
     // Reference of user collection
     var userCollectionRef: CollectionReference!
+    
+    var db: Any!
+    var user: Any!
+    var docID: String!
+    var pollsList = [Poll]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        db = Firestore.firestore()
+        user = Auth.auth().currentUser
         
         userCollectionRef = Firestore.firestore().collection("users")
         // Uncomment the following line to preserve selection between presentations
@@ -38,7 +66,7 @@ class HistoryTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         getUserAuth()
-//        getDataFromDB()
+        getDataFromDB()
     }
     
     // MARK: - DATABASE QUERIES
@@ -52,57 +80,56 @@ class HistoryTableViewController: UITableViewController {
     }
     
     
-//    // Async func to fetch data from DB
-//    func getDataFromDB() {
+    // Async func to fetch data from DB
+    func getDataFromDB() {
+        var docID : String!
+        let db = Firestore.firestore()
+        let user = Auth.auth().currentUser
+        
+        // Query for the current user's document ID
+        db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
+            if let error = error {
+                print("Error geting user document: \(error)")
+                return
+            }
+            else {
+                // Cycle to iterate over the user documents to get the document ID
+                for collection in snapshot!.documents {
+                    docID = collection.documentID
+                    
+                    // Query to get polls from user documents
+                    db.collection("users").document(docID).collection("polls").getDocuments { (polls, error) in
+                        if let err = error {
+                            print("Error fetching polls: \(err)")
+                            return
+                        }
+                        else {
+                            
+                            for poll in polls!.documents {
+                                let pollObj = Poll(name: poll.documentID)
+//                                print("\n\nCrea PollObj con nombre: \(poll.documentID)")
+                                for (symptom, clinimetry) in poll.data() {
+                                    pollObj.append(symptom: symptom, clinimetry: String(describing: clinimetry))
+//                                    print("Agrega sintoma: \(symptom) = \(clinimetry)")
+                                }
+                                pollObj.display()
+                                // Add poll to data structure
+                                self.pollsList.append(pollObj)
+                            }
+                        }
+                    }
+                }
+                // Reload data from table view
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                
+            }
+        }
+        
 //
-//        userCollectionRef.getDocuments { (snapshot, error) in
-//
-//                if let err = error{
-//                print("Error fetching user documents: \(err)")
-//                } else {
-//
-//                    guard let snap = snapshot else { return }
-//
-//                    // Iterate through all documents
-//                    for document in (snap.documents) {
-//
-//                        // Save each document content
-//                        let data = document.data()
-//
-//                        // Get uid of user in current document
-//                        let dbUid = data["uid"] as? String ?? "-"
-//
-//                            // Check if it is the user we are looking for
-//                            if dbUid == self.uid {
-//
-//                                // Iterate through user data
-//                                for (key, value) in data {
-//
-//                                    if key == "firstName" {
-//                                        self.firstName = String(describing: value)
-//                                    }
-//                                    else if key == "lastName" {
-//                                        self.lastName = String(describing: value)
-//                                    }
-//                                    else if key == "phoneNumber" {
-//                                        self.phoneNumber = String(describing: value)
-//                                }
-//                            }
-//                                // Insert user information in array
-//                                let fullName = self.firstName + " " + self.lastName
-//                                self.userInfo.append(fullName)
-//                                self.userInfo.append(self.email)
-//                                self.userInfo.append(self.phoneNumber)
-//                                self.userInfo.append(self.password)
-//                                }
-//                    }
-//                    // Reload data from tableView after fetching data from DB
-//                    DispatchQueue.main.async {
-//                        self.tableView.reloadData()
-//                    }
-//                }
-//        }
-//    }
+        
+    }
 
     // MARK: - Table view data source
 
