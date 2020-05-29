@@ -57,6 +57,7 @@ class HistoryTableViewController: UITableViewController {
         user = Auth.auth().currentUser
         
         userCollectionRef = Firestore.firestore().collection("users")
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -66,7 +67,11 @@ class HistoryTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         getUserAuth()
-        getDataFromDB()
+        getDataFromDB { (status) in
+            if status {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     // MARK: - DATABASE QUERIES
@@ -81,7 +86,7 @@ class HistoryTableViewController: UITableViewController {
     
     
     // Async func to fetch data from DB
-    func getDataFromDB() {
+    func getDataFromDB(completion: @escaping (_ status: Bool) -> Void) {
         var docID : String!
         let db = Firestore.firestore()
         let user = Auth.auth().currentUser
@@ -90,7 +95,7 @@ class HistoryTableViewController: UITableViewController {
         db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
             if let error = error {
                 print("Error geting user document: \(error)")
-                return
+                completion(false)
             }
             else {
                 // Cycle to iterate over the user documents to get the document ID
@@ -101,7 +106,7 @@ class HistoryTableViewController: UITableViewController {
                     db.collection("users").document(docID).collection("polls").getDocuments { (polls, error) in
                         if let err = error {
                             print("Error fetching polls: \(err)")
-                            return
+                            completion(false)
                         }
                         else {
                             
@@ -116,19 +121,23 @@ class HistoryTableViewController: UITableViewController {
                                 // Add poll to data structure
                                 self.pollsList.append(pollObj)
                             }
+                            
+                            // Reload data from table view
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                            
                         }
                     }
                 }
+                completion(true)
                 // Reload data from table view
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+//                DispatchQueue.main.async {
+//                    self.tableView.reloadData()
+//                }
                 
             }
         }
-        
-//
-        
     }
 
     // MARK: - Table view data source
@@ -138,19 +147,29 @@ class HistoryTableViewController: UITableViewController {
         // Cambiar a que cada sección sea una fecha?????
         // Si el usuario hizo 3 cuestionarios el mismo día que sean tres rows de una misma sección???
         // REVISAR............
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return pollsList.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+        // Parse string name from poll
+        let dateArr = self.pollsList[indexPath.row].name.components(separatedBy: " ")
+        
+        cell.textLabel?.text = "Cuestionario \(indexPath.row+1)"
+        cell.detailTextLabel?.text = "\(dateArr[2])/\(dateArr[1])/\(dateArr[0])"
+        
+        if dateArr.isEmpty {
+            cell.detailTextLabel?.text = "Cargando..."
+        }
+        else {
+            cell.detailTextLabel?.text = "\(dateArr[2])/\(dateArr[1])/\(dateArr[0])"
+        }
         return cell
     }
 
