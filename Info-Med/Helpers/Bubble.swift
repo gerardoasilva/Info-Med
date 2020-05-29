@@ -105,9 +105,9 @@ class Bubble: UITextView {
         // Set the thickness of the border.
         self.layer.borderWidth = 0
         // Set font
-        self.font = UIFont(name: "Helvetica Neue", size: 14)
-        self.font = UIFont.preferredFont(forTextStyle: .body)
-        self.adjustsFontForContentSizeCategory = true
+        self.font = UIFont(name: "Helvetica Neue", size: 18)
+//        self.font = UIFont.preferredFont(forTextStyle: .body)
+//        self.adjustsFontForContentSizeCategory = true
         // Set font color.
         self.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         // Set left justified.

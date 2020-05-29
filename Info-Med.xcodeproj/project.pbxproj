@@ -229,13 +229,13 @@
 				DCB7F9CF244FB08900D8E9A8 /* Constants.swift */,
 				635FCD0D245023CA0083E984 /* Classes.swift */,
 				635FCD0F245024090083E984 /* Bubble.swift */,
-				DCF9D326246244F900F69F29 /* ResponseAPI.swift */,
 				637C91E3247C06880059CA80 /* OptionBubble.swift */,
 				63018DA7247CD3EB0047C4C5 /* BubbleOfBubbles.swift */,
 				63018DA9247CE62B0047C4C5 /* TypingBubble.swift */,
 				63AFB926246A968D006EF9FD /* SideMenuCell.swift */,
 				DC9AC681247F741700BEED29 /* MenuView.swift */,
 				DC9AC6832480626700BEED29 /* CustomTableViewHeaders.swift */,
+				DCF9D326246244F900F69F29 /* ResponseAPI.swift */,
 				DCF9D324246220C900F69F29 /* APIRequest.swift */,
 			);
 			path = Helpers;

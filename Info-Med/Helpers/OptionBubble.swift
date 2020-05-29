@@ -40,7 +40,8 @@ class OptionBubble: Bubble {
         smallView.layer.masksToBounds = true
         smallView.layer.cornerRadius = 20.0
         smallView.layer.borderWidth = 1
-        smallView.font = UIFont.preferredFont(forTextStyle: .body)
+        smallView.font = UIFont(name: "Helvetica Neue", size: 18)
+//        smallView.font = UIFont.preferredFont(forTextStyle: .body)
         smallView.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         //smallView.isEditable = false
         //smallView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
