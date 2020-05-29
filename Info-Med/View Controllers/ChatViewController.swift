@@ -283,6 +283,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     // This function initializes the conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
+        self.isNewChat = false
         // Delete all bubbles
         bubblesList = nil
         // Delete all contexts
