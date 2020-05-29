@@ -69,6 +69,11 @@ class InfoTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         getUserAuth()
         getDataFromDB()
+        
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.backgroundColor = .none
     }
     
      func configureNavBar(){
@@ -78,6 +83,10 @@ class InfoTableViewController: UITableViewController {
           navigationController?.navigationBar.shadowImage = UIImage()
           navigationController?.navigationBar.isTranslucent = true
           
+        
+        // Style for pushed view controller's nav bar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
           
       }
     

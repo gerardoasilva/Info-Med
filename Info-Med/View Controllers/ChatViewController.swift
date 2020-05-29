@@ -206,7 +206,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // This function creates the viewcontroller for the side menu
     func createSideMenu() {
         // Set menu's width
-        let menuWidth =  UIScreen.main.bounds.width - menuLimit
+//        let menuWidth =  UIScreen.main.bounds.width - menuLimit
         let toolBarFrame = inputToolBar.frame
         let scrollViewFrame = messageScrollView.frame
         

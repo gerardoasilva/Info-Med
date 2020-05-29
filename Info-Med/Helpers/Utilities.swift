@@ -31,6 +31,29 @@ class Utilities: NSObject {
         //        textField.layer.addSublayer(bottomLine)
     }
     
+    static func styleChangePasswordTextfield(_ textField: UITextField) {
+        
+//        let bottomLine = CALayer()
+//        bottomLine.frame = CGRect(x: 0, y: textField.frame.height - 2, width: textField.frame.width, height: 2)
+//        bottomLine.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
+        // Remove border on textfield
+        textField.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
+        textField.backgroundColor = .white
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 3
+        textField.textAlignment = .left
+        textField.font = UIFont(name: "Helvetica Neue", size: 20)
+        textField.layer.borderColor = #colorLiteral(red: 0.5990002751, green: 0.6184628606, blue: 0.6656202674, alpha: 1)
+        textField.layer.borderWidth = 1
+//        textField.layer.shadowColor = UIColor.black.cgColor
+//        textField.layer.shadowOpacity = 0.1
+//        textField.layer.shadowRadius = 5
+//        textField.layer.shadowOffset = CGSize(width: 0, height: 10)
+//        textField.layer.addSublayer(bottomLine)
+        textField.setLeftPaddingPoints(10)
+        textField.setRightPaddingPoints(10)
+    }
+    
     static func styleFilledButton(_ button: UIButton) {
         // Filled rounded corner style
         button.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
