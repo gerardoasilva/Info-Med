@@ -129,10 +129,22 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         let button = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
         
+        // Configuration for credits button
+        let creditsbutton = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(presentCredits))
+        navigationItem.rightBarButtonItem = creditsbutton
+        
         // Style for pushed view controller's nav bar
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
     }
+    
+    // Navigation to credits VC
+    @objc func presentCredits(){
+        // Go to credits View Controller
+        let creditsViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.creditsViewController) as? CreditsViewController
+        self.navigationController?.pushViewController(creditsViewController!, animated: true)
+    }
+    
     
     // MARK: - SIDE MENU
     
