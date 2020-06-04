@@ -130,7 +130,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         navigationItem.leftBarButtonItem = button
         
         // Configuration for credits button
-        let creditsbutton = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(presentCredits))
+        let creditsbutton = UIBarButtonItem(image: UIImage(systemName: "info.circle", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(presentCredits))
         navigationItem.rightBarButtonItem = creditsbutton
         
         // Style for pushed view controller's nav bar
@@ -142,7 +142,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     @objc func presentCredits(){
         // Go to credits View Controller
         let creditsViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.creditsViewController) as? CreditsViewController
-        self.navigationController?.pushViewController(creditsViewController!, animated: true)
+//        self.navigationController?.pushViewController(creditsViewController!, animated: true)
+        self.performSegue(withIdentifier: "presentCredits", sender: self)
     }
     
     
@@ -277,6 +278,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         // Show menu
         if isMenuHidden {
             
+            navigationItem.rightBarButtonItem?.isEnabled = false
+            
             UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 
                 // Slide chat content to the right
@@ -296,6 +299,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
             // Hide menu
         else {
+            navigationItem.rightBarButtonItem?.isEnabled = true
+            
             UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 // Slide chat content to the origin
 //                self.menuView.frame.origin.x = -menuWidth

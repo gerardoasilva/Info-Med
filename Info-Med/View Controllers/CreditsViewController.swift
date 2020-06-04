@@ -9,11 +9,12 @@
 import UIKit
 
 class CreditsViewController: UIViewController {
-
+    @IBOutlet weak var fingerHandle: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        fingerHandle.layer.cornerRadius = fingerHandle.frame.size.height / 2
     }
     
 
