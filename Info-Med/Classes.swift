@@ -23,6 +23,7 @@ enum MenuOption {
     case signOut
 }
 
+// Class message used for chat bubbles
 class Message: Codable {
     var text: String!
     var sender: String!
@@ -33,6 +34,7 @@ class Message: Codable {
     }
 }
 
+// Class context used to decode and encode contexts in requests
 class Context: Codable {
     var name: String!
     var lifespanCount: Int!
@@ -61,6 +63,7 @@ class Query: Codable {
     }
 }
 
+// Class poll used to store results from polls in firebase
 class Poll {
     var name: String!
     var results = [String: Double]()

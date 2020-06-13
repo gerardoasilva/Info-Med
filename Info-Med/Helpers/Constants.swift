@@ -8,11 +8,11 @@
 
 import Foundation
 
-
+// Structure containing constants used in the application
 struct Constants {
     
+    // Structure containing view controllers' IDs
     struct Storyboard {
-        
         static let chatViewController = "ChatVC"
         static let loginViewController = "LoginVC"
         static let infoTableViewController = "InfoVC"

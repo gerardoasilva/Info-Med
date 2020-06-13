@@ -133,8 +133,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
-    
-    
+    // Set style of navbar
     func configureNavbar() {
         // Make navbar transparent
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
@@ -142,6 +141,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         navigationController?.navigationBar.isTranslucent = true
     }
     
+    // Set un style and constraints of elements
     func setUpElements() {
         
         let screenHeight = self.view.bounds.height
@@ -157,14 +157,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Add constraints
         topView.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
         topView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        //        topView.heightAnchor.constraint(equalToConstant: screenHeight / 3).isActive = true
         topView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/3).isActive = true
         topView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
         topView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
         
         tfEmail.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: (screenHeight - topView.frame.height)/9).isActive = true
         tfEmail.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
-        //        tfEmail.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
         tfEmail.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 5/6).isActive = true
         tfEmail.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
@@ -177,19 +175,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         tfPassword.topAnchor.constraint(equalTo: tfEmail.bottomAnchor, constant: 25).isActive = true
         tfPassword.centerXAnchor.constraint(equalTo: tfEmail.centerXAnchor).isActive = true
-        //        tfPassword.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 5).isActive = true
         tfPassword.widthAnchor.constraint(equalTo: tfEmail.widthAnchor).isActive = true
         tfPassword.heightAnchor.constraint(equalTo: tfEmail.heightAnchor).isActive = true
         
         loginButton.topAnchor.constraint(equalTo: tfPassword.bottomAnchor, constant: 25).isActive = true
         loginButton.centerXAnchor.constraint(equalTo: tfPassword.centerXAnchor).isActive = true
-        //        loginButton.widthAnchor.constraint(equalToConstant: screenWhidth / 6 * 3).isActive = true
         loginButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 1/2).isActive = true
         loginButton.heightAnchor.constraint(equalTo: tfEmail.heightAnchor).isActive = true
         
         registerButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 12)
         registerButton.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
-        //        registerButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         registerButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/13).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         registerButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor).isActive = true
@@ -243,11 +238,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         // Enable login button if all conditions are met
         loginButton.isEnabled = true
-        //        loginButton.setTitleColor(.white, for: .normal)
     }
     
     // MARK: - NAVIGATION
     
+    // Go to chat VC
     func transitionToChatVC() {
         let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
         //adds a nav controler to the newly instantiated view so that the side menu is visible

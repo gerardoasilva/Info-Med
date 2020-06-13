@@ -8,11 +8,12 @@
 
 import UIKit
 
+// A bubble that shows agent is getting a response
 class TypingBubble: Bubble {
+    
+    // Initializer function
     init(view: UIView) {
         super.init(view: view, msg: Message(text: " ... ", sender: "Debug"))
-        //self.font = UIFont.preferredFont(forTextStyle: .title1)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {

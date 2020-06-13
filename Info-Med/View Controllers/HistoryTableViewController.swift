@@ -11,11 +11,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseDatabase
 
-//class HistoryCustomTableViewCell : UITableViewCell {
-//
-//
-//}
-
 class HistoryTableViewController: UITableViewController {
     
     // Variables
@@ -29,7 +24,7 @@ class HistoryTableViewController: UITableViewController {
     var docID: String!
     var pollsList = [Poll]()
     
-
+    // Initialize variables and setup elements
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,12 +35,6 @@ class HistoryTableViewController: UITableViewController {
         
         // Register custom header view
         tableView.register(TitleHeaderForTableView.self, forHeaderFooterViewReuseIdentifier: "sectionHeader")
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,8 +44,6 @@ class HistoryTableViewController: UITableViewController {
                 self.tableView.reloadData()
             }
         }
-            
-        
     }
     
     // MARK: - DATABASE QUERIES
@@ -68,7 +55,6 @@ class HistoryTableViewController: UITableViewController {
             uid = user.uid
         }
     }
-    
     
     // Async func to fetch data from DB
     func getDataFromDB(completion: @escaping (_ status: Bool) -> Void) {
@@ -120,26 +106,31 @@ class HistoryTableViewController: UITableViewController {
 
     // MARK: - Table view data source
     
+    // Set table view header height
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 100
     }
     
+    // Setup header content
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "sectionHeader") as! TitleHeaderForTableView
         headerView.title.text = "Historial"
         headerView.image.image = UIImage(named: "history.white")
         return headerView
     }
-
+    
+    // Set number of sections
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
+    // Set number of rows
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return pollsList.count
     }
 
+    // Setup row content
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
@@ -158,6 +149,7 @@ class HistoryTableViewController: UITableViewController {
         return cell
     }
     
+    // Remove selection style of row when pressed
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -170,8 +162,7 @@ class HistoryTableViewController: UITableViewController {
         let detailView = segue.destination as! DetailHistoryTableViewController
         let indexPath = tableView.indexPathForSelectedRow!
         
-        detailView.poll = pollsList[indexPath.row]
-        
+        detailView.poll = pollsList[indexPath.row] 
     }
 
 }

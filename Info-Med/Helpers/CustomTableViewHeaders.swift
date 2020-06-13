@@ -8,11 +8,12 @@
 
 import UIKit
 
-// This class is fot the section header used in the table view
+// This class is for the section header used in some table views
 class TitleHeaderForTableView: UITableViewHeaderFooterView {
     let title = UILabel()
     let image = UIImageView()
     
+    // Initializer function to setup elements in header
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         configureContents()
@@ -22,6 +23,7 @@ class TitleHeaderForTableView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // Function to setup style and constraints of elements in header
     func configureContents() {
         image.translatesAutoresizingMaskIntoConstraints = false
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -31,11 +33,9 @@ class TitleHeaderForTableView: UITableViewHeaderFooterView {
         contentView.addSubview(title)
         
         // Add style
-//        image.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         image.tintColor = .white
         
         title.textAlignment = .center
-//        title.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         title.textColor = .white
         title.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
         

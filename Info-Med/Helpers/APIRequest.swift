@@ -8,16 +8,18 @@
 
 import Foundation
 
+// Enum to indicate the type of error from http request
 enum APIError : Error {
     case responseProblem
     case decodingProblem
     case encodingProblem
 }
 
+// Struct that containts method to make HTTP requests to server
 struct APIRequest {
     let resourceURL: URL
     
-    // Create an instance of APIRequest with the endpoint of the server
+    // Initializer function that creates an instance of APIRequest with the endpoint of the server received
     init(endpoint: String) {
         let resourceString = "https://info-med.herokuapp.com/api/\(endpoint)"
         guard let resourceURL = URL(string: resourceString) else { fatalError() }
@@ -25,7 +27,7 @@ struct APIRequest {
         self.resourceURL = resourceURL
     }
     
-    // HTTP Request to server endpoint
+    // Function that makes HTTP request to server endpoint
     func response(_ queryToSolve: Query, completion: @escaping(Result<Response, APIError>) -> Void) {
         print("Executing request")
         

@@ -10,7 +10,7 @@ import UIKit
 import FirebaseAuth
 
 class PasswordViewController: UIViewController, UITextFieldDelegate {
-    
+    // Outlets
     @IBOutlet weak var tfCurrentPassword: UITextField!
     @IBOutlet weak var tfNewPassword: UITextField!
     @IBOutlet weak var tfConfirmPassword: UITextField!
@@ -22,6 +22,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         title = "Cambiar contraseña"
+        
         // Texfield Delegates
         tfCurrentPassword.delegate = self
         tfNewPassword.delegate = self
@@ -30,7 +31,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         // Setup elements of the view controller
         setupElements()
         setupAddTargetIsNotEmptyTextFields()
-
+        
         
         // Add tap recognizer in current view to hide keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -40,21 +41,19 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         let leftEdgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(popViewController(_:)))
         leftEdgePan.edges = .left
         view.addGestureRecognizer(leftEdgePan)
-
+        
     }
     
     // MARK: - SETUP
+    
+    // Setup elements of VC
     func setupElements() {
         lbError.textColor = #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
         lbError.numberOfLines = 3
         lbError.textAlignment = .center
         lbError.alpha = 0
-//        lbError.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -15).isActive = true
-//        lbError.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-//        lbError.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 5/6).isActive = true
-//        lbError.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        // Password button style
+        // Add password button style
         // Filled rounded corner style
         saveButton.titleLabel?.text = "Cambiar"
         saveButton.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
@@ -70,7 +69,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         saveButton.layer.shadowRadius = 5
         saveButton.layer.shadowOffset = CGSize(width: 0, height: 10)
         
-        // Cancel button style
+        // Add cancel button style
         // Filled rounded corner style
         cancelButton.titleLabel?.text = "Cancelar"
         cancelButton.backgroundColor = #colorLiteral(red: 0.8588235294, green: 0.2588235294, blue: 0.2588235294, alpha: 1)
@@ -92,32 +91,32 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     }
     
     // Setup textfields to listen to edit changes
-       func setupAddTargetIsNotEmptyTextFields() {
-           saveButton.isEnabled = false
-           tfCurrentPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
-           tfNewPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
-           tfConfirmPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
-       }
+    func setupAddTargetIsNotEmptyTextFields() {
+        saveButton.isEnabled = false
+        tfCurrentPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
+        tfNewPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
+        tfConfirmPassword.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
+    }
     
-    // Makes sure to enable register button only when required textflieds have content inside
-       @objc func textFieldIsNotEmpty(sender: UITextField) {
-           
-           sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
-           
-           guard
-               let currentPassword = tfCurrentPassword.text, !currentPassword.isEmpty,
-               let newPassword = tfNewPassword.text, !newPassword.isEmpty,
-               let confirmedPassword = tfConfirmPassword.text, !confirmedPassword.isEmpty
-               else
-           {
-               self.saveButton.isEnabled = false
-               return
-           }
-           // enable register button if all conditions are met
-           saveButton.isEnabled = true
-       }
+    // Function that enables register button only when required textflieds are not empty
+    @objc func textFieldIsNotEmpty(sender: UITextField) {
+        
+        sender.text = sender.text?.trimmingCharacters(in: .whitespaces)
+        
+        guard
+            let currentPassword = tfCurrentPassword.text, !currentPassword.isEmpty,
+            let newPassword = tfNewPassword.text, !newPassword.isEmpty,
+            let confirmedPassword = tfConfirmPassword.text, !confirmedPassword.isEmpty
+            else
+        {
+            self.saveButton.isEnabled = false
+            return
+        }
+        // Enable register button if all conditions are met
+        saveButton.isEnabled = true
+    }
     
-    // Allows navigation throguh textfields when "return" is pressed
+    // Allow navigation throguh textfields when "return" is pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
         case tfCurrentPassword:
@@ -125,17 +124,16 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         case tfNewPassword:
             tfConfirmPassword.becomeFirstResponder()
         case tfConfirmPassword:
-            pressSaveChanges(saveButton)
+            tapSaveChanges(saveButton)
         default:
             textField.resignFirstResponder()
-
+            
         }
         return true
     }
     
-    
+    // Check if textfields are filled
     func validateFields() -> String? {
-        // Check if textfields are filled
         if tfCurrentPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             tfNewPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             tfConfirmPassword.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
@@ -149,40 +147,40 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
             // Password is not valid
             return "La contraseña debe contener al menos 8 caracteres incluyendo una letra y un caracter especial."
         }
-
+        
         // Check if passwords are the same
         if cleanedNewPassword != cleanedConfirmPassword {
             return "La contraseña nueva no coincide."
         }
-    
+        
         return nil
-   }
-
+    }
     
-    // Hides keyboard when user taps away from keyboard
+    
+    // Hide keyboard when user taps outside from keyboard
     @IBAction func dismissKeyboard() {
         view.endEditing(true)
     }
     
-    
-    @IBAction func pressSaveChanges(_ sender: UIButton) {
-    let error = validateFields()
-
+    // Function called when save is tapped
+    @IBAction func tapSaveChanges(_ sender: UIButton) {
+        let error = validateFields()
+        
         if error != nil {
             // There was somwthing wrong with the textfields
             showError(error!)
             //showError()
         }
-
+            
         else {
             // Current information of user
             let user = Auth.auth().currentUser
             let currentPassword = tfCurrentPassword.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let email = (user?.email)!
-
+            
             // Set credential with current info of user
             let credential = EmailAuthProvider.credential(withEmail: email, password: currentPassword)
-
+            
             // Reauthenticate user with credential
             user?.reauthenticate(with: credential, completion: { (result, error) in
                 if let err = error {
@@ -204,7 +202,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // function to return to previous VC
+    // Function to return to previous VC
     @IBAction func popViewController(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -215,21 +213,4 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         lbError.alpha = 1
     }
     
-    
-    
-    
-    
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

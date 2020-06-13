@@ -9,8 +9,10 @@
 import Foundation
 import UIKit
 
+// This class contains static functions used to style elements inside the apllication or validate them
 class Utilities: NSObject {
     
+    // Function to style input text fields
     static func styleTextField(_ textField: UITextField) {
         
         // Remove border on textfield
@@ -27,15 +29,10 @@ class Utilities: NSObject {
         
         textField.setLeftPaddingPoints(10)
         textField.setRightPaddingPoints(10)
-        
-        //        textField.layer.addSublayer(bottomLine)
     }
     
+    // Function to style password change textFields
     static func styleChangePasswordTextfield(_ textField: UITextField) {
-        
-//        let bottomLine = CALayer()
-//        bottomLine.frame = CGRect(x: 0, y: textField.frame.height - 2, width: textField.frame.width, height: 2)
-//        bottomLine.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
         // Remove border on textfield
         textField.textColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
         textField.backgroundColor = .white
@@ -45,15 +42,11 @@ class Utilities: NSObject {
         textField.font = UIFont(name: "Helvetica Neue", size: 20)
         textField.layer.borderColor = #colorLiteral(red: 0.5990002751, green: 0.6184628606, blue: 0.6656202674, alpha: 1)
         textField.layer.borderWidth = 1
-//        textField.layer.shadowColor = UIColor.black.cgColor
-//        textField.layer.shadowOpacity = 0.1
-//        textField.layer.shadowRadius = 5
-//        textField.layer.shadowOffset = CGSize(width: 0, height: 10)
-//        textField.layer.addSublayer(bottomLine)
         textField.setLeftPaddingPoints(10)
         textField.setRightPaddingPoints(10)
     }
     
+    // Function to style buttons
     static func styleFilledButton(_ button: UIButton) {
         // Filled rounded corner style
         button.backgroundColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
@@ -70,15 +63,7 @@ class Utilities: NSObject {
         button.layer.shadowOffset = CGSize(width: 0, height: 10)
     }
     
-    static func styleHollowButton(_ button: UIButton) {
-        // Holow rounded corner style
-        button.layer.borderWidth = 2
-        button.layer.borderColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 0.8470588235)
-        button.layer.cornerRadius = button.frame.height / 2
-        button.tintColor = #colorLiteral(red: 0.3215686275, green: 0.3215686275, blue: 0.3215686275, alpha: 1)
-    }
-    
-    // Validate if email has correct format
+    // Function to validate if email has correct format
     static func isEmailValid(_ email: String) -> Bool {
         
         let emailTest = NSPredicate(format: "SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
@@ -86,7 +71,7 @@ class Utilities: NSObject {
         return emailTest.evaluate(with: email)
     }
     
-    // Validate if password has correct format
+    // Funtion to validate if password has correct format
     static func isPasswordValid(_ password: String) -> Bool {
         // Password has at least 8 characters
         if (password.count < 8) {
@@ -104,7 +89,7 @@ class Utilities: NSObject {
         return upperCaseTest.evaluate(with: password)
     }
     
-    // Validate if phone number has correct format
+    // Function to validate if phone number has correct format
     static func isPhoneNumberValid(_ phoneNumber: String) -> Bool {
         
         let phoneNumberTest = NSPredicate(format: "SELF MATCHES %@", "[0-9]{6,14}")

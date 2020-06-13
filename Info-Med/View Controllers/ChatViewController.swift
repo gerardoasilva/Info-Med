@@ -10,8 +10,6 @@ import AVFoundation
 import FirebaseAuth
 import FirebaseFirestore
 
-
-
 class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate, OptionBubbleActionProtocol, UIScrollViewDelegate {
     
     // Outlets
@@ -20,43 +18,41 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     @IBOutlet weak var btSend: UIButton!
     @IBOutlet var inputToolBar: UIToolbar!
     
-    // Variables
+    // Chat variables
     var menuView: UIView! // Side menu view
     var isMenuHidden = true
-    var darkView: UIView! // Darkens the screen when menu is open
+    var darkView: UIView! // Darkens the chat when menu is open
     var menuLimit: CGFloat!
     var activeField: UITextField!
-    var bubblesList: [Bubble]!  //list of chat bubbles were new bubbles are pushed to
-    var contexts: [Context] = [Context]() // Declare empty Context array to store contexts from queries
-    
-    //questionary specific variables
-    var symptomsDict : [String : Double]! //saves the symptoms ad sums of the current questionary
-    var currentSymptom : String! //saves the current cuestion symptom
-    
-    var lastSuperBubble : BubbleOfBubbles!
+    var bubblesList: [Bubble]!  // List of chat bubbles were new bubbles are pushed to
+    var contexts: [Context] = [Context]() // Empty context array to store contexts from chat queries
+    var lastSuperBubble: BubbleOfBubbles!
     var typingBubbleIsPresent = false
+    private var keyBSize: CGSize!
+    var menuRightConstraint: NSLayoutConstraint!
+
+    // Questionary specific variables
+    var symptomsDict: [String : Double]! // Saves the symptoms and its metric of the current questionary
+    var currentSymptom: String! // Saves the current cuestion symptom
     
-    var acumulatedHeight = 0    //the virtual height of the bubbles areas, gets extended as new bubbles are added
-    var offsetAccum = 0 //the inner view offset, must correspond to the accumulated height
-    @IBOutlet weak var toolBarBottomConstraint: NSLayoutConstraint! // Outlet to move the inputbar
+    var acumulatedHeight = 0    // The virtual height of the bubbles areas displayed, it increases as new bubbles are added
+    var offsetAccum = 0 // The inner view offset, must correspond to the accumulated height
+    @IBOutlet weak var toolBarBottomConstraint: NSLayoutConstraint! // Outlet constraint to move the Tool Bar
     
     // Vars for agents
-    var actualAgent: Agent = .faq
+    var actualAgent: Agent = .faq // Inicializa el agente de preguntas frecuentes
     var isNewChat = true
     
-    private var keyBSize: CGSize!
-    
-    var menuRightConstraint: NSLayoutConstraint!
-    
+    // Function to initialzie and setup elements for chat
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tfInput.delegate = self
         
-        // Set max width side menu can have, is the horizontal space it can't cover
+        // Set max width the side menu can cover of the screen
         menuLimit = self.view.frame.size.width / 4
         
-        // Enable view to scroll
+        // Configure scroll view
         messageScrollView.isScrollEnabled = true
         messageScrollView.alwaysBounceVertical = true
         messageScrollView.keyboardDismissMode = .onDrag
@@ -67,17 +63,19 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         // Add sideMenu button to Navbar
         configureNavBar()
         
+        // Display agent's introduction
         if isNewChat {
             // Configure initial chat
             startConversation()
 
         }
         
+        // Initialize side menu
         if menuView == nil {
             createSideMenu()
         }
            
-        // Add tap gesture to close menu when tapped outside of it
+        // Add tap and swiope gesture to close menu when tapped outside of it
         let closeMenuTap = UITapGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
         let closeMenuSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.handleMenuToggle(_:)))
         closeMenuSwipe.direction = .left
@@ -94,29 +92,24 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
 
         // Register to listen notification for menu option 'Cuestionario"
         NotificationCenter.default.addObserver(self, selector: #selector(optionSelectionHandler(notification:)), name: MenuView.notificationOption, object: nil)
-        
-        print("ISHIDDEN from willLoad: \(isMenuHidden)")
-        
     }
     
-    
-    
+    // Function to setup nav bar style
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.backgroundColor = .none
-         print("ISHIDDEN from WillAppear: \(isMenuHidden)")
-        print(menuView.frame)
         
+        // Show menu if it should be shown
         if !isMenuHidden && menuView.frame.origin.x < 0 {
             isMenuHidden = !isMenuHidden
             handleMenuToggle()
         }
     }
-
     
     // MARK: - NAVIGATION
+    // Function to configure style of navbar and buttons
     func configureNavBar(){
         
         // Make navbar transparent
@@ -124,37 +117,33 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         
-        // Set configuration for menu button image and add button to NavBar
+        // Add side menu button to navbar
         let largeConfig = UIImage.SymbolConfiguration(textStyle: .largeTitle)
         let button = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMenuToggle))
         navigationItem.leftBarButtonItem = button
         
-        // Configuration for credits button
+        // Add credits button to navbar
         let creditsbutton = UIBarButtonItem(image: UIImage(systemName: "info.circle", withConfiguration: largeConfig)!.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(presentCredits))
         navigationItem.rightBarButtonItem = creditsbutton
         
-        // Style for pushed view controller's nav bar
+        // Style for pushed view controller's navbar
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.05835793167, green: 0.624536097, blue: 0.9605233073, alpha: 1)
     }
     
-    // Navigation to credits VC
+    // Function that transitions to CreditsVC
     @objc func presentCredits(){
-        // Go to credits View Controller
-        let creditsViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.creditsViewController) as? CreditsViewController
-//        self.navigationController?.pushViewController(creditsViewController!, animated: true)
         self.performSegue(withIdentifier: "presentCredits", sender: self)
     }
     
-    
     // MARK: - SIDE MENU
     
-    // Function to handles user optionSelection from the side menu
+    // Function to handle selected option by user from the side menu
     @objc func optionSelectionHandler(notification: NSNotification?) {
-        
+        // Check if there is a selected option notification
         if let optionSelected = (notification?.object) as? MenuOption {
             
-            //clear the questionaire variables if the user changes screen
+            // Clear the questionaire variables if the user changes agent
             if actualAgent != .questionnaire{
                 //clear the dictionary to be able to use it again
                 self.symptomsDict = nil
@@ -165,43 +154,39 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             // Display user info viewController
             case .info:
                 print("INFO listened")
-                /*
-                    Do user info stuff
-                 */
                 let infoTableViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.infoTableViewController) as? InfoTableViewController
-                
-                        
+                  
                 self.navigationController?.pushViewController(infoTableViewController!, animated: true)
-                
-                
                 
             // Change chatbot to FAQ
             case .faq:
                 print("FAQ listened")
+                // Close menu
                 handleMenuToggle()
                 
+                // Update actual agent
                 if actualAgent != .faq {
                     actualAgent = .faq
                     
-                    // Delete actual conversation
+                    // Delete actual conversation and start conversation with new agent
                     startConversation()
-                    
                 }
                 
-            // Change chatbot to questionnaire
+            // Change chatbot to Questionnaire
             case .questionnaire:
                 print("QUESTIONNAIRE listened")
+                // Close menu
                 handleMenuToggle()
                                 
+                // Update actual agent
                 if actualAgent != .questionnaire {
                     actualAgent = .questionnaire
                     
-                    // Delete actual conversation
+                    // Delete actual conversation and start conversation with new agent
                     startConversation()
-                    
                 }
                 
-            // Show hitory of interactions
+            // Display history view controller
             case .history:
                 print("HISTORY listened")
                 let historyTableViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.historyTableViewController) as? HistoryTableViewController
@@ -219,20 +204,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     // This function creates the viewcontroller for the side menu
     func createSideMenu() {
         // Set menu's width
-//        let menuWidth =  UIScreen.main.bounds.width - menuLimit
         let toolBarFrame = inputToolBar.frame
         let scrollViewFrame = messageScrollView.frame
         
+        // Create menu view
         menuView = MenuView(toolBarFrame: toolBarFrame, scrollViewFrame: scrollViewFrame)
 
         // Create dark view
         darkView = UIView()
         
-        // Set menuView and darkViewdimensions and position
+        // Set menuView and darkView dimensions and position
         menuView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         darkView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         
-        // Add subview of menu to ChatViewController
+        // Add subviews to ChatViewController
         view.addSubview(darkView)
         view.addSubview(menuView)
 
@@ -243,8 +228,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         menuView.translatesAutoresizingMaskIntoConstraints = false
         darkView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Set constraint outlet of menu
         menuRightConstraint = menuView.rightAnchor.constraint(equalTo: self.view.leftAnchor)
 
+        // Add constraints of menu and side view
         NSLayoutConstraint.activate([
             menuRightConstraint,
             menuView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
@@ -257,11 +244,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             darkView.topAnchor.constraint(equalTo: self.view.topAnchor)
             
         ])
-
-        print("Added menu view to ChatViewController")
     }
     
-    //gets called when pressing the navbar hamburger button
+    // Function that handles side menu when pressing on the navbar's hamburguer button
     @objc func handleMenuToggle(_ sender: UITapGestureRecognizer? = nil){
         toggleMenu()
     }
@@ -284,44 +269,33 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 
                 // Slide chat content to the right
                 self.view.endEditing(true)
-//                self.menuView.frame.origin.x = 0
                 self.menuRightConstraint.constant = menuWidth
-//                self.messageScrollView.frame.origin.x += menuWidth
-//                self.inputToolBar.frame.origin.x = menuWidth
-//                self.menuView.frame.origin.x = 0
-//                self.darkView.frame.origin.x = self.menuView.frame.width
                 self.menuView.layer.shadowOpacity = 1
                 self.darkView.alpha = 0.2
                 self.darkView.isUserInteractionEnabled = true
                 self.view.layoutIfNeeded()
             }, completion: nil)
-            isMenuHidden = !isMenuHidden
         }
-            // Hide menu
+        // Hide menu
         else {
             navigationItem.rightBarButtonItem?.isEnabled = true
             
             UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseIn, animations: {
                 // Slide chat content to the origin
-//                self.menuView.frame.origin.x = -menuWidth
                 self.menuRightConstraint.constant = 0
-//                self.messageScrollView.frame.origin.x -= 0
-//                self.inputToolBar.frame.origin.x = 0
-//                self.menuView.frame.origin.x = -self.menuView.frame.width - self.darkView.frame.width
-//                self.darkView.frame.origin.x = -self.menuLimit
                 self.menuView.layer.shadowOpacity = 0
                 self.darkView.alpha = 0
                 self.darkView.isUserInteractionEnabled = false
                 self.view.layoutIfNeeded()
             }, completion: nil)
-            isMenuHidden = !isMenuHidden
         }
-        
+        // Update bool
+        isMenuHidden = !isMenuHidden
     }
     
     // MARK: - CHAT
     
-    // Add style for the input text field
+    // Function to add style for the input text field
     func setupTextField() {
         tfInput.font = UIFont(name: "HelveticaNeue", size: 18)
         tfInput.returnKeyType = UIReturnKeyType.send
@@ -333,23 +307,26 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         tfInput.setRightPaddingPoints(10)
     }
     
-    // This function initializes the conversation with the chatbot depending on the agent chosen by the user
+    // This function clears the chat and starts a conversation with the chatbot depending on the agent chosen by the user
     func startConversation() {
+        // Update bool to indicate chat has begun
         self.isNewChat = false
-        // Delete all bubbles
+        // Delete all bubbles from list
         bubblesList = nil
-        // Delete all contexts
+        // Delete all contexts from list
         contexts.removeAll()
-        // Delete chat from screen
+        // Delete all chat bubblesfrom screen
         messageScrollView.subviews.forEach({ $0.removeFromSuperview() })
         acumulatedHeight = 0
         offsetAccum = 0
         
-
+        // Display agent's introduction depending on the chat selected
         switch actualAgent {
         case .faq:
+            // Call the intent for faq introduction
             prepareRequest(userInput: "Hola", agent: .faq)
         default:
+            // Call intent for questionnaire introduction
             prepareRequest(userInput: "Iniciar cuestionario", agent: .questionnaire)
         }
         
@@ -364,6 +341,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     /// - Returns: Void
     func displayResponse(msg: String) {
         print("Request completed")
+        // Add agent's response bubble to list of bubbles
         addBubble(bbl: Bubble(view: messageScrollView ,msg: Message(text: msg, sender: "agent")))
         
         // Scroll the screen to the last message displayed
@@ -375,7 +353,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             } else {
                 bottomOffset = CGPoint(x: 0, y: messageScrollView.contentSize.height - messageScrollView.frame.size.height)
             }
-            // Set offset
+            // Set offset to move content animated
             messageScrollView.setContentOffset(bottomOffset, animated: true)
         }
     }
@@ -417,19 +395,19 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
     }
     
-    //Removes the last bubble from the scrroll view, bubble array, and resets the height, accum height, and offset
+    // Function that removes the last bubble from the scrroll view and bubble list. It also resets the height, accum height, and offset
     func removeLastBubble(){
         if bubblesList == nil {
             return
         }
         
-        let index = bubblesList.count - 1 //the last index in the array
+        let index = bubblesList.count - 1 // The last index in the array
         
         if index + 1 >= 1{
-            //the bubble to remove
+            // The bubble to remove
             let bbl = bubblesList[index]
             
-            //if it is the last remaining bubble
+            // If it is the last remaining bubble
             if index + 1 == 1{
                 acumulatedHeight -= bbl.padd
                 messageScrollView.contentSize.height = CGFloat(acumulatedHeight)
@@ -443,20 +421,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
             bbl.removeFromSuperview()
             bubblesList.removeLast()
             
-            //if it is the last remaining bubble
+            // If it is the last remaining bubble
             if index + 1 == 1{
                 bubblesList = nil
             }
             
             // Check if content is larger than scroll view's actual height
             if CGFloat(messageScrollView.contentSize.height) >= messageScrollView.frame.height {
-                // remove height from offset
+                // Remove height from offset
                 offsetAccum -= subtractedHeight
             }
-            
-            /*for b in bubblesList{
-                b.updateNeighbors(arr: bubblesList)
-            }*/
         }
     }
     
@@ -509,7 +483,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
         }
     }
     
-    //send button is pressed
+    // Send button is pressed
     @IBAction func sendTapped(_ sender: Any) {
         send()
     }
@@ -529,23 +503,22 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     func send(){
         if tfInput.text != ""{
             
-            //remove the typing bubble if it exists, before adding the next typing bubble and the user's bubble
+            // Temove the typing bubble if it exists, before adding the next typing bubble and the user's bubble
             if typingBubbleIsPresent{
                 self.removeLastBubble()
                 typingBubbleIsPresent = false
             }
             
+            // Add bubble to bubble list
             addBubble(bbl: Bubble(view: messageScrollView, msg: Message(text: tfInput.text!, sender: "user")))
             
-
-//            if CGFloat(offsetAccum) > self.messageScrollView.frame.height {
-//                messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-//            }
+            // Move chat content
             if messageScrollView.contentSize.height > messageScrollView.frame.size.height {
                 let bottomOffset = CGPoint(x: 0, y: messageScrollView.contentSize.height - messageScrollView.frame.size.height)
                 messageScrollView.setContentOffset(bottomOffset, animated: true)
             }
-            prepareRequest(userInput: tfInput.text!, agent: actualAgent) // Does the server request
+            // Request response from server
+            prepareRequest(userInput: tfInput.text!, agent: actualAgent)
         }
         
         tfInput.text = ""
@@ -554,9 +527,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     // MARK: - CHAT OPTION BUBBLE PROTOCOL IMPLEMENTATION
     
+    // Function called when agent suggestion is tapped
     func onOptionBubblePress(text: String) {
         messageScrollView.setContentOffset(CGPoint(x: 0, y: CGFloat(offsetAccum)), animated: true)
-        prepareRequest(userInput: text, agent: actualAgent) //does the server request as if the user sent it
+        prepareRequest(userInput: text, agent: actualAgent) // Does the server request as if the user sent it
         print("Suggestion sent\n")
     }
     
@@ -566,15 +540,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     func prepareRequest(userInput: String!, agent: Agent!) {
         print("Preparing request")
                 
-        //add the (...) typing bubble to indicate that a request is being fulfilled
+        // Add the (...) typing bubble to indicate that a request is being fulfilled
         addBubble(bbl: TypingBubble(view: messageScrollView))
         typingBubbleIsPresent = true
         
+        // Block user interaction with past agent suggestions
         if lastSuperBubble != nil{
             lastSuperBubble.blockFurtherActions(bbl: nil)
         }
         
-        // Validate that the user's query is valid
+        // Validate the user's query
         if let query = userInput {
             
             // Create the query to solve
@@ -596,22 +571,21 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                         self.contexts.append(Context(name: context.name, lifespanCount: context.lifespanCount))
                     }
                     
-                    print("Contexts self: \(self.contexts)")
                     print("FULL RESPONSE: \(response)\n")
                                         
                     // Does the display response in the main thread as UI changes in other treads do not behave correctly
                     DispatchQueue.main.async {
                         
-                        //remove the typing bubble if present, before pushing the response bubble
+                        // Remove the typing bubble if present, before pushing the response bubble
                         if self.typingBubbleIsPresent{
                             self.removeLastBubble()
                             self.typingBubbleIsPresent = false
                         }
                         
-                        //display the bot response
+                        // Display the bot's response
                         self.displayResponse(msg: response.fulfillmentText)
                         
-                        //initiate the symptoms dictionary if needed
+                        // Initialize the symptoms dictionary if needed
                         if self.symptomsDict == nil{
                             self.symptomsDict = [:]
                         }
@@ -623,7 +597,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                             // Save the syptoms clinimetry to the disctionary
                             if let clinimetry = fm.payload?.fields.clinimetry?.numberValue { // If there is some clinimetry to process
                                 
-                                if clinimetry == 0{// It is the firs question of the queationaire
+                                if clinimetry == 0 { // It is the firs question of the queationaire
                                     
                                     // Set currentSyptom to the question symptom for cases where the question is missing the symptom
                                     if let symptom = fm.payload?.fields.symptom?.stringValue {
@@ -634,11 +608,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                     var symp = fm.payload?.fields.symptom?.stringValue
                                     print("SYMP: \(String(describing: symp))")
                                     
-                                    if symp == nil{// If the answere doesnot carry a symptom use the questions default
+                                    if symp == nil { // If the answere doesn't have a symptom use the questions default
                                         symp = self.currentSymptom
                                     }
                                     
-                                    // Check if key is already in dictionary
+                                    // Check if key is already in dictionary and add clinimetry value
                                     if self.symptomsDict[symp!] == nil {
                                          self.symptomsDict[symp!] = Double(clinimetry)
                                     } else {
@@ -647,7 +621,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 }
                             }
                             
-                            //chech if the suggestions array is empty
+                            // Check if the suggestions array is empty
                             var sugEmpty = false
                             if fm.payload != nil && fm.payload?.fields.suggestions != nil{
                                 if ((fm.payload?.fields.suggestions?.listValue.values.isEmpty)!){
@@ -655,7 +629,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 }
                             }
                                 
-                            //push dictionary to DB when the poll is finnished. That its indicated by an empty suggestions array. Do not push if there is nothing to push
+                            // Push dictionary to DB when the poll is finnished. That is indicated by an empty suggestions array. Do not push if there is nothing to push
                             if  sugEmpty && self.symptomsDict != nil{
                                 print("Pushing to DB!!")
                                 print("DIC TO PUSH = \(String(describing: self.symptomsDict))")
@@ -666,14 +640,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                 print("USER = \(String(describing: user?.uid))")
                                 
                                 var docID : String!
-                                //let semaphore = DispatchSemaphore(value: 0)
                                 
-                                //query for the current user's document id
+                                // Query to get the current user's document id
                                 db.collection("users").whereField("uid", isEqualTo: user!.uid).getDocuments {(snapshot, error) in
                                     if let error = error {
                                         print("Error geting user document: \(error)")
                                     }else{
-                                        //iterate the documents resulting from the query
+                                        // Iterate the documents resulting from the query
                                         for document in snapshot!.documents{
                                             let data = document.data()
                                             docID = document.documentID
@@ -682,10 +655,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                             print("DOC ID = \(String(describing: document.documentID))")
                                         }
                                     }
-                                    //semaphore.signal()
-                                    //if the query was succesful then add a document with the poll results
+                                    
+                                    // If the query was succesful then add a document with the poll results
                                     if(docID != nil && self.symptomsDict != nil){
-                                        //prepare date data to be used as document id name
+                                        // Prepare date data to be used as document id name
                                         let date = Date()
                                         let calendar = Calendar.current
                                         let sec = calendar.component(.second, from: date)
@@ -703,11 +676,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                                     // Clear the dictionary to be able to use it again
                                     self.symptomsDict = nil
                                 }
-                                
-                                // Semaphore.wait()
                             }
-                            
-                            // Print("DIC = \(String(describing: self.symptomsDict))")
                             
                             // Display an option bubble for each suggestion
                             if let values = fm.payload?.fields.suggestions?.listValue.values {
@@ -744,7 +713,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
                 }
             })
         }
-            // Text input is invalid, do nothing
+        // Text input is invalid, do nothing
         else {
             return
         }
@@ -798,7 +767,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     
     // Each text field in the interface sets the view controller as its delegate.
     // Therefore, when a text field becomes active, it calls these methods.
-    
     func textFieldDidBeginEditing (_ textField: UITextField )
     {
         activeField = textField
@@ -810,7 +778,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UIGestureRecogn
     }
     
 }
-
 
 // Class extension to add padding to textField
 extension UITextField {

@@ -8,6 +8,7 @@
 
 import UIKit
 
+// This is a class for the side menu
 class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     public var tableView = UITableView()
@@ -16,8 +17,9 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     let screenHeight = UIScreen.main.bounds.height
     let screenWidth = UIScreen.main.bounds.width
     
-    var heightViewController: CGFloat! // height of view controller
+    var heightViewController: CGFloat!
     var messageScrollHeight: CGFloat!
+    
     // Table data
     var labels: [String]!
     var icons: [UIImage?]!
@@ -35,7 +37,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         setupViews()
         
-        // Create sideMenu ViewController
+        // Init sideMenu ViewController
         labels = [
             "Mi cuenta",
             "Preguntas COVID-19",
@@ -66,12 +68,11 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
-        //tableView Constrains
     }
     
+    // Function to setup side menu elements style and constraints
     func setupViews() {
-        let widthMenu = screenWidth/4*3
-        
+        let widthMenu = screenWidth/4*3 // To cover only 3/4 of the screen width
         heightViewController = UIScreen.main.bounds.height
         
         // Style views
@@ -92,6 +93,7 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Table view constraints
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor),
@@ -100,10 +102,12 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         ])
     }
     
+    // Function to set the number of rows
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         labels.count
     }
     
+    // Function to setup each cell content and style
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideMenuCell
         cell.title.text = labels[indexPath.row]
@@ -122,15 +126,16 @@ class MenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    // Function to set height for each cell to 80 and the remaining space to row 4
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 4){
             let heightTableRows = tableView.rowHeight * 5
             return tableView.bounds.height - heightTableRows
-//            return (self.toolBarFrame.origin.y - self.scrollViewFrame.origin.y) - (heightTableRows + self.scrollViewFrame.origin.y)
         }
         return 80;
     }
     
+    // Function to notify when a cell is pressed except for row 4
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Post notification depending on user selection
         if indexPath.row != 4 {

@@ -51,7 +51,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - SETUP
     
-    // Add constraints and style
+    // Setup style and constraints of elements
     func setUpElements() {
         
         let screenWhidth = self.view.bounds.width
@@ -138,6 +138,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         tfPhoneNumber.addTarget(self, action: #selector(textFieldIsNotEmpty), for: .editingChanged)
     }
     
+    // Setup style for navbar
     func configureNavbar() {
         // Make navbar transparent
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
@@ -214,13 +215,13 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             self.registerButton.isEnabled = false
             return
         }
-        // enable register button if all conditions are met
+        // Enable register button if all conditions are met
         registerButton.isEnabled = true
     }
     
     // MARK: - KEYBOARD
     
-    // Hides keyboard when user taps away from keyboard
+    // Hide keyboard when user taps away from keyboard
     @IBAction func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -230,14 +231,13 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         self.navigationController?.popViewController(animated: true)
     }
     
-    // Transitions view to chat
+    // Transition view to chat VC
     func transitionToChatVC() {
         let chatViewController = storyboard?.instantiateViewController(identifier: Constants.Storyboard.chatViewController) as? ChatViewController
-        //adds a nav controler to the newly instantiated view so that the side menu is visible
+        // Add a nav controler to the newly instantiated view so that the side menu is visible
         let navController = UINavigationController(rootViewController: chatViewController!)
         
         view.window?.rootViewController = navController
-        //view.window?.rootViewController = chatViewController
         view.window?.makeKeyAndVisible()
     }
     
@@ -265,7 +265,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             let firstName = tfFirstName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let lastName = tfLastName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             
-            //Create user
+            // Create user
             Auth.auth().createUser(withEmail: email, password: password) { (result, err) in
                 
                 // Check for errors
